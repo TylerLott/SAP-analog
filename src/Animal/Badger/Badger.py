@@ -1,6 +1,16 @@
 from src.Animal.Animal import Animal
 
-class Ant(Animal):
+class Badger(Animal):
     def __init__(self, health, dmg, position):
-        super().__init__(health, dmg, position)
-        self.tier = 1
+
+        default_health = 4
+        default_dmg = 5
+
+        super().__init__(default_health+health, default_dmg+dmg, position)
+        self.tier = 3
+
+    def onFaint(self):
+        # damage all enemies level * dmg
+        pass
+
+    

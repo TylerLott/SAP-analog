@@ -22,7 +22,7 @@ class Animal(ABC):
         self.position = pos      
 
     @abstractmethod
-    def onfaint(self):
+    def onFaint(self):
         pass
 
     @abstractmethod
