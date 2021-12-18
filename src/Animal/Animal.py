@@ -3,9 +3,10 @@ from abc import ABC, abstractmethod
 
 class Animal(ABC):
 
-    def __init__(self, health, dmg):
+    def __init__(self, health, dmg, position):
         self.health = health
         self.dmg = dmg
+        self.position = position
         self.alive = True
         self.level = 1 # above 5: level 3, above 3: level 2, less: level 1
 
@@ -15,7 +16,10 @@ class Animal(ABC):
             self.alive = False
 
     def onCombine(self):
-        self.level += 1           
+        self.level += 1     
+
+    def updatePosition(self, pos):
+        self.position = pos      
 
     @abstractmethod
     def onfaint(self):
