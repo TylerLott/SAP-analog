@@ -7,11 +7,15 @@ class Animal(ABC):
         self.health = health
         self.dmg = dmg
         self.alive = True
+        self.level = 1 # above 5: level 3, above 3: level 2, less: level 1
 
     def onHit(self, dmgAmt):
         self.dmg -= dmgAmt
         if self.dmg <= 0:
             self.alive = False
+
+    def onCombine(self):
+        self.level += 1           
 
     @abstractmethod
     def onfaint(self):
