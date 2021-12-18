@@ -9,8 +9,8 @@ class Badger(Animal):
         super().__init__(default_health+health, default_dmg+dmg, position)
         self.tier = 3
 
-    def onFaint(self):
+    def onFaint(self) -> int:
         # damage all enemies level * dmg
-        pass
+        return self.getLevel() * self.dmg
 
     

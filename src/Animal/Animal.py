@@ -10,6 +10,11 @@ class Animal(ABC):
         self.alive = True
         self.level = 1 # above 5: level 3, above 3: level 2, less: level 1
 
+    def getLevel(self) -> int:
+        if self.level > 5: return 3
+        if self.level > 2: return 2
+        return 1
+
     def onHit(self, dmgAmt):
         self.dmg -= dmgAmt
         if self.dmg <= 0:
