@@ -3,12 +3,13 @@ from abc import ABC, abstractmethod
 
 class Animal(ABC):
 
-    def __init__(self, health, dmg, position):
+    def __init__(self, health: int, dmg: int, position):
         self.health = health
         self.dmg = dmg
         self.position = position
         self.alive = True
         self.level = 1 # above 5: level 3, above 3: level 2, less: level 1
+        self.effect = None
 
     def getLevel(self) -> int:
         if self.level > 5: return 3
@@ -24,7 +25,10 @@ class Animal(ABC):
         self.level += 1     
 
     def updatePosition(self, pos):
-        self.position = pos      
+        self.position = pos     
+
+    def giveEffect(self):
+        pass 
 
     @abstractmethod
     def onFaint(self):
