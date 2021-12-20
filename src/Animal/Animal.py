@@ -10,6 +10,7 @@ class Animal(ABC):
         self.alive = True
         self.level = 1 # above 5: level 3, above 3: level 2, less: level 1
         self.effect = None
+        self.dmgModifier = 1
 
     def getLevel(self) -> int:
         if self.level > 5: return 3
@@ -17,7 +18,7 @@ class Animal(ABC):
         return 1
 
     def onHit(self, dmgAmt):
-        self.dmg -= dmgAmt
+        self.dmg -= round(dmgAmt * self.dmgModifier)
         if self.dmg <= 0:
             self.alive = False
 
@@ -27,8 +28,11 @@ class Animal(ABC):
     def updatePosition(self, pos):
         self.position = pos     
 
-    def giveEffect(self):
+    def getEffect(self, effect):
         pass 
+
+    def getFood(self, food):
+        pass
 
     @abstractmethod
     def onFaint(self):
