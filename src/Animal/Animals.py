@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from random import randrange
 
+from src.Animal.Actions.Actions import Action
+
 
 class Animal(ABC):
     def __init__(self, health: int, dmg: int, position):
@@ -91,12 +93,12 @@ class Ant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, position)
         self.tier = 1
 
-    def onFaint(self, friends: list) -> int:
+    def onFaint(self, friends: list) -> Action:
         # give random friend +2/1
         # return index of friend from friend list
-        if len(friends) == 0:
-            return -1
-        return randrange(len(friends))
+        # TODO: figure out how to randomly assign
+        act = Action("heal", 2, 1, "random", -2)
+        return act
 
 
 class Badger(Animal):
@@ -109,8 +111,11 @@ class Badger(Animal):
         self.tier = 3
 
     def onFaint(self) -> int:
-        # damage all enemies level * dmg
-        return self.getLevel() * self.dmg
+        # damage adjacent enemies level * dmg
+        # TODO: figure out how to represent the teams in a way that works
+        # act = Action("attack", -(self.getLevel() * self.dmg), 0, self.position-1, )
+        # return act
+        pass
 
 
 class Bat(Animal):
