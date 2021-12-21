@@ -42,13 +42,19 @@ class Shop:
             self.items[i] = getRandomFood(self.getMaxTier())
 
     def buyAnimal(self, position: int) -> Animal:
+        if self.money < 3:
+            return None
         animal = self.animals[position]
         self.animals[position] = None
+        self.money -= 3
         return animal
 
     def buyFood(self, position: int) -> Food:
+        if self.money < 3:
+            return None
         food = self.items[position]
         self.items[position] = None
+        self.money -= 3
         return food
 
     def getMaxTier(self):
@@ -74,6 +80,7 @@ class Shop:
         if self.round == 9:
             self.animals = [None] * 5
         self.roll()
+        self.money = 10
 
     def __str__(self):
 
