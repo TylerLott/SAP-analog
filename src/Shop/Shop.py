@@ -1,5 +1,6 @@
 from src.Animal.Animals import *
 from src.Animal.AnimalGenerator import getRandomAnimal
+from src.Food.FoodGenerator import getRandomFood
 
 
 class Shop:
@@ -24,10 +25,10 @@ class Shop:
         self.items = [None] * 1
 
     def roll(self):
-        for i in self.animals:
-            i = getRandomAnimal(self.getMaxTeir())
-        for i in self.items:
-            i = self.drawItem()
+        for i in range(len(self.animals)):
+            self.animals[i] = getRandomAnimal(self.getMaxTeir())
+        for i in range(len(self.items)):
+            self.items[i] = getRandomFood(self.getMaxTeir())
 
     def getMaxTeir(self):
         if 1 <= self.round <= 2:
