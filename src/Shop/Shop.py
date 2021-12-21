@@ -21,11 +21,7 @@ class Shop:
         self.round = 1
         self.animals = [None]*3
         self.items = [None]*1
-        self.all_animals = [
-            Ant,
-            Badger
-        ]
-
+        
     def roll(self):
         for i in self.animals:
             i = getRandomAnimal(self.getMaxTeir())

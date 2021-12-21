@@ -125,3 +125,251 @@ class Badger(Animal):
     def onFaint(self) -> int:
         # damage all enemies level * dmg
         return self.getLevel() * self.dmg
+
+class Bat(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Beaver(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Beetle(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Bison(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Blowfish(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Bluebird(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Boar(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Camel(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Cat(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Cow(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Crab(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Cricket(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Crocodile(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Deer(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Dodo(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Dog(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Dolphin(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Dragon(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Duck(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Elephant(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Fish(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Flamingo(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Fly(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Giraffe(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Gorilla(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Hedgehog(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Hippo(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Horse(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Kangaroo(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Ladybug(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Leopard(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Mammoth(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Mosquito(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Monkey(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Otter(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Ox(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Parrot(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Peacock(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Penguin(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Pig(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Rabbit(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Rat(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Rhino(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Rooster(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Scorpion(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Seal(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Shark(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Sheep(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Shrimp(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Skunk(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Sloth(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Snail(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Snake(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Spider(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Squirrel(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Swan(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+class Tiger(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+
+class Turkey(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+
+class Turtle(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+
+class Whale(Animal):
+    def __init__(self, health, dmg, position):
+        pass
+
+
+class Worm(Animal):
+    def __init__(self, health, dmg, position):
+        pass
