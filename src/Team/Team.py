@@ -19,3 +19,6 @@ class Team:
             return 1
         else:
             return -1
+
+    def addFood(self, food, position: int):
+        pass
