@@ -22,3 +22,6 @@ class Team:
 
     def addFood(self, food, position: int):
         pass
+
+    def combineFriend(self, position):
+        pass
