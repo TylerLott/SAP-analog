@@ -1,4 +1,5 @@
 from src.Animal.Animals import *
+from src.Food.Food import *
 from src.Animal.AnimalGenerator import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 
@@ -23,14 +24,34 @@ class Shop:
         self.round = 1
         self.animals = [None] * 3
         self.items = [None] * 1
+        self.health_modifier = 0
+        self.dmg_modifier = 0
+        self.money = 10
+        self.roll()
+
+    def payRoll(self):
+        if self.money > 0:
+            self.roll()
+            self.money -= 1
 
     def roll(self):
+        self.money -= 1
         for i in range(len(self.animals)):
-            self.animals[i] = getRandomAnimal(self.getMaxTeir())
+            self.animals[i] = getRandomAnimal(self.getMaxTier())
         for i in range(len(self.items)):
-            self.items[i] = getRandomFood(self.getMaxTeir())
+            self.items[i] = getRandomFood(self.getMaxTier())
 
-    def getMaxTeir(self):
+    def buyAnimal(self, position: int) -> Animal:
+        animal = self.animals[position]
+        self.animals[position] = None
+        return animal
+
+    def buyFood(self, position: int) -> Food:
+        food = self.items[position]
+        self.items[position] = None
+        return food
+
+    def getMaxTier(self):
         if 1 <= self.round <= 2:
             return 1
         if 3 <= self.round <= 4:
@@ -53,3 +74,47 @@ class Shop:
         if self.round == 9:
             self.animals = [None] * 5
         self.roll()
+
+    def __str__(self):
+
+        animal_string = "|"
+        stat_string = "|"
+        for i in self.animals:
+            if not i:
+                space = " "
+                animal_string += f"{space:^10}|"
+                continue
+            an = f"{i.__class__.__name__:^10}|"
+            animal_string += an
+            stat = f"{i.health:^5}{i.dmg:^5}|"
+            stat_string += stat
+
+        item_string = "|"
+        for i in self.items:
+            if not i:
+                space = " "
+                animal_string += f"{space:^10}|"
+                continue
+            it = f"{i.__class__.__name__:^10}|"
+            item_string += it
+
+        str_length = (len(animal_string) + len(item_string) - 6) // 2
+        shop_text = ("#" * str_length) + " SHOP " + ("#" * str_length)
+
+        anim_len = (len(animal_string) - 9) // 2
+        animal_title = ("-" * anim_len) + " ANIMALS " + ("-" * anim_len) + "|"
+
+        item_len = (len(item_string) - 7) // 2
+        item_title = ("-" * item_len) + " ITEMS " + ("-" * item_len)
+
+        return (
+            shop_text
+            + "\n"
+            + animal_title
+            + item_title
+            + "\n"
+            + animal_string
+            + item_string
+            + "\n"
+            + stat_string
+        )

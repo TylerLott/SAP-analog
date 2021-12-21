@@ -1,6 +1,7 @@
+from random import randint
 from src.Food.Food import *
 
-food = {
+foods = {
     1: [Apple, Honey],
     2: [Cupcake, MeatBone, Pill],
     3: [Garlic, Salad],
@@ -10,5 +11,10 @@ food = {
 }
 
 
-def getRandomFood(maxTier):
-    pass
+def getRandomFood(maxTier: int) -> Food:
+    if maxTier == 1:
+        tier = 1
+    else:
+        tier = randint(1, maxTier - 1)
+    food = randint(0, len(foods[tier]) - 1)
+    return foods[tier][food]()
