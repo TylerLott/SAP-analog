@@ -1,5 +1,6 @@
 
 from abc import ABC, abstractmethod
+from random import randrange
 
 class Animal(ABC):
 
@@ -93,3 +94,34 @@ class Animal(ABC):
     @abstractmethod
     def onFriendAheadFaint(self):
         pass
+
+
+class Ant(Animal):
+    def __init__(self, health:int, dmg:int, position:int):
+
+        default_health = 1
+        default_dmg = 2
+
+        super().__init__(default_health+health, default_dmg+dmg, position)
+        self.tier = 1
+
+    def onFaint(self, friends: list) -> int:
+        # give random friend +2/1
+        # return index of friend from friend list
+        if len(friends) == 0:
+            return -1
+        return randrange(len(friends))
+
+
+class Badger(Animal):
+    def __init__(self, health, dmg, position):
+
+        default_health = 4
+        default_dmg = 5
+
+        super().__init__(default_health+health, default_dmg+dmg, position)
+        self.tier = 3
+
+    def onFaint(self) -> int:
+        # damage all enemies level * dmg
+        return self.getLevel() * self.dmg

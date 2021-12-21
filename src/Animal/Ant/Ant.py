@@ -1,5 +1,5 @@
 from random import randrange
-from src.Animal.Animal import Animal
+from src.Animal.Animals import Animal
 
 class Ant(Animal):
     def __init__(self, health:int, dmg:int, position:int):
