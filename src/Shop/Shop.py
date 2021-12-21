@@ -83,6 +83,7 @@ class Shop:
             if not i:
                 space = " "
                 animal_string += f"{space:^10}|"
+                stat_string += f"{space:^10}|"
                 continue
             an = f"{i.__class__.__name__:^10}|"
             animal_string += an
@@ -93,7 +94,7 @@ class Shop:
         for i in self.items:
             if not i:
                 space = " "
-                animal_string += f"{space:^10}|"
+                item_string += f"{space:^10}|"
                 continue
             it = f"{i.__class__.__name__:^10}|"
             item_string += it
@@ -102,10 +103,10 @@ class Shop:
         shop_text = ("#" * str_length) + " SHOP " + ("#" * str_length)
 
         anim_len = (len(animal_string) - 9) // 2
-        animal_title = ("-" * anim_len) + " ANIMALS " + ("-" * anim_len) + "|"
+        animal_title = "|" + ("-" * anim_len) + " ANIMALS " + ("-" * anim_len) + "|"
 
         item_len = (len(item_string) - 7) // 2
-        item_title = ("-" * item_len) + " ITEMS " + ("-" * item_len)
+        item_title = ("-" * item_len) + " FOODS " + ("-" * item_len) + "|"
 
         return (
             shop_text
