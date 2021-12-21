@@ -1,8 +1,7 @@
-
 class Team:
     def __init__(self):
         self.health = 10
-        self.friends = [None]*5
+        self.friends = [None] * 5
 
     def moveFriend(self, pos1, pos2) -> None:
         self.friends[pos1], self.friends[pos2] = self.friends[pos2], self.friends[pos1]
