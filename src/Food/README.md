@@ -1,6 +1,6 @@
-# Effect List
+# Food List
 
-| Item                      | Effect                                               |
+| Food                      | Effect                                               |
 | ------------------------- | ---------------------------------------------------- |
 | Meat Bone                 | Deal an additional 5 damage.                         |
 | Chili, innate to Bus      | Deal an additional 5 damage to the animal behind.    |

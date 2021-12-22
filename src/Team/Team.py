@@ -28,3 +28,6 @@ class Team:
 
     def buyFood(self, food, position: int):
         pass
+
+    def nextTurn(self):
+        pass

@@ -1,5 +1,5 @@
-from src.Animal.Animals import *
-from src.Food.Food import *
+from src.Animal.Animals import Animal
+from src.Food.Food import Food
 from src.Animal.AnimalGenerator import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 
@@ -7,6 +7,8 @@ from src.Food.FoodGenerator import getRandomFood
 class Shop:
     def __init__(self):
         """
+        Shop class
+
         round 1-2: teir 1
         round 3-4: teir 1, 2
         round 5-6: teir 1, 2, 3
@@ -89,7 +91,9 @@ class Shop:
         self.money = 10
 
     def __str__(self):
-
+        """
+        For printing cleanly to console
+        """
         animal_string = "|"
         stat_string = "|"
         for i in self.animals:
