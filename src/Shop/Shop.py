@@ -57,6 +57,12 @@ class Shop:
         self.money -= 3
         return food
 
+    def getShop(self):
+        return self.animals + self.items
+
+    def getMoney(self):
+        return self.money
+
     def getMaxTier(self):
         if 1 <= self.round <= 2:
             return 1

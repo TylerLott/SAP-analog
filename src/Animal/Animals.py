@@ -26,7 +26,7 @@ class Animal(ABC):
         if self.dmg <= 0:
             self.alive = False
 
-    def onCombine(self):
+    def combine(self):
         self.level += 1
 
     def updatePosition(self, pos):
