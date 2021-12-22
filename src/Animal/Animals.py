@@ -1,43 +1,113 @@
 from abc import ABC, abstractmethod
 from random import randrange
 
-from src.Animal.Actions.Actions import Action
+from src.Food.Effect.Effect import NoneEffect, Effect
 
 
 class Animal(ABC):
-    def __init__(self, health: int, dmg: int, position):
-        self.health = health
-        self.dmg = dmg
-        self.position = position
+    """
+    Animal base class
+    """
+
+    def __init__(self, health: int, dmg: int) -> None:
+        # Default
+        self.temp_hp = 0
+        self.temp_dmg = 0
+        self.base_hp = health
+        self.base_dmg = dmg
         self.alive = True
-        self.level = 1  # above 5: level 3, above 3: level 2, less: level 1
-        self.effect = None
+        self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
+        self.effect = NoneEffect
         self.dmgModifier = 1
+        self.cost = 3
+
+        # Derived
+        self.hp = self.temp_hp + self.base_hp
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### Getters ####
+
+    def getHp(self) -> int:
+        return self.hp
+
+    def getDmg(self) -> int:
+        return self.dmg
 
     def getLevel(self) -> int:
-        if self.level > 5:
+        if self.exp > 5:
             return 3
-        if self.level > 2:
+        if self.exp > 2:
             return 2
         return 1
 
+    def getExp(self) -> int:
+        return self.exp
+
+    def getEffect(self) -> Effect:
+        return self.effect
+
+    def getCost(self) -> int:
+        return self.cost
+
+    #### Setters ####
+
+    def addBaseHp(self, amt: int) -> None:
+        self.base_hp += amt
+        self.__recalcHp()
+
+    def addTempHp(self, amt: int) -> None:
+        self.temp_hp += amt
+        self.__recalcHp()
+
+    def subBaseHp(self, amt: int) -> None:
+        self.base_hp -= amt
+        self.__recalcHp()
+
+    def subTempHp(self, amt: int) -> None:
+        self.temp_hp -= amt
+        self.__recalcHp()
+
+    def addBaseDmg(self, amt: int) -> None:
+        self.base_dmg += amt
+        self.__recalcDmg()
+
+    def addTempDmg(self, amt: int) -> None:
+        self.temp_dmg += amt
+        self.__recalcDmg()
+
+    def subBaseDmg(self, amt: int) -> None:
+        self.base_dmg -= amt
+        self.__recalcDmg()
+
+    def subTempDmg(self, amt: int) -> None:
+        self.temp_dmg -= amt
+        self.__recalcDmg()
+
+    def setEffect(self, effect: Effect) -> None:
+        self.effect = effect
+
+    #### Private ####
+
+    def __recalcHp(self):
+        self.hp = self.temp_hp + self.base_hp
+
+    def __recalcDmg(self):
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### On Events ####
+
+    # Normal On Events
     def onHit(self, dmgAmt):
-        self.dmg -= round(dmgAmt * self.dmgModifier)
-        if self.dmg <= 0:
+        self.hp -= round(dmgAmt * self.dmgModifier)
+        if self.hp <= 0:
             self.alive = False
 
-    def combine(self):
-        self.level += 1
+    def onCombine(self, animal):
+        self.exp += animal.getExp()
+        self.base_hp += animal.getExp()
+        self.base_dmg += animal.getExp()
 
-    def updatePosition(self, pos):
-        self.position = pos
-
-    def getEffect(self, effect):
-        pass
-
-    def getFood(self, food):
-        pass
-
+    # Special On Events
     def onFaint(self):
         pass
 
@@ -93,12 +163,8 @@ class Ant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, position)
         self.tier = 1
 
-    def onFaint(self, friends: list) -> Action:
-        # give random friend +2/1
-        # return index of friend from friend list
-        # TODO: figure out how to randomly assign
-        act = Action("heal", 2, 1, "random", -2)
-        return act
+    def onFaint(self):
+        pass
 
 
 class Badger(Animal):
@@ -110,11 +176,7 @@ class Badger(Animal):
         super().__init__(default_health + health, default_dmg + dmg, position)
         self.tier = 3
 
-    def onFaint(self) -> int:
-        # damage adjacent enemies level * dmg
-        # TODO: figure out how to represent the teams in a way that works
-        # act = Action("attack", -(self.getLevel() * self.dmg), 0, self.position-1, )
-        # return act
+    def onFaint(self):
         pass
 
 
