@@ -32,5 +32,8 @@ class Team:
     def nextTurn(self):
         pass
 
+    def setState(self):
+        pass
+
     def getState(self):
         pass
