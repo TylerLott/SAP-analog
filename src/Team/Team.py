@@ -43,3 +43,6 @@ class Team:
 
     def __str__(self):
         pass
+
+    def test(self):
+        pass
