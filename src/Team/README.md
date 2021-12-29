@@ -56,7 +56,13 @@ This can be read in the following way:
 
 [7 x number of animals + effects] for current shop state
 
-These will be kept as is and fed into the NN directly
+These will be kept as is and fed into the NN directly [12 x number of animals + effects (68)] thats like many, many different team states...
+
+[5 x 3] for the stats and exp levels of the animals
+
+- These are normalized to the greatest possible stat
+- 50 for hp and dmg
+- 6 for exp level
 
 **possible moves**
 
@@ -78,4 +84,4 @@ These will be kept as is and fed into the NN directly
 
 [1 x 2] for roll and end turn
 
-These are all flattened into one [1 x all] array so the output from the NN can be a 1D array. This will probably be a filter on the NN instead of an actual input. (i.e. only making the availiable moves available)
+These are all flattened into one [1 x all (77)] array so the output from the NN can be a 1D array. This will probably be a filter on the NN instead of an actual input. (i.e. only making the availiable moves available)
