@@ -1,5 +1,6 @@
 from src.Animal.Animals import Animal
 from src.Shop.Shop import Shop
+from src.Food.Food import Food
 
 
 class Team:
@@ -23,15 +24,18 @@ class Team:
             self.friends[friend_pos] = None
 
     def buyFriend(self, friend: Animal, friend_pos: int) -> int:
-        if not self.friends[friend_pos]:
-            self.money -= friend.getCost()
-            self.friends[friend_pos] = friend
-        elif self.friends[friend_pos].__class__ == friend.__class__:
-            # TODO: figure out how to combine to keep highest stats
-            pass
+        if self.money >= friend.getCost():
+            if not self.friends[friend_pos]:
+                self.money -= friend.getCost()
+                self.friends[friend_pos] = friend
+            elif self.friends[friend_pos].__class__ == friend.__class__:
+                # TODO: figure out how to combine to keep highest stats
+                pass
 
-    def buyFood(self, food, position: int):
-        pass
+    def buyFood(self, food: Food, position: int):
+        if self.money >= food.getCost():
+            self.money -= food.getCost()
+            self.friends[position].setFood(food)
 
     def nextTurn(self):
         pass

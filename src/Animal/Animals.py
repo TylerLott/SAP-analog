@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from random import randrange
 
 from src.Food.Effect.Effect import NoneEffect, Effect
+from src.Food.Food import Food
 
 
 class Animal(ABC):
@@ -85,6 +86,9 @@ class Animal(ABC):
 
     def setEffect(self, effect: Effect) -> None:
         self.effect = effect
+
+    def setFood(self, food: Food) -> None:
+        pass
 
     #### Private ####
 

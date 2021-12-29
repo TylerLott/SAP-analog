@@ -5,6 +5,9 @@ class Food(ABC):
     def __init__(self):
         pass
 
+    def getCost(self):
+        pass
+
 
 class Apple(Food):
     def __init__(self):
