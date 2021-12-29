@@ -3,9 +3,10 @@ from src.Shop.Shop import Shop
 
 
 class Team:
-    '''
+    """
     This is the class for the Teams
-    '''
+    """
+
     def __init__(self):
         self.round = 1
         self.shop = Shop()
@@ -42,7 +43,4 @@ class Team:
         pass
 
     def __str__(self):
-        pass
-
-    def test(self):
         pass
