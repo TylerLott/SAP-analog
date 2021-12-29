@@ -6,11 +6,17 @@ class Fight:
         pass
         # turn order is based on damage
 
-    def simulate(self):
+    def simulate(self) -> Team:
         # Copy teams into new arrays
+
+        # return the winning team
 
         """
         onStartOfBattle in order of dmg
+            onFaint if dies
+            onAheadFaint if ahead dies
+            onFriendSummoned if summoned
+            onHurt if hurt
 
         while loop
             onStartOfTurn
