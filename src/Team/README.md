@@ -56,13 +56,51 @@ This can be read in the following way:
 
 [7 x number of animals + effects] for current shop state
 
-These will be kept as is and fed into the NN directly [12 x number of animals + effects (68)] thats like many, many different team states...
+These will be kept as is and fed into the NN directly [12 x number of animals + effects (68)] thats like many, many different team states... which makes a NN reinforcement learning agent great for this because there will be new states almost every play through.
 
-[5 x 3] for the stats and exp levels of the animals
+[5 x 4] for the stats, exp levels, and positions of the animals
 
 - These are normalized to the greatest possible stat
 - 50 for hp and dmg
 - 6 for exp level
+
+**combinatorics analysis of team state**
+
+r can be 1-5, because a team can have 1-5 animals (this is assuming no empty)
+
+n = 58, one for each animal
+
+(n! / ((n-r)! \* r!) for r={1-5} and n=58) \* 10
+
+r = 5
+
+4582116
+
+r = 4
+
+424270
+
+r = 3
+
+30856
+
+r = 2
+
+1653
+
+r = 1
+
+58
+
+total
+
+5038953
+
+\* 10
+
+50,389,530 different possible team states (excluding hp, dmg, and exp stats and assuming all effects can be applied in shop (which I don't think is true))
+
+lol thats a lot but chess has like ~10^29,241 possible games so I think this is doable, although I am not google deepmind... I also might need to combine the two arrays because I'm worried the animal position won't transfer. I may also need to only allow one move between fights, at least for the first little bit.
 
 **possible moves**
 
