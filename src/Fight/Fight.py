@@ -3,13 +3,16 @@ from src.Team.Team import Team
 
 class Fight:
     def __init__(self, team1: Team, team2: Team):
-        pass
+        self.team1 = team1
+        self.team2 = team2
+        self.team1Friends = team1.friends.copy()
+        self.team2Friends = team2.friends.copy()
+        # Copy teams into new arrays
         # turn order is based on damage
 
-    def simulate(self) -> Team:
-        # Copy teams into new arrays
+    def simulate(self) -> None:
 
-        # return the winning team
+        # subtract hp from losing team
 
         """
         onStartOfBattle in order of dmg
@@ -18,7 +21,7 @@ class Fight:
             onFriendSummoned if summoned
             onHurt if hurt
 
-        while loop
+        while loop til no animals on one team
             onStartOfTurn
             onBeforeAttack for front animals
             attack - using getDmg and subHp
@@ -28,6 +31,6 @@ class Fight:
                     call onSummoned for all others
             onHurt
             onFriendAheadFaint
-            onFrinedAheadAttack if not faint
+            onFriendAheadAttack if not faint
         """
         pass
