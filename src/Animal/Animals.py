@@ -50,6 +50,9 @@ class Animal(ABC):
     def getCost(self) -> int:
         return self.cost
 
+    def getState(self) -> list:
+        pass
+
     #### Setters ####
 
     def addBaseHp(self, amt: int) -> None:

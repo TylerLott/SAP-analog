@@ -41,9 +41,11 @@ class Team:
         pass
 
     def setState(self):
+        # convert state to the right move and do that move
         pass
 
     def getState(self):
+        # get animals state, shop state, and possible moves state
         pass
 
     def __str__(self):
