@@ -10,7 +10,7 @@ class Animal(ABC):
     Animal base class
     """
 
-    def __init__(self, health: int, dmg: int) -> None:
+    def __init__(self, health: int, dmg: int, effect: Effect = NoneEffect) -> None:
         # Default
         self.temp_hp = 0
         self.temp_dmg = 0
@@ -18,7 +18,7 @@ class Animal(ABC):
         self.base_dmg = dmg
         self.alive = True
         self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
-        self.effect = NoneEffect
+        self.effect = effect
         self.dmgModifier = 1
         self.cost = 3
 
@@ -86,6 +86,10 @@ class Animal(ABC):
     def subTempDmg(self, amt: int) -> None:
         self.temp_dmg -= amt
         self.__recalcDmg()
+
+    def subHp(self, amt: int) -> None:
+        # Only for use in battle
+        self.hp -= amt
 
     def setEffect(self, effect: Effect) -> None:
         self.effect = effect

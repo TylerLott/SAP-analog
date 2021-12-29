@@ -3,6 +3,7 @@ from abc import ABC
 
 class Food(ABC):
     def __init__(self):
+        # TODO: all of this
         pass
 
     def getCost(self):

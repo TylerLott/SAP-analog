@@ -38,7 +38,9 @@ class Team:
             self.friends[position].setFood(food)
 
     def nextTurn(self):
-        pass
+        self.round += 1
+        self.shop.nextRound()
+        self.money = 10
 
     def setState(self):
         # convert state to the right move and do that move
