@@ -1,6 +1,6 @@
 from abc import ABC
-from src.Food.Effect import Effect
-from src.Food.Effect.Effects import NoneEffect
+from src.Effect import Effect
+from src.Effect.Effects import NoneEffect
 
 
 class Food(ABC):

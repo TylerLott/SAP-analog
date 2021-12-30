@@ -1,4 +1,4 @@
-from src.Food.Effect import Effect
+from src.Effect import Effect
 
 
 class NoneEffect(Effect):

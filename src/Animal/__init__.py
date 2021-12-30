@@ -1,8 +1,8 @@
 from abc import ABC
 from random import randrange
 
-from src.Food.Effect import Effect
-from src.Food.Effect.Effects import NoneEffect
+from src.Effect import Effect
+from src.Effect.Effects import NoneEffect
 from src.Food.Foods import Food
 
 

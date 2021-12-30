@@ -1,6 +1,5 @@
 from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
-from src.Food import Food
 
 
 class Team:
@@ -24,6 +23,11 @@ class Team:
     ### Getters ###
 
     def getFriendCopy(self) -> list:
+        """
+        public get a copy of the friends array method
+
+        should only be used in fight
+        """
         temp = self.friends.copy()
         return temp
 
@@ -90,6 +94,9 @@ class Team:
         pass
 
     def __onFriendSummon(self) -> None:
+        pass
+
+    def __onStartOfTurn(self) -> None:
         pass
 
     ### Actions ###

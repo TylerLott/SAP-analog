@@ -1,4 +1,3 @@
-from src.Food.Effect import Effect
 from src.Animal import Animal
 
 
