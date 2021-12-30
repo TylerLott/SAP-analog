@@ -8,12 +8,31 @@ class Team:
     This is the class for the Teams
     """
 
+    ### Init ###
+
     def __init__(self):
         self.round = 1
         self.shop = Shop()
         self.life = 10
         self.money = 10
         self.friends = [None] * 5
+
+    ### Getters ###
+
+    def getFriendCopy(self) -> list:
+        temp = self.friends.copy()
+        return temp
+
+    def getRound(self) -> int:
+        return self.round
+
+    def getLife(self) -> int:
+        return self.life
+
+    def getMoney(self) -> int:
+        return self.money
+
+    ### Setters ###
 
     def moveFriend(self, pos1, pos2) -> None:
         self.friends[pos1], self.friends[pos2] = self.friends[pos2], self.friends[pos1]
@@ -44,6 +63,8 @@ class Team:
             self.friends[position].setFood(food)
             # onEat
 
+    ### Actions ###
+
     def endTurn(self) -> None:
         # onEndOfTurn
         pass
@@ -55,6 +76,8 @@ class Team:
         self.money = 10
         # onStartOfTurn - for stuff like the swan
 
+    ### State ###
+
     def setState(self):
         # convert state to the right move and do that move
         pass
@@ -63,5 +86,11 @@ class Team:
         # get animals state, shop state, and possible moves state
         pass
 
+    ### Overrides ###
+
     def __str__(self):
         pass
+        # title
+        # friends
+        # stats
+        # effects

@@ -5,24 +5,28 @@ from src.Food.FoodGenerator import getRandomFood
 
 
 class Shop:
+    """
+    Shop class
+
+    round 1-2: teir 1
+    round 3-4: teir 1, 2
+    round 5-6: teir 1, 2, 3
+    round 7-8: teir 1, 2, 3, 4
+    round 9-10: teir 1, 2, 3, 4, 5
+    round 11+: all teirs
+
+    round 1-4: 3 animals
+    round 5-8: 4 animals
+    round 9+:  5 animals
+
+    round 1-2: 1 food
+    round 3+: 2 food
+    """
+
+    ### Init ###
+
     def __init__(self):
-        """
-        Shop class
 
-        round 1-2: teir 1
-        round 3-4: teir 1, 2
-        round 5-6: teir 1, 2, 3
-        round 7-8: teir 1, 2, 3, 4
-        round 9-10: teir 1, 2, 3, 4, 5
-        round 11+: all teirs
-
-        round 1-4: 3 animals
-        round 5-8: 4 animals
-        round 9+:  5 animals
-
-        round 1-2: 1 food
-        round 3+: 2 food
-        """
         self.round = 1
         self.animals = [None] * 3
         self.items = [None] * 1

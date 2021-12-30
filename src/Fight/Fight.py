@@ -5,8 +5,8 @@ class Fight:
     def __init__(self, team1: Team, team2: Team):
         self.team1 = team1
         self.team2 = team2
-        self.team1Friends = team1.friends.copy()
-        self.team2Friends = team2.friends.copy()
+        self.team1Friends = team1.getFriendCopy()
+        self.team2Friends = team2.getFriendCopy()
         # Copy teams into new arrays
         # turn order is based on damage
 
