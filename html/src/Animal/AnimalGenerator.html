@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>src API documentation</title>
+<title>src.Animal.AnimalGenerator API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,42 +19,98 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>src</code></h1>
+<h1 class="title">Module <code>src.Animal.AnimalGenerator</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from random import randint
+import sys
+import os
+
+sys.path.append(os.getcwd())
+
+from src.Animal.Animals import *
+
+animals = {
+    1: [Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig],
+    2: [Crab, Dodo, Elephant, Flamingo, Hedgehog, Peacock, Rat, Shrimp, Spider, Swan],
+    3: [
+        Badger,
+        Blowfish,
+        Camel,
+        Dog,
+        Giraffe,
+        Kangaroo,
+        Ox,
+        Rabbit,
+        Sheep,
+        Snail,
+        Turtle,
+    ],
+    4: [
+        Bison,
+        Deer,
+        Dolphin,
+        Hippo,
+        Parrot,
+        Penguin,
+        Rooster,
+        Skunk,
+        Squirrel,
+        Whale,
+        Worm,
+    ],
+    5: [Cow, Crocodile, Monkey, Rhino, Scorpion, Seal, Shark, Turkey],
+    6: [Boar, Cat, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger],
+}
+
+
+def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; Animal:
+    if maxTier == 1:
+        tier = 1
+    else:
+        tier = randint(1, maxTier - 1)
+    animal = randint(0, len(animals[tier]) - 1)
+    return animals[tier][animal](health_mod, dmg_mod)
+
+
+if __name__ == &#34;__main__&#34;:
+    count = 0
+    for i in animals.keys():
+        count += len(animals[i])
+
+    print(count)</code></pre>
+</details>
 </section>
 <section>
-<h2 class="section-title" id="header-submodules">Sub-modules</h2>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
-<dt><code class="name"><a title="src.Animal" href="Animal/index.html">src.Animal</a></code></dt>
+<dt id="src.Animal.AnimalGenerator.getRandomAnimal"><code class="name flex">
+<span>def <span class="ident">getRandomAnimal</span></span>(<span>maxTier: int, health_mod: int = 0, dmg_mod: int = 0) ‑> <a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></span>
+</code></dt>
 <dd>
 <div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Fight" href="Fight/index.html">src.Fight</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Food" href="Food/index.html">src.Food</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Game" href="Game/index.html">src.Game</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Shop" href="Shop/index.html">src.Shop</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Team" href="Team/index.html">src.Team</a></code></dt>
-<dd>
-<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; Animal:
+    if maxTier == 1:
+        tier = 1
+    else:
+        tier = randint(1, maxTier - 1)
+    animal = randint(0, len(animals[tier]) - 1)
+    return animals[tier][animal](health_mod, dmg_mod)</code></pre>
+</details>
 </dd>
 </dl>
-</section>
-<section>
-</section>
-<section>
 </section>
 <section>
 </section>
@@ -65,14 +121,14 @@
 <ul></ul>
 </div>
 <ul id="index">
-<li><h3><a href="#header-submodules">Sub-modules</a></h3>
+<li><h3>Super-module</h3>
 <ul>
-<li><code><a title="src.Animal" href="Animal/index.html">src.Animal</a></code></li>
-<li><code><a title="src.Fight" href="Fight/index.html">src.Fight</a></code></li>
-<li><code><a title="src.Food" href="Food/index.html">src.Food</a></code></li>
-<li><code><a title="src.Game" href="Game/index.html">src.Game</a></code></li>
-<li><code><a title="src.Shop" href="Shop/index.html">src.Shop</a></code></li>
-<li><code><a title="src.Team" href="Team/index.html">src.Team</a></code></li>
+<li><code><a title="src.Animal" href="index.html">src.Animal</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.Animal.AnimalGenerator.getRandomAnimal" href="#src.Animal.AnimalGenerator.getRandomAnimal">getRandomAnimal</a></code></li>
 </ul>
 </li>
 </ul>

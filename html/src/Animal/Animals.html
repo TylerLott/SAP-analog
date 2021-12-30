@@ -1,0 +1,2931 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.10.0" />
+<title>src.Animal.Animals API documentation</title>
+<meta name="description" content="" />
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
+<link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
+<link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js" integrity="sha256-Uv3H6lx7dJmRfRvH8TH6kJD1TSK1aFcwgx+mdg3epi8=" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => hljs.initHighlighting())</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>src.Animal.Animals</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from abc import ABC
+from random import randrange
+
+from src.Food.Effect.Effect import *
+from src.Animal import Animal
+
+
+class NoneAnimal(Animal):
+    &#34;&#34;&#34;None class for animals&#34;&#34;&#34;
+
+    def __init__(self):
+        super().__init__(0, 0)
+
+    def __nonezero__(self):
+        return False
+
+
+class Ant(Animal):
+    &#34;&#34;&#34;Ant Class&#34;&#34;&#34;
+
+    def __init__(self, health: int, dmg: int):
+
+        default_health = 1
+        default_dmg = 2
+        ability = &#34;Faint: Buff&#34;
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1
+
+    def onFaint(self):
+        pass
+
+
+class Badger(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+    def onFaint(self):
+        pass
+
+
+class Bat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Beaver(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Bison(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Blowfish(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Boar(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 8
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Camel(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Cat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Cow(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Crab(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Cricket(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Crocodile(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 8
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Deer(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Dodo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Dog(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Dolphin(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Dragon(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Duck(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Elephant(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Fish(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Flamingo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Fly(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Giraffe(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Gorilla(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 9
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Hedgehog(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Hippo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 7
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Horse(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Kangaroo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Leopard(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 10
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Mammoth(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 10
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Mosquito(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Monkey(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Otter(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Ox(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Parrot(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Peacock(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Penguin(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Pig(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Rabbit(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Rat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Rhino(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Rooster(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Scorpion(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Seal(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Shark(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Sheep(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Shrimp(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Skunk(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Sloth(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1
+
+
+class Snail(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Snake(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Spider(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Squirrel(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Swan(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+
+class Tiger(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
+
+
+class Turkey(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5
+
+
+class Turtle(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+
+class Whale(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4
+
+
+class Worm(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.Animal.Animals.Ant"><code class="flex name class">
+<span>class <span class="ident">Ant</span></span>
+<span>(</span><span>health: int, dmg: int)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Ant Class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Ant(Animal):
+    &#34;&#34;&#34;Ant Class&#34;&#34;&#34;
+
+    def __init__(self, health: int, dmg: int):
+
+        default_health = 1
+        default_dmg = 2
+        ability = &#34;Faint: Buff&#34;
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1
+
+    def onFaint(self):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Ant.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Badger"><code class="flex name class">
+<span>class <span class="ident">Badger</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Badger(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3
+
+    def onFaint(self):
+        pass</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Badger.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self):
+    pass</code></pre>
+</details>
+</dd>
+</dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Bat"><code class="flex name class">
+<span>class <span class="ident">Bat</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Bat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Beaver"><code class="flex name class">
+<span>class <span class="ident">Beaver</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Beaver(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Bison"><code class="flex name class">
+<span>class <span class="ident">Bison</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Bison(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Blowfish"><code class="flex name class">
+<span>class <span class="ident">Blowfish</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Blowfish(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Boar"><code class="flex name class">
+<span>class <span class="ident">Boar</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Boar(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 8
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Camel"><code class="flex name class">
+<span>class <span class="ident">Camel</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Camel(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Cat"><code class="flex name class">
+<span>class <span class="ident">Cat</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Cow"><code class="flex name class">
+<span>class <span class="ident">Cow</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cow(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Crab"><code class="flex name class">
+<span>class <span class="ident">Crab</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Crab(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Cricket"><code class="flex name class">
+<span>class <span class="ident">Cricket</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Cricket(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Crocodile"><code class="flex name class">
+<span>class <span class="ident">Crocodile</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Crocodile(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 8
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Deer"><code class="flex name class">
+<span>class <span class="ident">Deer</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Deer(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Dodo"><code class="flex name class">
+<span>class <span class="ident">Dodo</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dodo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Dog"><code class="flex name class">
+<span>class <span class="ident">Dog</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dog(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Dolphin"><code class="flex name class">
+<span>class <span class="ident">Dolphin</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dolphin(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Dragon"><code class="flex name class">
+<span>class <span class="ident">Dragon</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Dragon(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Duck"><code class="flex name class">
+<span>class <span class="ident">Duck</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Duck(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Elephant"><code class="flex name class">
+<span>class <span class="ident">Elephant</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Elephant(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Fish"><code class="flex name class">
+<span>class <span class="ident">Fish</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Fish(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Flamingo"><code class="flex name class">
+<span>class <span class="ident">Flamingo</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Flamingo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Fly"><code class="flex name class">
+<span>class <span class="ident">Fly</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Fly(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Giraffe"><code class="flex name class">
+<span>class <span class="ident">Giraffe</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Giraffe(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Gorilla"><code class="flex name class">
+<span>class <span class="ident">Gorilla</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Gorilla(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 9
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Hedgehog"><code class="flex name class">
+<span>class <span class="ident">Hedgehog</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Hedgehog(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Hippo"><code class="flex name class">
+<span>class <span class="ident">Hippo</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Hippo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 7
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Horse"><code class="flex name class">
+<span>class <span class="ident">Horse</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Horse(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Kangaroo"><code class="flex name class">
+<span>class <span class="ident">Kangaroo</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Kangaroo(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Leopard"><code class="flex name class">
+<span>class <span class="ident">Leopard</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Leopard(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 10
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Mammoth"><code class="flex name class">
+<span>class <span class="ident">Mammoth</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Mammoth(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 10
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Monkey"><code class="flex name class">
+<span>class <span class="ident">Monkey</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Monkey(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Mosquito"><code class="flex name class">
+<span>class <span class="ident">Mosquito</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Mosquito(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.NoneAnimal"><code class="flex name class">
+<span>class <span class="ident">NoneAnimal</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>None class for animals</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NoneAnimal(Animal):
+    &#34;&#34;&#34;None class for animals&#34;&#34;&#34;
+
+    def __init__(self):
+        super().__init__(0, 0)
+
+    def __nonezero__(self):
+        return False</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Otter"><code class="flex name class">
+<span>class <span class="ident">Otter</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Otter(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Ox"><code class="flex name class">
+<span>class <span class="ident">Ox</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Ox(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Parrot"><code class="flex name class">
+<span>class <span class="ident">Parrot</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Parrot(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Peacock"><code class="flex name class">
+<span>class <span class="ident">Peacock</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Peacock(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Penguin"><code class="flex name class">
+<span>class <span class="ident">Penguin</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Penguin(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Pig"><code class="flex name class">
+<span>class <span class="ident">Pig</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Pig(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Rabbit"><code class="flex name class">
+<span>class <span class="ident">Rabbit</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rabbit(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Rat"><code class="flex name class">
+<span>class <span class="ident">Rat</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rat(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Rhino"><code class="flex name class">
+<span>class <span class="ident">Rhino</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rhino(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Rooster"><code class="flex name class">
+<span>class <span class="ident">Rooster</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Rooster(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 5
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Scorpion"><code class="flex name class">
+<span>class <span class="ident">Scorpion</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Scorpion(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Seal"><code class="flex name class">
+<span>class <span class="ident">Seal</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Seal(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 8
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Shark"><code class="flex name class">
+<span>class <span class="ident">Shark</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Shark(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Sheep"><code class="flex name class">
+<span>class <span class="ident">Sheep</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Sheep(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Shrimp"><code class="flex name class">
+<span>class <span class="ident">Shrimp</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Shrimp(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Skunk"><code class="flex name class">
+<span>class <span class="ident">Skunk</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Skunk(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Sloth"><code class="flex name class">
+<span>class <span class="ident">Sloth</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Sloth(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Snail"><code class="flex name class">
+<span>class <span class="ident">Snail</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Snail(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Snake"><code class="flex name class">
+<span>class <span class="ident">Snake</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Snake(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 6
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Spider"><code class="flex name class">
+<span>class <span class="ident">Spider</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Spider(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Squirrel"><code class="flex name class">
+<span>class <span class="ident">Squirrel</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Squirrel(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Swan"><code class="flex name class">
+<span>class <span class="ident">Swan</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Swan(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Tiger"><code class="flex name class">
+<span>class <span class="ident">Tiger</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Tiger(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 3
+        default_dmg = 4
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Turkey"><code class="flex name class">
+<span>class <span class="ident">Turkey</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Turkey(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 4
+        default_dmg = 3
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 5</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Turtle"><code class="flex name class">
+<span>class <span class="ident">Turtle</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Turtle(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 3</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Whale"><code class="flex name class">
+<span>class <span class="ident">Whale</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Whale(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 6
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Worm"><code class="flex name class">
+<span>class <span class="ident">Worm</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Worm(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 2
+        default_dmg = 2
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 4</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src.Animal" href="index.html">src.Animal</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.Animal.Animals.Ant" href="#src.Animal.Animals.Ant">Ant</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Ant.onFaint" href="#src.Animal.Animals.Ant.onFaint">onFaint</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Badger" href="#src.Animal.Animals.Badger">Badger</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Badger.onFaint" href="#src.Animal.Animals.Badger.onFaint">onFaint</a></code></li>
+</ul>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Bat" href="#src.Animal.Animals.Bat">Bat</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Beaver" href="#src.Animal.Animals.Beaver">Beaver</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Bison" href="#src.Animal.Animals.Bison">Bison</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Blowfish" href="#src.Animal.Animals.Blowfish">Blowfish</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Boar" href="#src.Animal.Animals.Boar">Boar</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Camel" href="#src.Animal.Animals.Camel">Camel</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Cat" href="#src.Animal.Animals.Cat">Cat</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Cow" href="#src.Animal.Animals.Cow">Cow</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Crab" href="#src.Animal.Animals.Crab">Crab</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Cricket" href="#src.Animal.Animals.Cricket">Cricket</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Crocodile" href="#src.Animal.Animals.Crocodile">Crocodile</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Deer" href="#src.Animal.Animals.Deer">Deer</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Dodo" href="#src.Animal.Animals.Dodo">Dodo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Dog" href="#src.Animal.Animals.Dog">Dog</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Dolphin" href="#src.Animal.Animals.Dolphin">Dolphin</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Dragon" href="#src.Animal.Animals.Dragon">Dragon</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Duck" href="#src.Animal.Animals.Duck">Duck</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Elephant" href="#src.Animal.Animals.Elephant">Elephant</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Fish" href="#src.Animal.Animals.Fish">Fish</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Flamingo" href="#src.Animal.Animals.Flamingo">Flamingo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Fly" href="#src.Animal.Animals.Fly">Fly</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Giraffe" href="#src.Animal.Animals.Giraffe">Giraffe</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Gorilla" href="#src.Animal.Animals.Gorilla">Gorilla</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Hedgehog" href="#src.Animal.Animals.Hedgehog">Hedgehog</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Hippo" href="#src.Animal.Animals.Hippo">Hippo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Horse" href="#src.Animal.Animals.Horse">Horse</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Kangaroo" href="#src.Animal.Animals.Kangaroo">Kangaroo</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Leopard" href="#src.Animal.Animals.Leopard">Leopard</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Mammoth" href="#src.Animal.Animals.Mammoth">Mammoth</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Monkey" href="#src.Animal.Animals.Monkey">Monkey</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Mosquito" href="#src.Animal.Animals.Mosquito">Mosquito</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.NoneAnimal" href="#src.Animal.Animals.NoneAnimal">NoneAnimal</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Otter" href="#src.Animal.Animals.Otter">Otter</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Ox" href="#src.Animal.Animals.Ox">Ox</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Parrot" href="#src.Animal.Animals.Parrot">Parrot</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Peacock" href="#src.Animal.Animals.Peacock">Peacock</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Penguin" href="#src.Animal.Animals.Penguin">Penguin</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Pig" href="#src.Animal.Animals.Pig">Pig</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Rabbit" href="#src.Animal.Animals.Rabbit">Rabbit</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Rat" href="#src.Animal.Animals.Rat">Rat</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Rhino" href="#src.Animal.Animals.Rhino">Rhino</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Rooster" href="#src.Animal.Animals.Rooster">Rooster</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Scorpion" href="#src.Animal.Animals.Scorpion">Scorpion</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Seal" href="#src.Animal.Animals.Seal">Seal</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Shark" href="#src.Animal.Animals.Shark">Shark</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Sheep" href="#src.Animal.Animals.Sheep">Sheep</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Shrimp" href="#src.Animal.Animals.Shrimp">Shrimp</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Skunk" href="#src.Animal.Animals.Skunk">Skunk</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Sloth" href="#src.Animal.Animals.Sloth">Sloth</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Snail" href="#src.Animal.Animals.Snail">Snail</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Snake" href="#src.Animal.Animals.Snake">Snake</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Spider" href="#src.Animal.Animals.Spider">Spider</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Squirrel" href="#src.Animal.Animals.Squirrel">Squirrel</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Swan" href="#src.Animal.Animals.Swan">Swan</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Tiger" href="#src.Animal.Animals.Tiger">Tiger</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Turkey" href="#src.Animal.Animals.Turkey">Turkey</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Turtle" href="#src.Animal.Animals.Turtle">Turtle</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Whale" href="#src.Animal.Animals.Whale">Whale</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Worm" href="#src.Animal.Animals.Worm">Worm</a></code></h4>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.10.0</a>.</p>
+</footer>
+</body>
+</html>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>src API documentation</title>
+<title>src.Food API documentation</title>
 <meta name="description" content="" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
@@ -19,34 +19,87 @@
 <main>
 <article id="content">
 <header>
-<h1 class="title">Package <code>src</code></h1>
+<h1 class="title">Module <code>src.Food</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from abc import ABC
+from src.Food.Effect.Effect import *
+
+class Food(ABC):
+    &#34;&#34;&#34;
+    Food Base Class
+
+    &#34;&#34;&#34;
+
+    ### Init ###
+
+    def __init__(
+        self,
+        temp_hp: int = 0,
+        temp_dmg: int = 0,
+        perm_hp: int = 0,
+        perm_dmg: int = 0,
+        effect: Effect = NoneEffect,
+        cost: int = 3,
+    ):
+        &#34;&#34;&#34;Constructor method&#34;&#34;&#34;
+        self.temp_buff = [temp_hp, temp_dmg]
+        self.perm_buff = [perm_hp, perm_dmg]
+        self.effect = effect
+        self.cost = cost
+        pass
+
+    ### Getters ###
+
+    def getCost(self) -&gt; int:
+        return self.cost
+
+    def getEffect(self) -&gt; Effect:
+        return self.effect
+
+    def getTempBuff(self) -&gt; list:
+        # [temp_hp, temp_dmg]
+        return self.temp_buff
+
+    def getPermBuff(self) -&gt; list:
+        # [perm_hp, perm_dmg]
+        return self.perm_buff
+
+    ### Setters ###
+
+    ### Overrides ###
+
+    def __str__(self):
+        out_str = &#34;|==============================|\n&#34;
+        out_str += &#34;|&#34; + f&#34;{self.__class__.__name__:^30}&#34; + &#34;|\n&#34;
+        out_str += &#34;|------------------------------|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Tmp Health: &#34; + str(self.temp_buff[0]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Tmp Damage: &#34;+ str(self.temp_buff[1]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Perm Health: &#34; + str(self.perm_buff[0]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Perm Damage: &#34;+ str(self.perm_buff[1]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|==============================|\n&#34;
+
+        return out_str</code></pre>
+</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="src.Animal" href="Animal/index.html">src.Animal</a></code></dt>
+<dt><code class="name"><a title="src.Food.Effect" href="Effect/index.html">src.Food.Effect</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.Fight" href="Fight/index.html">src.Fight</a></code></dt>
+<dt><code class="name"><a title="src.Food.Food" href="Food.html">src.Food.Food</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.Food" href="Food/index.html">src.Food</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Game" href="Game/index.html">src.Game</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Shop" href="Shop/index.html">src.Shop</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt><code class="name"><a title="src.Team" href="Team/index.html">src.Team</a></code></dt>
+<dt><code class="name"><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -65,14 +118,16 @@
 <ul></ul>
 </div>
 <ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="src" href="../index.html">src</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="src.Animal" href="Animal/index.html">src.Animal</a></code></li>
-<li><code><a title="src.Fight" href="Fight/index.html">src.Fight</a></code></li>
-<li><code><a title="src.Food" href="Food/index.html">src.Food</a></code></li>
-<li><code><a title="src.Game" href="Game/index.html">src.Game</a></code></li>
-<li><code><a title="src.Shop" href="Shop/index.html">src.Shop</a></code></li>
-<li><code><a title="src.Team" href="Team/index.html">src.Team</a></code></li>
+<li><code><a title="src.Food.Effect" href="Effect/index.html">src.Food.Effect</a></code></li>
+<li><code><a title="src.Food.Food" href="Food.html">src.Food.Food</a></code></li>
+<li><code><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></li>
 </ul>
 </li>
 </ul>

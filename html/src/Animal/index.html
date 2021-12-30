@@ -22,15 +22,260 @@
 <h1 class="title">Module <code>src.Animal</code></h1>
 </header>
 <section id="section-intro">
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">from abc import ABC
+from random import randrange
+
+from src.Food.Effect.Effect import *
+from src.Food.Food import Food
+
+
+class Animal(ABC):
+    &#34;&#34;&#34;
+    Animal base class
+    &#34;&#34;&#34;
+
+    ### Init ###
+
+    def __init__(
+        self, health: int, dmg: int, effect: Effect = NoneEffect, ability: str = &#34;None&#34;
+    ) -&gt; None:
+        # Default
+        self.temp_hp = 0
+        self.temp_dmg = 0
+        self.base_hp = health
+        self.base_dmg = dmg
+        self.alive = True
+        self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
+        self.ability = ability
+        self.effect = effect
+        self.dmgModifier = 1
+        self.cost = 3
+
+        # Derived
+        self.hp = self.temp_hp + self.base_hp
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### Getters ####
+
+    def getHp(self) -&gt; int:
+        return self.hp
+
+    def getDmg(self) -&gt; int:
+        return self.dmg
+
+    def getLevel(self) -&gt; int:
+        if self.exp &gt; 5:
+            return 3
+        if self.exp &gt; 2:
+            return 2
+        return 1
+
+    def getExp(self) -&gt; int:
+        return self.exp
+
+    def getAbility(self) -&gt; str:
+        &#34;&#34;&#34;Ability should be string describing animal abilities, if any&#34;&#34;&#34;
+        return self.ability
+
+    def getEffect(self) -&gt; Effect:
+        return self.effect
+
+    def getCost(self) -&gt; int:
+        return self.cost
+
+    def getState(self) -&gt; list:
+        pass
+
+    #### Setters ####
+
+    def addBaseHp(self, amt: int) -&gt; None:
+        self.base_hp += amt
+        self.__recalcHp()
+
+    def addTempHp(self, amt: int) -&gt; None:
+        self.temp_hp += amt
+        self.__recalcHp()
+
+    def subBaseHp(self, amt: int) -&gt; None:
+        self.base_hp -= amt
+        self.__recalcHp()
+
+    def subTempHp(self, amt: int) -&gt; None:
+        if amt == -1:
+            self.temp_hp = 0
+        else:
+            self.temp_hp -= amt
+        self.__recalcHp()
+
+    def addBaseDmg(self, amt: int) -&gt; None:
+        self.base_dmg += amt
+        self.__recalcDmg()
+
+    def addTempDmg(self, amt: int) -&gt; None:
+        self.temp_dmg += amt
+        self.__recalcDmg()
+
+    def subBaseDmg(self, amt: int) -&gt; None:
+        self.base_dmg -= amt
+        self.__recalcDmg()
+
+    def subTempDmg(self, amt: int) -&gt; None:
+        if amt == -1:
+            self.temp_dmg = 0
+        else:
+            self.temp_dmg -= amt
+        self.__recalcDmg()
+
+    def subHp(self, amt: int) -&gt; None:
+        # Only for use in battle
+        self.hp -= amt
+
+    def setEffect(self, effect: Effect) -&gt; None:
+        self.effect = effect
+
+    def setFood(self, food: Food) -&gt; None:
+        pass
+
+    #### Private ####
+
+    def __setHp(self, amt: int) -&gt; None:
+        self.base_hp = amt
+        self.__recalcHp()
+
+    def __setDmg(self, amt: int) -&gt; None:
+        self.base_dmg = amt
+        self.__recalcDmg()
+
+    def __setExp(self, amt: int) -&gt; None:
+        self.exp = amt
+
+    def __recalcHp(self):
+        self.hp = self.temp_hp + self.base_hp
+
+    def __recalcDmg(self):
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### On Events ####
+
+    # Normal On Events
+    def onHit(self, dmgAmt):
+        self.hp -= round(dmgAmt * self.dmgModifier)
+        if self.hp &lt;= 0:
+            self.alive = False
+
+    # Special On Events
+    def onFaint(self):
+        pass
+
+    def onSell(self):
+        pass
+
+    def onEat(self):
+        pass
+
+    def onEndOfTurn(self):
+        pass
+
+    def onLevelUp(self):
+        pass
+
+    def onFoodBought(self):
+        pass
+
+    def onStartOfBattle(self):
+        pass
+
+    def onBuy(self):
+        pass
+
+    def onStartOfTurn(self):
+        pass
+
+    def onBeforeAttack(self):
+        pass
+
+    def onHurt(self):
+        pass
+
+    def onFriendSold(self):
+        pass
+
+    def onFriendSummoned(self):
+        pass
+
+    def onFriendAheadAttack(self):
+        pass
+
+    def onFriendAheadFaint(self):
+        pass
+
+    ### Overrides ###
+
+    def __str__(self):
+        out_str = &#34;|==============================|\n&#34;
+        out_str += &#34;|&#34; + f&#34;{self.__class__.__name__:^30}&#34; + &#34;|\n&#34;
+        out_str += &#34;|------------------------------|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Health: &#34; + str(self.hp):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|==============================|\n&#34;
+
+        return out_str
+
+    def __iadd__(self, other):
+        # add two animals
+        if other.__class__ == self.__class__:
+            high_hp = self.base_hp if self.base_hp &gt; other.base_hp else other.base_hp
+            high_dmg = (
+                self.base_dmg if self.base_dmg &gt; other.base_dmg else other.base_dmg
+            )
+            low_exp = (
+                self.getLevel()
+                if self.getLevel() &lt; other.getLevel()
+                else other.getLevel()
+            )
+            high_exp = (
+                self.getLevel()
+                if self.getLevel() &gt; other.getLevel()
+                else other.getLevel()
+            )
+            self.__setExp(low_exp + high_exp)
+            self.__setHp(high_hp + low_exp)
+            self.__setDmg(high_dmg + low_exp)
+
+        # add food to animal
+        if type(other) == Food:
+            temp_buff = other.getTempBuff()
+            perm_buff = other.getPermBuff()
+            effect = other.getEffect()
+
+            if type(effect) != NoneEffect:
+                self.effect = effect
+
+            self.addTempHp(temp_buff[0])
+            self.addTempDmg(temp_buff[1])
+            self.addBaseHp(perm_buff[0])
+            self.addBaseDmg(perm_buff[1])
+
+    def __nonzero__(self):
+        return True</code></pre>
+</details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="src.Animal.Animal" href="Animal.html">src.Animal.Animal</a></code></dt>
+<dt><code class="name"><a title="src.Animal.AnimalGenerator" href="AnimalGenerator.html">src.Animal.AnimalGenerator</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.Animal.Ant" href="Ant/index.html">src.Animal.Ant</a></code></dt>
+<dt><code class="name"><a title="src.Animal.Animals" href="Animals.html">src.Animal.Animals</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -41,6 +286,802 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.Animal.Animal"><code class="flex name class">
+<span>class <span class="ident">Animal</span></span>
+<span>(</span><span>health: int, dmg: int, effect: <a title="src.Food.Effect.Effect" href="../Food/Effect/Effect.html">src.Food.Effect.Effect</a> = src.Food.Effect.Effect.NoneEffect, ability: str = 'None')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Animal(ABC):
+    &#34;&#34;&#34;
+    Animal base class
+    &#34;&#34;&#34;
+
+    ### Init ###
+
+    def __init__(
+        self, health: int, dmg: int, effect: Effect = NoneEffect, ability: str = &#34;None&#34;
+    ) -&gt; None:
+        # Default
+        self.temp_hp = 0
+        self.temp_dmg = 0
+        self.base_hp = health
+        self.base_dmg = dmg
+        self.alive = True
+        self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
+        self.ability = ability
+        self.effect = effect
+        self.dmgModifier = 1
+        self.cost = 3
+
+        # Derived
+        self.hp = self.temp_hp + self.base_hp
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### Getters ####
+
+    def getHp(self) -&gt; int:
+        return self.hp
+
+    def getDmg(self) -&gt; int:
+        return self.dmg
+
+    def getLevel(self) -&gt; int:
+        if self.exp &gt; 5:
+            return 3
+        if self.exp &gt; 2:
+            return 2
+        return 1
+
+    def getExp(self) -&gt; int:
+        return self.exp
+
+    def getAbility(self) -&gt; str:
+        &#34;&#34;&#34;Ability should be string describing animal abilities, if any&#34;&#34;&#34;
+        return self.ability
+
+    def getEffect(self) -&gt; Effect:
+        return self.effect
+
+    def getCost(self) -&gt; int:
+        return self.cost
+
+    def getState(self) -&gt; list:
+        pass
+
+    #### Setters ####
+
+    def addBaseHp(self, amt: int) -&gt; None:
+        self.base_hp += amt
+        self.__recalcHp()
+
+    def addTempHp(self, amt: int) -&gt; None:
+        self.temp_hp += amt
+        self.__recalcHp()
+
+    def subBaseHp(self, amt: int) -&gt; None:
+        self.base_hp -= amt
+        self.__recalcHp()
+
+    def subTempHp(self, amt: int) -&gt; None:
+        if amt == -1:
+            self.temp_hp = 0
+        else:
+            self.temp_hp -= amt
+        self.__recalcHp()
+
+    def addBaseDmg(self, amt: int) -&gt; None:
+        self.base_dmg += amt
+        self.__recalcDmg()
+
+    def addTempDmg(self, amt: int) -&gt; None:
+        self.temp_dmg += amt
+        self.__recalcDmg()
+
+    def subBaseDmg(self, amt: int) -&gt; None:
+        self.base_dmg -= amt
+        self.__recalcDmg()
+
+    def subTempDmg(self, amt: int) -&gt; None:
+        if amt == -1:
+            self.temp_dmg = 0
+        else:
+            self.temp_dmg -= amt
+        self.__recalcDmg()
+
+    def subHp(self, amt: int) -&gt; None:
+        # Only for use in battle
+        self.hp -= amt
+
+    def setEffect(self, effect: Effect) -&gt; None:
+        self.effect = effect
+
+    def setFood(self, food: Food) -&gt; None:
+        pass
+
+    #### Private ####
+
+    def __setHp(self, amt: int) -&gt; None:
+        self.base_hp = amt
+        self.__recalcHp()
+
+    def __setDmg(self, amt: int) -&gt; None:
+        self.base_dmg = amt
+        self.__recalcDmg()
+
+    def __setExp(self, amt: int) -&gt; None:
+        self.exp = amt
+
+    def __recalcHp(self):
+        self.hp = self.temp_hp + self.base_hp
+
+    def __recalcDmg(self):
+        self.dmg = self.temp_dmg + self.base_dmg
+
+    #### On Events ####
+
+    # Normal On Events
+    def onHit(self, dmgAmt):
+        self.hp -= round(dmgAmt * self.dmgModifier)
+        if self.hp &lt;= 0:
+            self.alive = False
+
+    # Special On Events
+    def onFaint(self):
+        pass
+
+    def onSell(self):
+        pass
+
+    def onEat(self):
+        pass
+
+    def onEndOfTurn(self):
+        pass
+
+    def onLevelUp(self):
+        pass
+
+    def onFoodBought(self):
+        pass
+
+    def onStartOfBattle(self):
+        pass
+
+    def onBuy(self):
+        pass
+
+    def onStartOfTurn(self):
+        pass
+
+    def onBeforeAttack(self):
+        pass
+
+    def onHurt(self):
+        pass
+
+    def onFriendSold(self):
+        pass
+
+    def onFriendSummoned(self):
+        pass
+
+    def onFriendAheadAttack(self):
+        pass
+
+    def onFriendAheadFaint(self):
+        pass
+
+    ### Overrides ###
+
+    def __str__(self):
+        out_str = &#34;|==============================|\n&#34;
+        out_str += &#34;|&#34; + f&#34;{self.__class__.__name__:^30}&#34; + &#34;|\n&#34;
+        out_str += &#34;|------------------------------|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Health: &#34; + str(self.hp):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|==============================|\n&#34;
+
+        return out_str
+
+    def __iadd__(self, other):
+        # add two animals
+        if other.__class__ == self.__class__:
+            high_hp = self.base_hp if self.base_hp &gt; other.base_hp else other.base_hp
+            high_dmg = (
+                self.base_dmg if self.base_dmg &gt; other.base_dmg else other.base_dmg
+            )
+            low_exp = (
+                self.getLevel()
+                if self.getLevel() &lt; other.getLevel()
+                else other.getLevel()
+            )
+            high_exp = (
+                self.getLevel()
+                if self.getLevel() &gt; other.getLevel()
+                else other.getLevel()
+            )
+            self.__setExp(low_exp + high_exp)
+            self.__setHp(high_hp + low_exp)
+            self.__setDmg(high_dmg + low_exp)
+
+        # add food to animal
+        if type(other) == Food:
+            temp_buff = other.getTempBuff()
+            perm_buff = other.getPermBuff()
+            effect = other.getEffect()
+
+            if type(effect) != NoneEffect:
+                self.effect = effect
+
+            self.addTempHp(temp_buff[0])
+            self.addTempDmg(temp_buff[1])
+            self.addBaseHp(perm_buff[0])
+            self.addBaseDmg(perm_buff[1])
+
+    def __nonzero__(self):
+        return True</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animals.Ant" href="Animals.html#src.Animal.Animals.Ant">Ant</a></li>
+<li><a title="src.Animal.Animals.Badger" href="Animals.html#src.Animal.Animals.Badger">Badger</a></li>
+<li><a title="src.Animal.Animals.Bat" href="Animals.html#src.Animal.Animals.Bat">Bat</a></li>
+<li><a title="src.Animal.Animals.Beaver" href="Animals.html#src.Animal.Animals.Beaver">Beaver</a></li>
+<li><a title="src.Animal.Animals.Bison" href="Animals.html#src.Animal.Animals.Bison">Bison</a></li>
+<li><a title="src.Animal.Animals.Blowfish" href="Animals.html#src.Animal.Animals.Blowfish">Blowfish</a></li>
+<li><a title="src.Animal.Animals.Boar" href="Animals.html#src.Animal.Animals.Boar">Boar</a></li>
+<li><a title="src.Animal.Animals.Camel" href="Animals.html#src.Animal.Animals.Camel">Camel</a></li>
+<li><a title="src.Animal.Animals.Cat" href="Animals.html#src.Animal.Animals.Cat">Cat</a></li>
+<li><a title="src.Animal.Animals.Cow" href="Animals.html#src.Animal.Animals.Cow">Cow</a></li>
+<li><a title="src.Animal.Animals.Crab" href="Animals.html#src.Animal.Animals.Crab">Crab</a></li>
+<li><a title="src.Animal.Animals.Cricket" href="Animals.html#src.Animal.Animals.Cricket">Cricket</a></li>
+<li><a title="src.Animal.Animals.Crocodile" href="Animals.html#src.Animal.Animals.Crocodile">Crocodile</a></li>
+<li><a title="src.Animal.Animals.Deer" href="Animals.html#src.Animal.Animals.Deer">Deer</a></li>
+<li><a title="src.Animal.Animals.Dodo" href="Animals.html#src.Animal.Animals.Dodo">Dodo</a></li>
+<li><a title="src.Animal.Animals.Dog" href="Animals.html#src.Animal.Animals.Dog">Dog</a></li>
+<li><a title="src.Animal.Animals.Dolphin" href="Animals.html#src.Animal.Animals.Dolphin">Dolphin</a></li>
+<li><a title="src.Animal.Animals.Dragon" href="Animals.html#src.Animal.Animals.Dragon">Dragon</a></li>
+<li><a title="src.Animal.Animals.Duck" href="Animals.html#src.Animal.Animals.Duck">Duck</a></li>
+<li><a title="src.Animal.Animals.Elephant" href="Animals.html#src.Animal.Animals.Elephant">Elephant</a></li>
+<li><a title="src.Animal.Animals.Fish" href="Animals.html#src.Animal.Animals.Fish">Fish</a></li>
+<li><a title="src.Animal.Animals.Flamingo" href="Animals.html#src.Animal.Animals.Flamingo">Flamingo</a></li>
+<li><a title="src.Animal.Animals.Fly" href="Animals.html#src.Animal.Animals.Fly">Fly</a></li>
+<li><a title="src.Animal.Animals.Giraffe" href="Animals.html#src.Animal.Animals.Giraffe">Giraffe</a></li>
+<li><a title="src.Animal.Animals.Gorilla" href="Animals.html#src.Animal.Animals.Gorilla">Gorilla</a></li>
+<li><a title="src.Animal.Animals.Hedgehog" href="Animals.html#src.Animal.Animals.Hedgehog">Hedgehog</a></li>
+<li><a title="src.Animal.Animals.Hippo" href="Animals.html#src.Animal.Animals.Hippo">Hippo</a></li>
+<li><a title="src.Animal.Animals.Horse" href="Animals.html#src.Animal.Animals.Horse">Horse</a></li>
+<li><a title="src.Animal.Animals.Kangaroo" href="Animals.html#src.Animal.Animals.Kangaroo">Kangaroo</a></li>
+<li><a title="src.Animal.Animals.Leopard" href="Animals.html#src.Animal.Animals.Leopard">Leopard</a></li>
+<li><a title="src.Animal.Animals.Mammoth" href="Animals.html#src.Animal.Animals.Mammoth">Mammoth</a></li>
+<li><a title="src.Animal.Animals.Monkey" href="Animals.html#src.Animal.Animals.Monkey">Monkey</a></li>
+<li><a title="src.Animal.Animals.Mosquito" href="Animals.html#src.Animal.Animals.Mosquito">Mosquito</a></li>
+<li><a title="src.Animal.Animals.NoneAnimal" href="Animals.html#src.Animal.Animals.NoneAnimal">NoneAnimal</a></li>
+<li><a title="src.Animal.Animals.Otter" href="Animals.html#src.Animal.Animals.Otter">Otter</a></li>
+<li><a title="src.Animal.Animals.Ox" href="Animals.html#src.Animal.Animals.Ox">Ox</a></li>
+<li><a title="src.Animal.Animals.Parrot" href="Animals.html#src.Animal.Animals.Parrot">Parrot</a></li>
+<li><a title="src.Animal.Animals.Peacock" href="Animals.html#src.Animal.Animals.Peacock">Peacock</a></li>
+<li><a title="src.Animal.Animals.Penguin" href="Animals.html#src.Animal.Animals.Penguin">Penguin</a></li>
+<li><a title="src.Animal.Animals.Pig" href="Animals.html#src.Animal.Animals.Pig">Pig</a></li>
+<li><a title="src.Animal.Animals.Rabbit" href="Animals.html#src.Animal.Animals.Rabbit">Rabbit</a></li>
+<li><a title="src.Animal.Animals.Rat" href="Animals.html#src.Animal.Animals.Rat">Rat</a></li>
+<li><a title="src.Animal.Animals.Rhino" href="Animals.html#src.Animal.Animals.Rhino">Rhino</a></li>
+<li><a title="src.Animal.Animals.Rooster" href="Animals.html#src.Animal.Animals.Rooster">Rooster</a></li>
+<li><a title="src.Animal.Animals.Scorpion" href="Animals.html#src.Animal.Animals.Scorpion">Scorpion</a></li>
+<li><a title="src.Animal.Animals.Seal" href="Animals.html#src.Animal.Animals.Seal">Seal</a></li>
+<li><a title="src.Animal.Animals.Shark" href="Animals.html#src.Animal.Animals.Shark">Shark</a></li>
+<li><a title="src.Animal.Animals.Sheep" href="Animals.html#src.Animal.Animals.Sheep">Sheep</a></li>
+<li><a title="src.Animal.Animals.Shrimp" href="Animals.html#src.Animal.Animals.Shrimp">Shrimp</a></li>
+<li><a title="src.Animal.Animals.Skunk" href="Animals.html#src.Animal.Animals.Skunk">Skunk</a></li>
+<li><a title="src.Animal.Animals.Sloth" href="Animals.html#src.Animal.Animals.Sloth">Sloth</a></li>
+<li><a title="src.Animal.Animals.Snail" href="Animals.html#src.Animal.Animals.Snail">Snail</a></li>
+<li><a title="src.Animal.Animals.Snake" href="Animals.html#src.Animal.Animals.Snake">Snake</a></li>
+<li><a title="src.Animal.Animals.Spider" href="Animals.html#src.Animal.Animals.Spider">Spider</a></li>
+<li><a title="src.Animal.Animals.Squirrel" href="Animals.html#src.Animal.Animals.Squirrel">Squirrel</a></li>
+<li><a title="src.Animal.Animals.Swan" href="Animals.html#src.Animal.Animals.Swan">Swan</a></li>
+<li><a title="src.Animal.Animals.Tiger" href="Animals.html#src.Animal.Animals.Tiger">Tiger</a></li>
+<li><a title="src.Animal.Animals.Turkey" href="Animals.html#src.Animal.Animals.Turkey">Turkey</a></li>
+<li><a title="src.Animal.Animals.Turtle" href="Animals.html#src.Animal.Animals.Turtle">Turtle</a></li>
+<li><a title="src.Animal.Animals.Whale" href="Animals.html#src.Animal.Animals.Whale">Whale</a></li>
+<li><a title="src.Animal.Animals.Worm" href="Animals.html#src.Animal.Animals.Worm">Worm</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animal.addBaseDmg"><code class="name flex">
+<span>def <span class="ident">addBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addBaseDmg(self, amt: int) -&gt; None:
+    self.base_dmg += amt
+    self.__recalcDmg()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.addBaseHp"><code class="name flex">
+<span>def <span class="ident">addBaseHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addBaseHp(self, amt: int) -&gt; None:
+    self.base_hp += amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.addTempDmg"><code class="name flex">
+<span>def <span class="ident">addTempDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addTempDmg(self, amt: int) -&gt; None:
+    self.temp_dmg += amt
+    self.__recalcDmg()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.addTempHp"><code class="name flex">
+<span>def <span class="ident">addTempHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def addTempHp(self, amt: int) -&gt; None:
+    self.temp_hp += amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getAbility"><code class="name flex">
+<span>def <span class="ident">getAbility</span></span>(<span>self) ‑> str</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Ability should be string describing animal abilities, if any</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getAbility(self) -&gt; str:
+    &#34;&#34;&#34;Ability should be string describing animal abilities, if any&#34;&#34;&#34;
+    return self.ability</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getCost"><code class="name flex">
+<span>def <span class="ident">getCost</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getCost(self) -&gt; int:
+    return self.cost</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getDmg"><code class="name flex">
+<span>def <span class="ident">getDmg</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getDmg(self) -&gt; int:
+    return self.dmg</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getEffect"><code class="name flex">
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Food.Effect.Effect" href="../Food/Effect/Effect.html">src.Food.Effect.Effect</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getEffect(self) -&gt; Effect:
+    return self.effect</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getExp"><code class="name flex">
+<span>def <span class="ident">getExp</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getExp(self) -&gt; int:
+    return self.exp</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getHp"><code class="name flex">
+<span>def <span class="ident">getHp</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getHp(self) -&gt; int:
+    return self.hp</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getLevel"><code class="name flex">
+<span>def <span class="ident">getLevel</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getLevel(self) -&gt; int:
+    if self.exp &gt; 5:
+        return 3
+    if self.exp &gt; 2:
+        return 2
+    return 1</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getState"><code class="name flex">
+<span>def <span class="ident">getState</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getState(self) -&gt; list:
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onBeforeAttack"><code class="name flex">
+<span>def <span class="ident">onBeforeAttack</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onBeforeAttack(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onBuy"><code class="name flex">
+<span>def <span class="ident">onBuy</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onBuy(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onEat"><code class="name flex">
+<span>def <span class="ident">onEat</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onEat(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onEndOfTurn"><code class="name flex">
+<span>def <span class="ident">onEndOfTurn</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onEndOfTurn(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFoodBought"><code class="name flex">
+<span>def <span class="ident">onFoodBought</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFoodBought(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFriendAheadAttack"><code class="name flex">
+<span>def <span class="ident">onFriendAheadAttack</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendAheadAttack(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFriendAheadFaint"><code class="name flex">
+<span>def <span class="ident">onFriendAheadFaint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendAheadFaint(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFriendSold"><code class="name flex">
+<span>def <span class="ident">onFriendSold</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendSold(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFriendSummoned"><code class="name flex">
+<span>def <span class="ident">onFriendSummoned</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendSummoned(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onHit"><code class="name flex">
+<span>def <span class="ident">onHit</span></span>(<span>self, dmgAmt)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onHit(self, dmgAmt):
+    self.hp -= round(dmgAmt * self.dmgModifier)
+    if self.hp &lt;= 0:
+        self.alive = False</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onHurt"><code class="name flex">
+<span>def <span class="ident">onHurt</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onHurt(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onLevelUp"><code class="name flex">
+<span>def <span class="ident">onLevelUp</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onLevelUp(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onSell"><code class="name flex">
+<span>def <span class="ident">onSell</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onSell(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onStartOfBattle"><code class="name flex">
+<span>def <span class="ident">onStartOfBattle</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStartOfBattle(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onStartOfTurn"><code class="name flex">
+<span>def <span class="ident">onStartOfTurn</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStartOfTurn(self):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setEffect"><code class="name flex">
+<span>def <span class="ident">setEffect</span></span>(<span>self, effect: <a title="src.Food.Effect.Effect" href="../Food/Effect/Effect.html">src.Food.Effect.Effect</a>) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setEffect(self, effect: Effect) -&gt; None:
+    self.effect = effect</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setFood"><code class="name flex">
+<span>def <span class="ident">setFood</span></span>(<span>self, food: <a title="src.Food.Food" href="../Food/Food.html">src.Food.Food</a>) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setFood(self, food: Food) -&gt; None:
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.subBaseDmg"><code class="name flex">
+<span>def <span class="ident">subBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subBaseDmg(self, amt: int) -&gt; None:
+    self.base_dmg -= amt
+    self.__recalcDmg()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.subBaseHp"><code class="name flex">
+<span>def <span class="ident">subBaseHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subBaseHp(self, amt: int) -&gt; None:
+    self.base_hp -= amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.subHp"><code class="name flex">
+<span>def <span class="ident">subHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subHp(self, amt: int) -&gt; None:
+    # Only for use in battle
+    self.hp -= amt</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.subTempDmg"><code class="name flex">
+<span>def <span class="ident">subTempDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subTempDmg(self, amt: int) -&gt; None:
+    if amt == -1:
+        self.temp_dmg = 0
+    else:
+        self.temp_dmg -= amt
+    self.__recalcDmg()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.subTempHp"><code class="name flex">
+<span>def <span class="ident">subTempHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def subTempHp(self, amt: int) -&gt; None:
+    if amt == -1:
+        self.temp_hp = 0
+    else:
+        self.temp_hp -= amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -56,8 +1097,52 @@
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="src.Animal.Animal" href="Animal.html">src.Animal.Animal</a></code></li>
-<li><code><a title="src.Animal.Ant" href="Ant/index.html">src.Animal.Ant</a></code></li>
+<li><code><a title="src.Animal.AnimalGenerator" href="AnimalGenerator.html">src.Animal.AnimalGenerator</a></code></li>
+<li><code><a title="src.Animal.Animals" href="Animals.html">src.Animal.Animals</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.Animal.Animal" href="#src.Animal.Animal">Animal</a></code></h4>
+<ul class="two-column">
+<li><code><a title="src.Animal.Animal.addBaseDmg" href="#src.Animal.Animal.addBaseDmg">addBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.addBaseHp" href="#src.Animal.Animal.addBaseHp">addBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.addTempDmg" href="#src.Animal.Animal.addTempDmg">addTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.addTempHp" href="#src.Animal.Animal.addTempHp">addTempHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getAbility" href="#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getCost" href="#src.Animal.Animal.getCost">getCost</a></code></li>
+<li><code><a title="src.Animal.Animal.getDmg" href="#src.Animal.Animal.getDmg">getDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getEffect" href="#src.Animal.Animal.getEffect">getEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.getExp" href="#src.Animal.Animal.getExp">getExp</a></code></li>
+<li><code><a title="src.Animal.Animal.getHp" href="#src.Animal.Animal.getHp">getHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getLevel" href="#src.Animal.Animal.getLevel">getLevel</a></code></li>
+<li><code><a title="src.Animal.Animal.getState" href="#src.Animal.Animal.getState">getState</a></code></li>
+<li><code><a title="src.Animal.Animal.onBeforeAttack" href="#src.Animal.Animal.onBeforeAttack">onBeforeAttack</a></code></li>
+<li><code><a title="src.Animal.Animal.onBuy" href="#src.Animal.Animal.onBuy">onBuy</a></code></li>
+<li><code><a title="src.Animal.Animal.onEat" href="#src.Animal.Animal.onEat">onEat</a></code></li>
+<li><code><a title="src.Animal.Animal.onEndOfTurn" href="#src.Animal.Animal.onEndOfTurn">onEndOfTurn</a></code></li>
+<li><code><a title="src.Animal.Animal.onFaint" href="#src.Animal.Animal.onFaint">onFaint</a></code></li>
+<li><code><a title="src.Animal.Animal.onFoodBought" href="#src.Animal.Animal.onFoodBought">onFoodBought</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendAheadAttack" href="#src.Animal.Animal.onFriendAheadAttack">onFriendAheadAttack</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendAheadFaint" href="#src.Animal.Animal.onFriendAheadFaint">onFriendAheadFaint</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendSold" href="#src.Animal.Animal.onFriendSold">onFriendSold</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendSummoned" href="#src.Animal.Animal.onFriendSummoned">onFriendSummoned</a></code></li>
+<li><code><a title="src.Animal.Animal.onHit" href="#src.Animal.Animal.onHit">onHit</a></code></li>
+<li><code><a title="src.Animal.Animal.onHurt" href="#src.Animal.Animal.onHurt">onHurt</a></code></li>
+<li><code><a title="src.Animal.Animal.onLevelUp" href="#src.Animal.Animal.onLevelUp">onLevelUp</a></code></li>
+<li><code><a title="src.Animal.Animal.onSell" href="#src.Animal.Animal.onSell">onSell</a></code></li>
+<li><code><a title="src.Animal.Animal.onStartOfBattle" href="#src.Animal.Animal.onStartOfBattle">onStartOfBattle</a></code></li>
+<li><code><a title="src.Animal.Animal.onStartOfTurn" href="#src.Animal.Animal.onStartOfTurn">onStartOfTurn</a></code></li>
+<li><code><a title="src.Animal.Animal.setEffect" href="#src.Animal.Animal.setEffect">setEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.setFood" href="#src.Animal.Animal.setFood">setFood</a></code></li>
+<li><code><a title="src.Animal.Animal.subBaseDmg" href="#src.Animal.Animal.subBaseDmg">subBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.subBaseHp" href="#src.Animal.Animal.subBaseHp">subBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subHp" href="#src.Animal.Animal.subHp">subHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subTempDmg" href="#src.Animal.Animal.subTempDmg">subTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.subTempHp" href="#src.Animal.Animal.subTempHp">subTempHp</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

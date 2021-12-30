@@ -1,9 +1,4 @@
-from abc import ABC
-
-
-class Effect(ABC):
-    def __init__(self):
-        self.test = 0
+from src.Food.Effect import Effect
 
 
 class NoneEffect(Effect):
