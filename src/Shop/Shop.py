@@ -28,36 +28,9 @@ class Shop:
         self.items = [None] * 1
         self.health_modifier = 0
         self.dmg_modifier = 0
-        self.money = 10
         self.roll()
 
-    def payRoll(self):
-        if self.money > 0:
-            self.roll()
-            self.money -= 1
-
-    def roll(self):
-        self.money -= 1
-        for i in range(len(self.animals)):
-            self.animals[i] = getRandomAnimal(self.getMaxTier())
-        for i in range(len(self.items)):
-            self.items[i] = getRandomFood(self.getMaxTier())
-
-    def buyAnimal(self, position: int) -> Animal:
-        if self.money < 3:
-            return None
-        animal = self.animals[position]
-        self.animals[position] = None
-        self.money -= 3
-        return animal
-
-    def buyFood(self, position: int) -> Food:
-        if self.money < 3:
-            return None
-        food = self.items[position]
-        self.items[position] = None
-        self.money -= 3
-        return food
+    ### Getters ###
 
     def getShop(self):
         return self.animals + self.items
@@ -79,6 +52,29 @@ class Shop:
         if 11 <= self.round:
             return 6
 
+    def checkAnimal(self, position: int) -> Animal:
+        return self.animals[position]
+
+    ### Setters ###
+
+    def buyAnimal(self, position: int) -> Animal:
+        animal = self.animals[position]
+        self.animals[position] = None
+        return animal
+
+    def buyFood(self, position: int) -> Food:
+        food = self.items[position]
+        self.items[position] = None
+        return food
+
+    ### Actions ###
+
+    def roll(self):
+        for i in range(len(self.animals)):
+            self.animals[i] = getRandomAnimal(self.getMaxTier())
+        for i in range(len(self.items)):
+            self.items[i] = getRandomFood(self.getMaxTier())
+
     def nextRound(self):
         self.round += 1
         if self.round == 3:
@@ -89,6 +85,10 @@ class Shop:
             self.animals = [None] * 5
         self.roll()
         self.money = 10
+
+    ### Private ###
+
+    ### Overrides ###
 
     def __str__(self):
         """

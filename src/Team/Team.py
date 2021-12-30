@@ -25,25 +25,31 @@ class Team:
             # onSell
             # onFriendSell
 
-    def buyFriend(self, friend: Animal, friend_pos: int) -> int:
-        if self.money >= friend.getCost():
+    def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
+        animal = self.shop.checkAnimal(shop_pos)
+        if self.money >= animal.getCost():
             if not self.friends[friend_pos]:
-                self.money -= friend.getCost()
-                self.friends[friend_pos] = friend
+                self.money -= animal.getCost()
+                self.friends[friend_pos] = self.shop.buyAnimal(shop_pos)
                 # onBuy
                 # onFriendSummoned
-            elif self.friends[friend_pos].__class__ == friend.__class__:
+            elif self.friends[friend_pos].__class__ == animal.__class__:
                 # TODO: figure out how to combine to keep highest stats
                 pass
 
-    def buyFood(self, food: Food, position: int):
+    def buyFood(self, food: Food, position: int) -> None:
         # onFoodBought
         if self.money >= food.getCost():
             self.money -= food.getCost()
             self.friends[position].setFood(food)
             # onEat
 
-    def nextTurn(self):
+    def endTurn(self) -> None:
+        # onEndOfTurn
+        pass
+
+    def nextTurn(self) -> None:
+        # remove all temp hp
         self.round += 1
         self.shop.nextRound()
         self.money = 10

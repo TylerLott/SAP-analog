@@ -68,7 +68,10 @@ class Animal(ABC):
         self.__recalcHp()
 
     def subTempHp(self, amt: int) -> None:
-        self.temp_hp -= amt
+        if amt == -1:
+            self.temp_hp = 0
+        else:
+            self.temp_hp -= amt
         self.__recalcHp()
 
     def addBaseDmg(self, amt: int) -> None:
@@ -84,7 +87,10 @@ class Animal(ABC):
         self.__recalcDmg()
 
     def subTempDmg(self, amt: int) -> None:
-        self.temp_dmg -= amt
+        if amt == -1:
+            self.temp_dmg = 0
+        else:
+            self.temp_dmg -= amt
         self.__recalcDmg()
 
     def subHp(self, amt: int) -> None:
