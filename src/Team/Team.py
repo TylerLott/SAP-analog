@@ -60,7 +60,8 @@ class Team:
         # onFoodBought
         if self.money >= food.getCost():
             self.money -= food.getCost()
-            self.friends[position].setFood(food)
+            # iadd override in animal makes this work
+            self.friends[position] += food
             # onEat
 
     ### Actions ###

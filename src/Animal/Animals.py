@@ -202,8 +202,18 @@ class Animal(ABC):
             self.__setDmg(high_dmg + low_exp)
 
         # add food to animal
-        if other.__class__ == Food:
-            pass
+        if type(other) == Food:
+            temp_buff = other.getTempBuff()
+            perm_buff = other.getPermBuff()
+            effect = other.getEffect()
+
+            if type(effect) != NoneEffect:
+                self.effect = effect
+
+            self.addTempHp(temp_buff[0])
+            self.addTempDmg(temp_buff[1])
+            self.addBaseHp(perm_buff[0])
+            self.addBaseDmg(perm_buff[1])
 
 
 class Ant(Animal):
