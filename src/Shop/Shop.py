@@ -79,8 +79,8 @@ class Shop:
         for i in range(len(self.items)):
             self.items[i] = getRandomFood(self.getMaxTier())
 
-    def nextRound(self):
-        self.round += 1
+    def setRound(self, round: int):
+        self.round = round
         if self.round == 3:
             self.items = [None] * 2
         if self.round == 5:
@@ -88,7 +88,6 @@ class Shop:
         if self.round == 9:
             self.animals = [None] * 5
         self.roll()
-        self.money = 10
 
     ### Private ###
 
@@ -98,45 +97,17 @@ class Shop:
         """
         For printing cleanly to console
         """
-        animal_string = "|"
-        stat_string = "|"
+        out_str = "|##############################|\n"
+        out_str += "|############ SHOP ############|\n"
+        out_str += "|##############################|\n"
         for i in self.animals:
-            if not i:
-                space = " "
-                animal_string += f"{space:^10}|"
-                stat_string += f"{space:^10}|"
-                continue
-            an = f"{i.__class__.__name__:^10}|"
-            animal_string += an
-            stat = f"{i.getHp():^5}{i.getDmg():^5}|"
-            stat_string += stat
+            out_str += i.__str__()
 
-        item_string = "|"
+        out_str += "|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n"
+
         for i in self.items:
-            if not i:
-                space = " "
-                item_string += f"{space:^10}|"
-                continue
-            it = f"{i.__class__.__name__:^10}|"
-            item_string += it
+            out_str += i.__str__()
 
-        str_length = (len(animal_string) + len(item_string) - 6) // 2
-        shop_text = ("#" * str_length) + " SHOP " + ("#" * str_length)
+        out_str += "|##############################|\n"
 
-        anim_len = (len(animal_string) - 9) // 2
-        animal_title = "|" + ("-" * anim_len) + " ANIMALS " + ("-" * anim_len) + "|"
-
-        item_len = (len(item_string) - 7) // 2
-        item_title = ("-" * item_len) + " FOODS " + ("-" * item_len) + "|"
-
-        return (
-            shop_text
-            + "\n"
-            + animal_title
-            + item_title
-            + "\n"
-            + animal_string
-            + item_string
-            + "\n"
-            + stat_string
-        )
+        return out_str

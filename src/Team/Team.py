@@ -73,7 +73,7 @@ class Team:
     def nextTurn(self) -> None:
         # remove all temp hp
         self.round += 1
-        self.shop.nextRound()
+        self.shop.setRound(self.round)
         self.money = 10
         # onStartOfTurn - for stuff like the swan
 

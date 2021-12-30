@@ -184,7 +184,16 @@ class Animal(ABC):
     ### Overrides ###
 
     def __str__(self):
-        pass
+        out_str = "|=============================|\n"
+        out_str += "|" + f"{self.__class__.__name__:^30}" + "|\n"
+        out_str += "|-----------------------------|\n"
+        out_str += "|" + f'{"Health: " + self.hp:^30}' + "|\n"
+        out_str += "|" + f'{"Damage: "+ self.dmg:^30}' + "|\n"
+        out_str += "|" + f'{"Effect: "+ self.effect.__class__.__name__:^30}' + "|\n"
+        out_str += "|" + f'{"Cost: "+ self.cost:^30}' + "|\n"
+        out_str += "|=============================|\n"
+
+        return out_str
 
     def __iadd__(self, other):
         # add two animals

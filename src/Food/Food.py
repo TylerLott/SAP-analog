@@ -45,7 +45,18 @@ class Food(ABC):
     ### Overrides ###
 
     def __str__(self):
-        pass
+        out_str = "|=============================|\n"
+        out_str += "|" + f"{self.__class__.__name__:^30}" + "|\n"
+        out_str += "|-----------------------------|\n"
+        out_str += "|" + f'{"Tmp Health: " + self.temp_buff[0]:^30}' + "|\n"
+        out_str += "|" + f'{"Tmp Damage: "+ self.temp_buff[1]:^30}' + "|\n"
+        out_str += "|" + f'{"Perm Health: " + self.perm_buff[0]:^30}' + "|\n"
+        out_str += "|" + f'{"Perm Damage: "+ self.perm_buff[1]:^30}' + "|\n"
+        out_str += "|" + f'{"Effect: "+ self.effect.__class__.__name__:^30}' + "|\n"
+        out_str += "|" + f'{"Cost: "+ self.cost:^30}' + "|\n"
+        out_str += "|=============================|\n"
+
+        return out_str
 
 
 class Apple(Food):
