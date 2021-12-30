@@ -54,21 +54,24 @@ class Team:
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
         animal = self.shop.checkAnimal(shop_pos)
         if self.money >= animal.getCost():
+            animal = self.shop.buyAnimal(shop_pos)
             if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                self.friends[friend_pos] = self.shop.buyAnimal(shop_pos)
+                self.friends[friend_pos] = animal
                 # onBuy
                 # onFriendSummoned
             elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
                 self.friends += animal
 
-    def buyFood(self, food: Food, position: int) -> None:
-        # onFoodBought
+    def buyFood(self, shop_pos: int, position: int) -> None:
+        food = self.shop.checkFood(shop_pos)
         if self.money >= food.getCost():
+            food = self.shop.buyFood(shop_pos)
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
+            # onFoodBought
 
     def loseLife(self, amt: int) -> None:
         self.life -= amt
@@ -147,3 +150,6 @@ class Team:
         out_str += "|##############################|\n"
 
         return out_str
+
+    def __bool__(self):
+        return self.alive

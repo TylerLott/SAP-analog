@@ -60,3 +60,6 @@ class Food(ABC):
         out_str += "|==============================|\n"
 
         return out_str
+
+    def __bool__(self):
+        return True

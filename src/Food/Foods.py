@@ -5,7 +5,7 @@ class NoneFood(Food):
     def __init__(self):
         super().__init__()
 
-    def __nonzero__(self):
+    def __bool__(self):
         return False
 
 

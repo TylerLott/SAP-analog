@@ -65,6 +65,14 @@ class Shop:
         """
         return self.animals[position]
 
+    def checkFood(self, position: int) -> Food:
+        """
+        public check food method
+
+        returns food from shop position, without removing from shop
+        """
+        return self.items[position]
+
     def getState(self):
         """
         public get shop state method

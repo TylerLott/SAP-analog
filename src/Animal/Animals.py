@@ -8,7 +8,7 @@ class NoneAnimal(Animal):
     def __init__(self):
         super().__init__(0, 0)
 
-    def __nonezero__(self):
+    def __bool__(self):
         return False
 
 

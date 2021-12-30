@@ -276,6 +276,6 @@ class Animal(ABC):
             self.addBaseDmg(perm_buff[1])
             self.onEat()
 
-    def __nonzero__(self):
+    def __bool__(self):
         """override boolean value of animal"""
         return True
