@@ -1,12 +1,50 @@
 from abc import ABC
+from src.Food.Effect.Effect import *
 
 
 class Food(ABC):
-    def __init__(self):
-        # TODO: all of this
+    """
+    Food Base Class
+    """
+
+    ### Init ###
+
+    def __init__(
+        self,
+        temp_hp: int = 0,
+        temp_dmg: int = 0,
+        perm_hp: int = 0,
+        perm_dmg: int = 0,
+        effect: Effect = NoneEffect,
+        cost: int = 3,
+    ):
+        self.temp_buff = [temp_hp, temp_dmg]
+        self.perm_buff = [perm_hp, perm_dmg]
+        self.effect = effect
+        self.cost = cost
         pass
 
-    def getCost(self):
+    ### Getters ###
+
+    def getCost(self) -> int:
+        return self.cost
+
+    def getEffect(self) -> Effect:
+        return self.effect
+
+    def getTempBuff(self) -> list:
+        # [temp_hp, temp_dmg]
+        return self.temp_buff
+
+    def getPermBuff(self) -> list:
+        # [perm_hp, perm_dmg]
+        return self.perm_buff
+
+    ### Setters ###
+
+    ### Overrides ###
+
+    def __str__(self):
         pass
 
 
@@ -32,7 +70,7 @@ class MeatBone(Food):
 
 class Pill(Food):
     def __init__(self):
-        pass
+        super().__init__(cost=1)
 
 
 class Garlic(Food):

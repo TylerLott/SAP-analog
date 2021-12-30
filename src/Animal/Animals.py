@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from random import randrange
+from typing import Union
 
 from src.Food.Effect.Effect import NoneEffect, Effect
 from src.Food.Food import Food
@@ -9,6 +10,8 @@ class Animal(ABC):
     """
     Animal base class
     """
+
+    ### Init ###
 
     def __init__(self, health: int, dmg: int, effect: Effect = NoneEffect) -> None:
         # Default
@@ -105,6 +108,14 @@ class Animal(ABC):
 
     #### Private ####
 
+    def __setHp(self, amt: int) -> None:
+        self.base_hp = amt
+        self.__recalcHp()
+
+    def __setDmg(self, amt: int) -> None:
+        self.base_dmg = amt
+        self.__recalcDmg()
+
     def __recalcHp(self):
         self.hp = self.temp_hp + self.base_hp
 
@@ -169,6 +180,30 @@ class Animal(ABC):
 
     def onFriendAheadFaint(self):
         pass
+
+    ### Overrides ###
+
+    def __str__(self):
+        pass
+
+    def __iadd__(self, other):
+        # add two animals
+        if other.__class__ == self.__class__:
+            high_hp = self.base_hp if self.base_hp > other.base_hp else other.base_hp
+            high_dmg = (
+                self.base_dmg if self.base_dmg > other.base_dmg else other.base_dmg
+            )
+            low_exp = (
+                self.getLevel()
+                if self.getLevel() < other.getLevel()
+                else other.getLevel()
+            )
+            self.__setHp(high_hp + low_exp)
+            self.__setDmg(high_dmg + low_exp)
+
+        # add food to animal
+        if other.__class__ == Food:
+            pass
 
 
 class Ant(Animal):

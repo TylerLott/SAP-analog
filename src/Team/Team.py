@@ -53,8 +53,8 @@ class Team:
                 # onBuy
                 # onFriendSummoned
             elif self.friends[friend_pos].__class__ == animal.__class__:
-                # TODO: figure out how to combine to keep highest stats
-                pass
+                # iadd is overridden for animal so this works
+                self.friends += animal
 
     def buyFood(self, food: Food, position: int) -> None:
         # onFoodBought
