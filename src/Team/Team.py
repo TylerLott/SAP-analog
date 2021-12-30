@@ -22,25 +22,32 @@ class Team:
         if self.friends[friend_pos]:
             self.money += self.friends[friend_pos].getLevel()
             self.friends[friend_pos] = None
+            # onSell
+            # onFriendSell
 
     def buyFriend(self, friend: Animal, friend_pos: int) -> int:
         if self.money >= friend.getCost():
             if not self.friends[friend_pos]:
                 self.money -= friend.getCost()
                 self.friends[friend_pos] = friend
+                # onBuy
+                # onFriendSummoned
             elif self.friends[friend_pos].__class__ == friend.__class__:
                 # TODO: figure out how to combine to keep highest stats
                 pass
 
     def buyFood(self, food: Food, position: int):
+        # onFoodBought
         if self.money >= food.getCost():
             self.money -= food.getCost()
             self.friends[position].setFood(food)
+            # onEat
 
     def nextTurn(self):
         self.round += 1
         self.shop.nextRound()
         self.money = 10
+        # onStartOfTurn - for stuff like the swan
 
     def setState(self):
         # convert state to the right move and do that move

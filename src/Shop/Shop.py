@@ -104,7 +104,7 @@ class Shop:
                 continue
             an = f"{i.__class__.__name__:^10}|"
             animal_string += an
-            stat = f"{i.health:^5}{i.dmg:^5}|"
+            stat = f"{i.getHp():^5}{i.getDmg():^5}|"
             stat_string += stat
 
         item_string = "|"
