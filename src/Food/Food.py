@@ -45,38 +45,38 @@ class Food(ABC):
     ### Overrides ###
 
     def __str__(self):
-        out_str = "|=============================|\n"
+        out_str = "|==============================|\n"
         out_str += "|" + f"{self.__class__.__name__:^30}" + "|\n"
-        out_str += "|-----------------------------|\n"
-        out_str += "|" + f'{"Tmp Health: " + self.temp_buff[0]:^30}' + "|\n"
-        out_str += "|" + f'{"Tmp Damage: "+ self.temp_buff[1]:^30}' + "|\n"
-        out_str += "|" + f'{"Perm Health: " + self.perm_buff[0]:^30}' + "|\n"
-        out_str += "|" + f'{"Perm Damage: "+ self.perm_buff[1]:^30}' + "|\n"
-        out_str += "|" + f'{"Effect: "+ self.effect.__class__.__name__:^30}' + "|\n"
-        out_str += "|" + f'{"Cost: "+ self.cost:^30}' + "|\n"
-        out_str += "|=============================|\n"
+        out_str += "|------------------------------|\n"
+        out_str += "|" + f'{"Tmp Health: " + str(self.temp_buff[0]):^30}' + "|\n"
+        out_str += "|" + f'{"Tmp Damage: "+ str(self.temp_buff[1]):^30}' + "|\n"
+        out_str += "|" + f'{"Perm Health: " + str(self.perm_buff[0]):^30}' + "|\n"
+        out_str += "|" + f'{"Perm Damage: "+ str(self.perm_buff[1]):^30}' + "|\n"
+        out_str += "|" + f'{"Effect: "+ self.getEffect().__name__:^30}' + "|\n"
+        out_str += "|" + f'{"Cost: "+ str(self.cost):^30}' + "|\n"
+        out_str += "|==============================|\n"
 
         return out_str
 
 
 class Apple(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Honey(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Cupcake(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class MeatBone(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Pill(Food):
@@ -86,59 +86,59 @@ class Pill(Food):
 
 class Garlic(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Salad(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class CannedFood(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Pear(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Chili(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Chocolate(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Sushi(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Melon(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Mushroom(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Pizza(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Steak(Food):
     def __init__(self):
-        pass
+        super().__init__()
 
 
 class Milk(Food):
     def __init__(self):
-        pass
+        super().__init__()
