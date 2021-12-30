@@ -1,6 +1,5 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from random import randrange
-from typing import Union
 
 from src.Food.Effect.Effect import *
 from src.Food.Food import Food
@@ -123,6 +122,9 @@ class Animal(ABC):
         self.base_dmg = amt
         self.__recalcDmg()
 
+    def __setExp(self, amt: int) -> None:
+        self.exp = amt
+
     def __recalcHp(self):
         self.hp = self.temp_hp + self.base_hp
 
@@ -136,11 +138,6 @@ class Animal(ABC):
         self.hp -= round(dmgAmt * self.dmgModifier)
         if self.hp <= 0:
             self.alive = False
-
-    def onCombine(self, animal):
-        self.exp += animal.getExp()
-        self.base_hp += animal.getExp()
-        self.base_dmg += animal.getExp()
 
     # Special On Events
     def onFaint(self):
@@ -216,6 +213,12 @@ class Animal(ABC):
                 if self.getLevel() < other.getLevel()
                 else other.getLevel()
             )
+            high_exp = (
+                self.getLevel()
+                if self.getLevel() > other.getLevel()
+                else other.getLevel()
+            )
+            self.__setExp(low_exp + high_exp)
             self.__setHp(high_hp + low_exp)
             self.__setDmg(high_dmg + low_exp)
 
@@ -232,6 +235,17 @@ class Animal(ABC):
             self.addTempDmg(temp_buff[1])
             self.addBaseHp(perm_buff[0])
             self.addBaseDmg(perm_buff[1])
+
+    def __nonzero__(self):
+        return True
+
+
+class NoneAnimal(Animal):
+    def __init__(self):
+        super().__init__(0, 0)
+
+    def __nonezero__(self):
+        return False
 
 
 class Ant(Animal):

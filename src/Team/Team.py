@@ -1,4 +1,4 @@
-from src.Animal.Animals import Animal
+from src.Animal.Animals import NoneAnimal
 from src.Shop.Shop import Shop
 from src.Food.Food import Food
 
@@ -15,7 +15,7 @@ class Team:
         self.shop = Shop()
         self.life = 10
         self.money = 10
-        self.friends = [None] * 5
+        self.friends = [NoneAnimal] * 5
 
     ### Getters ###
 
@@ -90,8 +90,12 @@ class Team:
     ### Overrides ###
 
     def __str__(self):
-        pass
-        # title
-        # friends
-        # stats
-        # effects
+        """
+        For printing cleanly to console
+        - bottom is the first position
+        """
+        out_str = "|##############################|\n"
+        out_str += "|############ TEAM ############|\n"
+        out_str += "|##############################|\n"
+        for i in self.friends:
+            out_str += i.__str__()
