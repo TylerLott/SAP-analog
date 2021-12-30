@@ -27,7 +27,9 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from abc import ABC
-from src.Food.Effect.Effect import *
+from src.Food.Effect import Effect
+from src.Food.Effect.Effects import NoneEffect
+
 
 class Food(ABC):
     &#34;&#34;&#34;
@@ -95,11 +97,11 @@ class Food(ABC):
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.Food.Food" href="Food.html">src.Food.Food</a></code></dt>
+<dt><code class="name"><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt><code class="name"><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></dt>
+<dt><code class="name"><a title="src.Food.Foods" href="Foods.html">src.Food.Foods</a></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -110,6 +112,160 @@ class Food(ABC):
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="src.Food.Food"><code class="flex name class">
+<span>class <span class="ident">Food</span></span>
+<span>(</span><span>temp_hp: int = 0, temp_dmg: int = 0, perm_hp: int = 0, perm_dmg: int = 0, effect: <a title="src.Food.Effect.Effect" href="Effect/index.html#src.Food.Effect.Effect">Effect</a> = src.Food.Effect.Effects.NoneEffect, cost: int = 3)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Food Base Class</p>
+<p>Constructor method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Food(ABC):
+    &#34;&#34;&#34;
+    Food Base Class
+
+    &#34;&#34;&#34;
+
+    ### Init ###
+
+    def __init__(
+        self,
+        temp_hp: int = 0,
+        temp_dmg: int = 0,
+        perm_hp: int = 0,
+        perm_dmg: int = 0,
+        effect: Effect = NoneEffect,
+        cost: int = 3,
+    ):
+        &#34;&#34;&#34;Constructor method&#34;&#34;&#34;
+        self.temp_buff = [temp_hp, temp_dmg]
+        self.perm_buff = [perm_hp, perm_dmg]
+        self.effect = effect
+        self.cost = cost
+        pass
+
+    ### Getters ###
+
+    def getCost(self) -&gt; int:
+        return self.cost
+
+    def getEffect(self) -&gt; Effect:
+        return self.effect
+
+    def getTempBuff(self) -&gt; list:
+        # [temp_hp, temp_dmg]
+        return self.temp_buff
+
+    def getPermBuff(self) -&gt; list:
+        # [perm_hp, perm_dmg]
+        return self.perm_buff
+
+    ### Setters ###
+
+    ### Overrides ###
+
+    def __str__(self):
+        out_str = &#34;|==============================|\n&#34;
+        out_str += &#34;|&#34; + f&#34;{self.__class__.__name__:^30}&#34; + &#34;|\n&#34;
+        out_str += &#34;|------------------------------|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Tmp Health: &#34; + str(self.temp_buff[0]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Tmp Damage: &#34;+ str(self.temp_buff[1]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Perm Health: &#34; + str(self.perm_buff[0]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Perm Damage: &#34;+ str(self.perm_buff[1]):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
+        out_str += &#34;|==============================|\n&#34;
+
+        return out_str</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>abc.ABC</li>
+</ul>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="src.Food.Foods.Apple" href="Foods.html#src.Food.Foods.Apple">Apple</a></li>
+<li><a title="src.Food.Foods.CannedFood" href="Foods.html#src.Food.Foods.CannedFood">CannedFood</a></li>
+<li><a title="src.Food.Foods.Chili" href="Foods.html#src.Food.Foods.Chili">Chili</a></li>
+<li><a title="src.Food.Foods.Chocolate" href="Foods.html#src.Food.Foods.Chocolate">Chocolate</a></li>
+<li><a title="src.Food.Foods.Cupcake" href="Foods.html#src.Food.Foods.Cupcake">Cupcake</a></li>
+<li><a title="src.Food.Foods.Garlic" href="Foods.html#src.Food.Foods.Garlic">Garlic</a></li>
+<li><a title="src.Food.Foods.Honey" href="Foods.html#src.Food.Foods.Honey">Honey</a></li>
+<li><a title="src.Food.Foods.MeatBone" href="Foods.html#src.Food.Foods.MeatBone">MeatBone</a></li>
+<li><a title="src.Food.Foods.Melon" href="Foods.html#src.Food.Foods.Melon">Melon</a></li>
+<li><a title="src.Food.Foods.Milk" href="Foods.html#src.Food.Foods.Milk">Milk</a></li>
+<li><a title="src.Food.Foods.Mushroom" href="Foods.html#src.Food.Foods.Mushroom">Mushroom</a></li>
+<li><a title="src.Food.Foods.Pear" href="Foods.html#src.Food.Foods.Pear">Pear</a></li>
+<li><a title="src.Food.Foods.Pill" href="Foods.html#src.Food.Foods.Pill">Pill</a></li>
+<li><a title="src.Food.Foods.Pizza" href="Foods.html#src.Food.Foods.Pizza">Pizza</a></li>
+<li><a title="src.Food.Foods.Salad" href="Foods.html#src.Food.Foods.Salad">Salad</a></li>
+<li><a title="src.Food.Foods.Steak" href="Foods.html#src.Food.Foods.Steak">Steak</a></li>
+<li><a title="src.Food.Foods.Sushi" href="Foods.html#src.Food.Foods.Sushi">Sushi</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Food.Food.getCost"><code class="name flex">
+<span>def <span class="ident">getCost</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getCost(self) -&gt; int:
+    return self.cost</code></pre>
+</details>
+</dd>
+<dt id="src.Food.Food.getEffect"><code class="name flex">
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Food.Effect.Effect" href="Effect/index.html#src.Food.Effect.Effect">Effect</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getEffect(self) -&gt; Effect:
+    return self.effect</code></pre>
+</details>
+</dd>
+<dt id="src.Food.Food.getPermBuff"><code class="name flex">
+<span>def <span class="ident">getPermBuff</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getPermBuff(self) -&gt; list:
+    # [perm_hp, perm_dmg]
+    return self.perm_buff</code></pre>
+</details>
+</dd>
+<dt id="src.Food.Food.getTempBuff"><code class="name flex">
+<span>def <span class="ident">getTempBuff</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTempBuff(self) -&gt; list:
+    # [temp_hp, temp_dmg]
+    return self.temp_buff</code></pre>
+</details>
+</dd>
+</dl>
+</dd>
+</dl>
 </section>
 </article>
 <nav id="sidebar">
@@ -126,8 +282,21 @@ class Food(ABC):
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
 <li><code><a title="src.Food.Effect" href="Effect/index.html">src.Food.Effect</a></code></li>
-<li><code><a title="src.Food.Food" href="Food.html">src.Food.Food</a></code></li>
 <li><code><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></li>
+<li><code><a title="src.Food.Foods" href="Foods.html">src.Food.Foods</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="src.Food.Food" href="#src.Food.Food">Food</a></code></h4>
+<ul class="">
+<li><code><a title="src.Food.Food.getCost" href="#src.Food.Food.getCost">getCost</a></code></li>
+<li><code><a title="src.Food.Food.getEffect" href="#src.Food.Food.getEffect">getEffect</a></code></li>
+<li><code><a title="src.Food.Food.getPermBuff" href="#src.Food.Food.getPermBuff">getPermBuff</a></code></li>
+<li><code><a title="src.Food.Food.getTempBuff" href="#src.Food.Food.getTempBuff">getTempBuff</a></code></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

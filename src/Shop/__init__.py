@@ -1,5 +1,5 @@
 from src.Animal.Animals import Animal
-from src.Food.Food import Food
+from src.Food.Foods import Food
 from src.Animal.AnimalGenerator import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 

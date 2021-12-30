@@ -1,7 +1,4 @@
-from abc import ABC
-from random import randrange
-
-from src.Food.Effect.Effect import *
+from src.Food.Effect import Effect
 from src.Animal import Animal
 
 

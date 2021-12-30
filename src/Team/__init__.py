@@ -62,11 +62,20 @@ class Team:
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onEat
 
     ### Private ###
 
-    # all of the actions
+    def __onSell(self) -> None:
+        pass
+
+    def __onFriendSell(self) -> None:
+        pass
+
+    def __onBuy(self) -> None:
+        pass
+
+    def __onFriendSummon(self) -> None:
+        pass
 
     ### Actions ###
 

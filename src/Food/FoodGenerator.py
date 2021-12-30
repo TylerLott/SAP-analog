@@ -1,5 +1,5 @@
 from random import randint
-from src.Food.Food import *
+from src.Food.Foods import *
 
 foods = {
     1: [Apple, Honey],

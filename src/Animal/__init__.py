@@ -1,8 +1,9 @@
 from abc import ABC
 from random import randrange
 
-from src.Food.Effect.Effect import *
-from src.Food.Food import Food
+from src.Food.Effect import Effect
+from src.Food.Effect.Effects import NoneEffect
+from src.Food.Foods import Food
 
 
 class Animal(ABC):
@@ -34,12 +35,15 @@ class Animal(ABC):
     #### Getters ####
 
     def getHp(self) -> int:
+        """public get hp method"""
         return self.hp
 
     def getDmg(self) -> int:
+        """public get dmg method"""
         return self.dmg
 
     def getLevel(self) -> int:
+        """public get animal level method"""
         if self.exp > 5:
             return 3
         if self.exp > 2:
@@ -47,36 +51,50 @@ class Animal(ABC):
         return 1
 
     def getExp(self) -> int:
+        """public get animal exp method"""
         return self.exp
 
     def getAbility(self) -> str:
-        """Ability should be string describing animal abilities, if any"""
+        """
+        public get ability method
+        Ability should be string describing animal abilities, if any
+        """
         return self.ability
 
     def getEffect(self) -> Effect:
+        """public get animal effect method"""
         return self.effect
 
     def getCost(self) -> int:
+        """public get animal cost method"""
         return self.cost
 
     def getState(self) -> list:
+        """public get animal state method"""
         pass
 
     #### Setters ####
 
     def addBaseHp(self, amt: int) -> None:
+        """public add to base hp method"""
         self.base_hp += amt
         self.__recalcHp()
 
     def addTempHp(self, amt: int) -> None:
+        """public add to temp hp method"""
         self.temp_hp += amt
         self.__recalcHp()
 
     def subBaseHp(self, amt: int) -> None:
+        """public subtract from base hp method"""
         self.base_hp -= amt
         self.__recalcHp()
 
     def subTempHp(self, amt: int) -> None:
+        """
+        public subtract from temp hp method
+        sets temp hp to 0 if -1 is passed
+        """
         if amt == -1:
             self.temp_hp = 0
         else:
@@ -84,18 +102,25 @@ class Animal(ABC):
         self.__recalcHp()
 
     def addBaseDmg(self, amt: int) -> None:
+        """public add to base damage method"""
         self.base_dmg += amt
         self.__recalcDmg()
 
     def addTempDmg(self, amt: int) -> None:
+        """public add to temp damage method"""
         self.temp_dmg += amt
         self.__recalcDmg()
 
     def subBaseDmg(self, amt: int) -> None:
+        """public subtract from base damage method"""
         self.base_dmg -= amt
         self.__recalcDmg()
 
     def subTempDmg(self, amt: int) -> None:
+        """
+        public subtract from temp damage method
+        sets temp damage to 0 if -1 is passed
+        """
         if amt == -1:
             self.temp_dmg = 0
         else:
@@ -103,32 +128,38 @@ class Animal(ABC):
         self.__recalcDmg()
 
     def subHp(self, amt: int) -> None:
-        # Only for use in battle
+        """
+        public subtract from hp method
+        only for use in a fight
+        """
         self.hp -= amt
 
     def setEffect(self, effect: Effect) -> None:
+        """public set effect method"""
         self.effect = effect
-
-    def setFood(self, food: Food) -> None:
-        pass
 
     #### Private ####
 
     def __setHp(self, amt: int) -> None:
+        """private set hp method"""
         self.base_hp = amt
         self.__recalcHp()
 
     def __setDmg(self, amt: int) -> None:
+        """private set damage method"""
         self.base_dmg = amt
         self.__recalcDmg()
 
     def __setExp(self, amt: int) -> None:
+        """private set exp method"""
         self.exp = amt
 
     def __recalcHp(self):
+        """private recalcuate total hp method"""
         self.hp = self.temp_hp + self.base_hp
 
     def __recalcDmg(self):
+        """private recalcuate total damage method"""
         self.dmg = self.temp_dmg + self.base_dmg
 
     #### On Events ####
@@ -235,6 +266,7 @@ class Animal(ABC):
             self.addTempDmg(temp_buff[1])
             self.addBaseHp(perm_buff[0])
             self.addBaseDmg(perm_buff[1])
+            self.onEat()
 
     def __nonzero__(self):
         return True

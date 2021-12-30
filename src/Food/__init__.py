@@ -1,5 +1,7 @@
 from abc import ABC
-from src.Food.Effect.Effect import *
+from src.Food.Effect import Effect
+from src.Food.Effect.Effects import NoneEffect
+
 
 class Food(ABC):
     """
