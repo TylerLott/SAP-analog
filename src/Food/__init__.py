@@ -6,7 +6,6 @@ from src.Effect.Effects import NoneEffect
 class Food(ABC):
     """
     Food Base Class
-
     """
 
     ### Init ###

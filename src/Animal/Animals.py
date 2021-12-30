@@ -1,4 +1,5 @@
 from src.Animal import Animal
+from src.Effect.Effects import SplashEffect
 
 
 class NoneAnimal(Animal):
@@ -88,6 +89,18 @@ class Boar(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 6
+
+
+class Bus(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 5
+
+        super().__init__(
+            default_health + health, default_dmg + dmg, effect=SplashEffect()
+        )
+        self.tier = 4
 
 
 class Camel(Animal):

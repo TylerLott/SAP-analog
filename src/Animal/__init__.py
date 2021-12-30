@@ -1,9 +1,8 @@
 from abc import ABC
-from random import randrange
 
 from src.Effect import Effect
-from src.Effect.Effects import NoneEffect
-from src.Food.Foods import Food
+from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
+from src.Food import Food
 
 
 class Animal(ABC):
@@ -25,7 +24,7 @@ class Animal(ABC):
         self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
         self.ability = ability
         self.effect = effect
-        self.dmgModifier = 1
+        self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
 
         # Derived
@@ -166,7 +165,17 @@ class Animal(ABC):
 
     # Normal On Events
     def onHit(self, dmgAmt):
-        self.hp -= round(dmgAmt * self.dmgModifier)
+        dmg_taken = (
+            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier > 1 else 1
+        )
+        if type(self.effect) == MelonEffect:
+            dmg_taken = dmg_taken - 20 if dmg_taken - 20 > 0 else 0
+            self.setEffect(NoneEffect())
+        if type(self.effect) == CoconutEffect:
+            dmg_taken = 0
+            self.setEffect(NoneEffect())
+
+        self.hp -= dmg_taken
         if self.hp <= 0:
             self.alive = False
 

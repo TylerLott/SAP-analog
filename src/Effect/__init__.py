@@ -8,3 +8,6 @@ class Effect(ABC):
 
     def __init__(self):
         self.test = 0
+
+    def __bool__(self):
+        return True
