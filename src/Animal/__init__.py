@@ -233,6 +233,14 @@ class Animal(ABC):
         return out_str
 
     def __iadd__(self, other):
+        """
+        override +=
+
+        can be used to add two of the same animals
+
+        can be used to apply food to an animal
+
+        """
         # add two animals
         if other.__class__ == self.__class__:
             high_hp = self.base_hp if self.base_hp > other.base_hp else other.base_hp
@@ -269,4 +277,5 @@ class Animal(ABC):
             self.onEat()
 
     def __nonzero__(self):
+        """override boolean value of animal"""
         return True

@@ -5,7 +5,7 @@ from src.Food import Food
 
 class Team:
     """
-    This is the class for the Teams
+    Team Base Class
     """
 
     ### Init ###
