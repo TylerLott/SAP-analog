@@ -1,6 +1,14 @@
 from src.Food import Food
 
 
+class NoneFood(Food):
+    def __init__(self):
+        super().__init__()
+
+    def __nonzero__(self):
+        return False
+
+
 class Apple(Food):
     def __init__(self):
         super().__init__()

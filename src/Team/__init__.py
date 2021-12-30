@@ -6,6 +6,9 @@ from src.Food import Food
 class Team:
     """
     Team Base Class
+
+    This class is responsible for the team array, money management, game round, and lives
+    This class also has it's own instance of a shop
     """
 
     ### Init ###
@@ -14,8 +17,9 @@ class Team:
         self.round = 1
         self.shop = Shop()
         self.life = 10
+        self.alive = True
         self.money = 10
-        self.friends = [NoneAnimal] * 5
+        self.friends = [NoneAnimal()] * 5
 
     ### Getters ###
 
@@ -31,6 +35,9 @@ class Team:
 
     def getMoney(self) -> int:
         return self.money
+
+    def getAlive(self) -> bool:
+        return self.alive
 
     ### Setters ###
 
@@ -63,6 +70,11 @@ class Team:
             # iadd override in animal makes this work
             self.friends[position] += food
 
+    def loseLife(self, amt: int) -> None:
+        self.life -= amt
+        if self.life <= 0:
+            self.alive = False
+
     ### Private ###
 
     def __onSell(self) -> None:
@@ -78,6 +90,11 @@ class Team:
         pass
 
     ### Actions ###
+
+    def rollShop(self) -> None:
+        if self.money > 1:
+            self.shop.roll()
+            self.money -= 1
 
     def endTurn(self) -> None:
         # onEndOfTurn

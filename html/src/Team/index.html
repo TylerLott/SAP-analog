@@ -33,7 +33,7 @@ from src.Food import Food
 
 class Team:
     &#34;&#34;&#34;
-    This is the class for the Teams
+    Team Base Class
     &#34;&#34;&#34;
 
     ### Init ###
@@ -90,11 +90,20 @@ class Team:
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onEat
 
     ### Private ###
 
-    # all of the actions
+    def __onSell(self) -&gt; None:
+        pass
+
+    def __onFriendSell(self) -&gt; None:
+        pass
+
+    def __onBuy(self) -&gt; None:
+        pass
+
+    def __onFriendSummon(self) -&gt; None:
+        pass
 
     ### Actions ###
 
@@ -164,14 +173,14 @@ class Team:
 <span>class <span class="ident">Team</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>This is the class for the Teams</p></div>
+<div class="desc"><p>Team Base Class</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Team:
     &#34;&#34;&#34;
-    This is the class for the Teams
+    Team Base Class
     &#34;&#34;&#34;
 
     ### Init ###
@@ -228,11 +237,20 @@ class Team:
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onEat
 
     ### Private ###
 
-    # all of the actions
+    def __onSell(self) -&gt; None:
+        pass
+
+    def __onFriendSell(self) -&gt; None:
+        pass
+
+    def __onBuy(self) -&gt; None:
+        pass
+
+    def __onFriendSummon(self) -&gt; None:
+        pass
 
     ### Actions ###
 
@@ -304,8 +322,7 @@ class Team:
     if self.money &gt;= food.getCost():
         self.money -= food.getCost()
         # iadd override in animal makes this work
-        self.friends[position] += food
-        # onEat</code></pre>
+        self.friends[position] += food</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.buyFriend"><code class="name flex">

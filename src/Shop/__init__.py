@@ -1,19 +1,21 @@
-from src.Animal.Animals import Animal
-from src.Food.Foods import Food
+from src.Animal import Animal
+from src.Animal.Animals import NoneAnimal
+from src.Food import Food
+from src.Food.Foods import NoneFood
 from src.Animal.AnimalGenerator import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 
 
 class Shop:
     """
-    Shop class
+    Shop Base Class
 
-    round 1-2: teir 1
-    round 3-4: teir 1, 2
-    round 5-6: teir 1, 2, 3
-    round 7-8: teir 1, 2, 3, 4
-    round 9-10: teir 1, 2, 3, 4, 5
-    round 11+: all teirs
+    round 1-2: tier 1
+    round 3-4: tier 1, 2
+    round 5-6: tier 1, 2, 3
+    round 7-8: tier 1, 2, 3, 4
+    round 9-10: tier 1, 2, 3, 4, 5
+    round 11+: all tiers
 
     round 1-4: 3 animals
     round 5-8: 4 animals
@@ -36,13 +38,12 @@ class Shop:
 
     ### Getters ###
 
-    def getShop(self):
-        return self.animals + self.items
-
-    def getMoney(self):
-        return self.money
-
     def getMaxTier(self):
+        """
+        public get max shop animal tier method
+
+        returns highest tier
+        """
         if 1 <= self.round <= 2:
             return 1
         if 3 <= self.round <= 4:
@@ -57,18 +58,32 @@ class Shop:
             return 6
 
     def checkAnimal(self, position: int) -> Animal:
+        """
+        public check animal method
+
+        returns animal from shop position, without removing from shop
+        """
         return self.animals[position]
+
+    def getState(self):
+        """
+        public get shop state method
+
+        returns shop state array
+        """
+        pass
 
     ### Setters ###
 
     def buyAnimal(self, position: int) -> Animal:
+
         animal = self.animals[position]
-        self.animals[position] = None
+        self.animals[position] = NoneAnimal()
         return animal
 
     def buyFood(self, position: int) -> Food:
         food = self.items[position]
-        self.items[position] = None
+        self.items[position] = NoneFood()
         return food
 
     ### Actions ###
@@ -82,11 +97,11 @@ class Shop:
     def setRound(self, round: int):
         self.round = round
         if self.round == 3:
-            self.items = [None] * 2
+            self.items = [NoneFood()] * 2
         if self.round == 5:
-            self.animals = [None] * 4
+            self.animals = [NoneAnimal()] * 4
         if self.round == 9:
-            self.animals = [None] * 5
+            self.animals = [NoneAnimal()] * 5
         self.roll()
 
     ### Private ###
