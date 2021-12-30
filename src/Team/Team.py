@@ -64,6 +64,10 @@ class Team:
             self.friends[position] += food
             # onEat
 
+    ### Private ###
+
+    # all of the actions
+
     ### Actions ###
 
     def endTurn(self) -> None:
@@ -92,10 +96,18 @@ class Team:
     def __str__(self):
         """
         For printing cleanly to console
-        - bottom is the first position
+        - top is the first position
         """
         out_str = "|##############################|\n"
         out_str += "|############ TEAM ############|\n"
         out_str += "|##############################|\n"
+        out_str += "|==============================|\n"
+        out_str += "|" + f'{"Lives: " + str(self.life):^30}' + "|\n"
+        out_str += "|" + f'{"Money: " + str(self.money):^30}' + "|\n"
+        out_str += "|==============================|\n"
+        out_str += "|~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~|\n"
         for i in self.friends:
             out_str += i.__str__()
+        out_str += "|##############################|\n"
+
+        return out_str
