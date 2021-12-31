@@ -12,9 +12,8 @@ foods = {
 
 
 def getRandomFood(maxTier: int) -> Food:
-    if maxTier == 1:
-        tier = 1
-    else:
-        tier = randint(1, maxTier - 1)
-    food = randint(0, len(foods[tier]) - 1)
-    return foods[tier][food]()
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += foods[i]
+    food = randint(0, len(possible) - 1)
+    return possible[food]()
