@@ -176,18 +176,6 @@ class Boar(Animal):
         self.tier = 6
 
 
-class Bus(Animal):
-    def __init__(self, health, dmg):
-
-        default_health = 5
-        default_dmg = 5
-
-        super().__init__(
-            default_health + health, default_dmg + dmg, effect=SplashEffect()
-        )
-        self.tier = 4
-
-
 class Camel(Animal):
     """
     Camel Class
@@ -300,12 +288,47 @@ class Crocodile(Animal):
 
 
 class Deer(Animal):
+    """
+    Deer Class
+
+    Level 1: Faint -> Summon a 5/5 Bus with Splash
+    Level 2: Faint -> Summon a 10/10 Bus with Splash
+    Level 3: Faint -> Summon a 15/15 Bus with Splash
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 1
+        ability = "Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+
+    def onFaint(self, friends: list, enemies: list):
+        pos = self.getPosition(friends)
+        friends[pos] = Bus(5 * self.getLevel(), 5 * self.getLevel())
+
+
+class Bus(Animal):
+    """
+    Bus Class
+
+    Only summoned by a deer
+    """
+
+    def __init__(self, health, dmg):
+
+        default_health = 0
+        default_dmg = 0
+        ability = "None"
+
+        super().__init__(
+            default_health + health,
+            default_dmg + dmg,
+            effect=SplashEffect(),
+            ability=ability,
+        )
         self.tier = 4
 
 
@@ -360,13 +383,30 @@ class Dog(Animal):
 
 
 class Dolphin(Animal):
+    """
+    Dolphin Class
+
+    Level 1: Start of Battle -> Deal 5 damage to lowest health enemy
+    Level 2: Start of Battle -> Deal 10 damage to lowest health enemy
+    Level 3: Start of Battle -> Deal 15 damage to lowest health enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 4
+        ability = "Start of Battle: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onStartOfBattle(self, friends: list, enemies: list):
+        lowest = enemies[0]
+        for i in enemies:
+            if enemies[i].getHp() < lowest.getHp():
+                lowest = enemies[i]
+
+        lowest.subHp(5 * self.getLevel(), friends, enemies)
 
 
 class Dragon(Animal):
@@ -554,13 +594,24 @@ class Hedgehog(Animal):
 
 
 class Hippo(Animal):
+    """
+    Hippo Class
+
+    Level 1: Knock Out -> Gain +2/+2
+    Level 2: Knock Out -> Gain +4/+4
+    Level 3: Knock Out -> Gain +6/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 7
         default_dmg = 4
+        ability = "Knock Out: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    # TODO: Hippo knock out implement
 
 
 class Horse(Animal):
@@ -707,6 +758,7 @@ class Ox(Animal):
 
 
 class Parrot(Animal):
+    # TODO: implement this
     def __init__(self, health, dmg):
 
         default_health = 3
@@ -739,13 +791,28 @@ class Peacock(Animal):
 
 
 class Penguin(Animal):
+    """
+    Penguin Class
+
+    Level 1: End Turn -> Give other level 2 and 3 friends +1/+1
+    Level 2: End Turn -> Give other level 2 and 3 friends +2/+2
+    Level 3: End Turn -> Give other level 2 and 3 friends +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = "End Turn: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onEndOfTurn(self, friends: List[Animal]):
+        for i in friends:
+            if i.getLevel() > 1:
+                i.setBaseHp(i.getBaseHp() + self.getLevel())
+                i.setBaseDmg(i.getBaseDmg() + self.getLevel())
 
 
 class Pig(Animal):
@@ -843,10 +910,60 @@ class Rhino(Animal):
 
 
 class Rooster(Animal):
+    """
+    Rooster Class
+
+    Level 1: Faint -> Summon 1 Chick with 1 health and half of the rooster's attack
+    Level 2: Faint -> Summon 2 Chicks with 1 health and half of the rooster's attack
+    Level 3: Faint -> Summon 3 Chicks with 1 health and half of the rooster's attack
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 5
+        ability = "Faint: Summon"
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        attack = round(0.5 * self.getDmg())
+        if len(friends) == 5:
+            friends[pos] = Chick(0, attack)
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+        elif len(friends) == 4:
+            friends[pos] = Chick(0, attack)
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+            friends.insert(pos, Chick(0, attack))
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+        else:
+            friends[pos] = Chick(0, attack)
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+            friends.insert(pos, Chick(0, attack))
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+            friends.insert(pos, Chick(0, attack))
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+
+
+class Chick(Animal):
+    """
+    Chick Class
+
+    Can only be summoned by Rooster
+    """
+
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 0
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 4
