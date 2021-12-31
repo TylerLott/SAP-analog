@@ -3,6 +3,7 @@ from abc import ABC
 from src.Effect import Effect
 from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
 from src.Food import Food
+from src.Team import Team
 
 
 class Animal(ABC):
@@ -179,50 +180,52 @@ class Animal(ABC):
         if self.hp <= 0:
             self.alive = False
 
-    # Special On Events
-    def onFaint(self):
+    ### Special On Events ###
+    # These are passed friends or enemy lists of animals so they can be used in shop or fight
+
+    def onFaint(self, friends: list):
         pass
 
-    def onSell(self):
+    def onSell(self, friends: list):
         pass
 
-    def onEat(self):
+    def onEat(self, friends: list):
         pass
 
-    def onEndOfTurn(self):
+    def onEndOfTurn(self, friends: list):
         pass
 
-    def onLevelUp(self):
+    def onLevelUp(self, friends: list):
         pass
 
-    def onFoodBought(self):
+    def onFoodBought(self, friends: list):
         pass
 
-    def onStartOfBattle(self):
+    def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self):
+    def onBuy(self, friends: list):
         pass
 
-    def onStartOfTurn(self):
+    def onStartOfTurn(self, friends: list):
         pass
 
     def onBeforeAttack(self):
         pass
 
-    def onHurt(self):
+    def onHurt(self, friends: list, enemies: list):
         pass
 
-    def onFriendSold(self):
+    def onFriendSold(self, friends: list):
         pass
 
-    def onFriendSummoned(self):
+    def onFriendSummoned(self, friends: list):
         pass
 
-    def onFriendAheadAttack(self):
+    def onFriendAheadAttack(self, friends: list, enemies: list):
         pass
 
-    def onFriendAheadFaint(self):
+    def onFriendAheadFaint(self, friends: list, enemies: list):
         pass
 
     ### Overrides ###

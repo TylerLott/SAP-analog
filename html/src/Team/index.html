@@ -28,12 +28,14 @@
 </summary>
 <pre><code class="python">from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
-from src.Food import Food
 
 
 class Team:
     &#34;&#34;&#34;
     Team Base Class
+
+    This class is responsible for the team array, money management, game round, and lives
+    This class also has it&#39;s own instance of a shop
     &#34;&#34;&#34;
 
     ### Init ###
@@ -42,12 +44,18 @@ class Team:
         self.round = 1
         self.shop = Shop()
         self.life = 10
+        self.alive = True
         self.money = 10
-        self.friends = [NoneAnimal] * 5
+        self.friends = [NoneAnimal()] * 5
 
     ### Getters ###
 
     def getFriendCopy(self) -&gt; list:
+        &#34;&#34;&#34;
+        public get a copy of the friends array method
+
+        should only be used in fight
+        &#34;&#34;&#34;
         temp = self.friends.copy()
         return temp
 
@@ -59,6 +67,29 @@ class Team:
 
     def getMoney(self) -&gt; int:
         return self.money
+
+    def getAlive(self) -&gt; bool:
+        return self.alive
+
+    def getMoveOrder(self) -&gt; list:
+        &#34;&#34;&#34;
+        public get start of fight move order
+
+        kinda shitty code, probably refactor
+        &#34;&#34;&#34;
+        team_sob = []
+
+        for i in range(len(self.friends)):
+            if len(team_sob) == 0:
+                team_sob.append(i)
+            else:
+                for j in range(len(team_sob)):
+                    if self.friends[team_sob[j]].getDmg() &lt; self.friends[i].getDmg():
+                        team_sob.insert(j, i)
+                        break
+                    elif j == len(team_sob) - 1:
+                        team_sob.append(i)
+        return team_sob
 
     ### Setters ###
 
@@ -75,21 +106,29 @@ class Team:
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
         if self.money &gt;= animal.getCost():
+            animal = self.shop.buyAnimal(shop_pos)
             if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                self.friends[friend_pos] = self.shop.buyAnimal(shop_pos)
+                self.friends[friend_pos] = animal
                 # onBuy
                 # onFriendSummoned
             elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
                 self.friends += animal
 
-    def buyFood(self, food: Food, position: int) -&gt; None:
-        # onFoodBought
+    def buyFood(self, shop_pos: int, position: int) -&gt; None:
+        food = self.shop.checkFood(shop_pos)
         if self.money &gt;= food.getCost():
+            food = self.shop.buyFood(shop_pos)
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
+            # onFoodBought
+
+    def loseLife(self, amt: int) -&gt; None:
+        self.life -= amt
+        if self.life &lt;= 0:
+            self.alive = False
 
     ### Private ###
 
@@ -105,7 +144,15 @@ class Team:
     def __onFriendSummon(self) -&gt; None:
         pass
 
+    def __onStartOfTurn(self) -&gt; None:
+        pass
+
     ### Actions ###
+
+    def rollShop(self) -&gt; None:
+        if self.money &gt; 1:
+            self.shop.roll()
+            self.money -= 1
 
     def endTurn(self) -&gt; None:
         # onEndOfTurn
@@ -120,7 +167,7 @@ class Team:
 
     ### State ###
 
-    def setState(self, move):
+    def setState(self, move: list):
         &#34;&#34;&#34;
         Converts a move state array to the correct move
         Then completes that move
@@ -157,7 +204,10 @@ class Team:
             out_str += i.__str__()
         out_str += &#34;|##############################|\n&#34;
 
-        return out_str</code></pre>
+        return out_str
+
+    def __bool__(self):
+        return self.alive</code></pre>
 </details>
 </section>
 <section>
@@ -173,7 +223,9 @@ class Team:
 <span>class <span class="ident">Team</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Team Base Class</p></div>
+<div class="desc"><p>Team Base Class</p>
+<p>This class is responsible for the team array, money management, game round, and lives
+This class also has it's own instance of a shop</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -181,6 +233,9 @@ class Team:
 <pre><code class="python">class Team:
     &#34;&#34;&#34;
     Team Base Class
+
+    This class is responsible for the team array, money management, game round, and lives
+    This class also has it&#39;s own instance of a shop
     &#34;&#34;&#34;
 
     ### Init ###
@@ -189,12 +244,18 @@ class Team:
         self.round = 1
         self.shop = Shop()
         self.life = 10
+        self.alive = True
         self.money = 10
-        self.friends = [NoneAnimal] * 5
+        self.friends = [NoneAnimal()] * 5
 
     ### Getters ###
 
     def getFriendCopy(self) -&gt; list:
+        &#34;&#34;&#34;
+        public get a copy of the friends array method
+
+        should only be used in fight
+        &#34;&#34;&#34;
         temp = self.friends.copy()
         return temp
 
@@ -206,6 +267,29 @@ class Team:
 
     def getMoney(self) -&gt; int:
         return self.money
+
+    def getAlive(self) -&gt; bool:
+        return self.alive
+
+    def getMoveOrder(self) -&gt; list:
+        &#34;&#34;&#34;
+        public get start of fight move order
+
+        kinda shitty code, probably refactor
+        &#34;&#34;&#34;
+        team_sob = []
+
+        for i in range(len(self.friends)):
+            if len(team_sob) == 0:
+                team_sob.append(i)
+            else:
+                for j in range(len(team_sob)):
+                    if self.friends[team_sob[j]].getDmg() &lt; self.friends[i].getDmg():
+                        team_sob.insert(j, i)
+                        break
+                    elif j == len(team_sob) - 1:
+                        team_sob.append(i)
+        return team_sob
 
     ### Setters ###
 
@@ -222,21 +306,29 @@ class Team:
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
         if self.money &gt;= animal.getCost():
+            animal = self.shop.buyAnimal(shop_pos)
             if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                self.friends[friend_pos] = self.shop.buyAnimal(shop_pos)
+                self.friends[friend_pos] = animal
                 # onBuy
                 # onFriendSummoned
             elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
                 self.friends += animal
 
-    def buyFood(self, food: Food, position: int) -&gt; None:
-        # onFoodBought
+    def buyFood(self, shop_pos: int, position: int) -&gt; None:
+        food = self.shop.checkFood(shop_pos)
         if self.money &gt;= food.getCost():
+            food = self.shop.buyFood(shop_pos)
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
+            # onFoodBought
+
+    def loseLife(self, amt: int) -&gt; None:
+        self.life -= amt
+        if self.life &lt;= 0:
+            self.alive = False
 
     ### Private ###
 
@@ -252,7 +344,15 @@ class Team:
     def __onFriendSummon(self) -&gt; None:
         pass
 
+    def __onStartOfTurn(self) -&gt; None:
+        pass
+
     ### Actions ###
+
+    def rollShop(self) -&gt; None:
+        if self.money &gt; 1:
+            self.shop.roll()
+            self.money -= 1
 
     def endTurn(self) -&gt; None:
         # onEndOfTurn
@@ -267,7 +367,7 @@ class Team:
 
     ### State ###
 
-    def setState(self, move):
+    def setState(self, move: list):
         &#34;&#34;&#34;
         Converts a move state array to the correct move
         Then completes that move
@@ -304,12 +404,15 @@ class Team:
             out_str += i.__str__()
         out_str += &#34;|##############################|\n&#34;
 
-        return out_str</code></pre>
+        return out_str
+
+    def __bool__(self):
+        return self.alive</code></pre>
 </details>
 <h3>Methods</h3>
 <dl>
 <dt id="src.Team.Team.buyFood"><code class="name flex">
-<span>def <span class="ident">buyFood</span></span>(<span>self, food: <a title="src.Food.Food" href="../Food/index.html#src.Food.Food">Food</a>, position: int) ‑> None</span>
+<span>def <span class="ident">buyFood</span></span>(<span>self, shop_pos: int, position: int) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -317,12 +420,14 @@ class Team:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def buyFood(self, food: Food, position: int) -&gt; None:
-    # onFoodBought
+<pre><code class="python">def buyFood(self, shop_pos: int, position: int) -&gt; None:
+    food = self.shop.checkFood(shop_pos)
     if self.money &gt;= food.getCost():
+        food = self.shop.buyFood(shop_pos)
         self.money -= food.getCost()
         # iadd override in animal makes this work
-        self.friends[position] += food</code></pre>
+        self.friends[position] += food
+        # onFoodBought</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.buyFriend"><code class="name flex">
@@ -337,9 +442,10 @@ class Team:
 <pre><code class="python">def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
     animal = self.shop.checkAnimal(shop_pos)
     if self.money &gt;= animal.getCost():
+        animal = self.shop.buyAnimal(shop_pos)
         if not self.friends[friend_pos]:
             self.money -= animal.getCost()
-            self.friends[friend_pos] = self.shop.buyAnimal(shop_pos)
+            self.friends[friend_pos] = animal
             # onBuy
             # onFriendSummoned
         elif self.friends[friend_pos].__class__ == animal.__class__:
@@ -361,8 +467,8 @@ class Team:
     pass</code></pre>
 </details>
 </dd>
-<dt id="src.Team.Team.getFriendCopy"><code class="name flex">
-<span>def <span class="ident">getFriendCopy</span></span>(<span>self) ‑> list</span>
+<dt id="src.Team.Team.getAlive"><code class="name flex">
+<span>def <span class="ident">getAlive</span></span>(<span>self) ‑> bool</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -370,7 +476,26 @@ class Team:
 <summary>
 <span>Expand source code</span>
 </summary>
+<pre><code class="python">def getAlive(self) -&gt; bool:
+    return self.alive</code></pre>
+</details>
+</dd>
+<dt id="src.Team.Team.getFriendCopy"><code class="name flex">
+<span>def <span class="ident">getFriendCopy</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public get a copy of the friends array method</p>
+<p>should only be used in fight</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
 <pre><code class="python">def getFriendCopy(self) -&gt; list:
+    &#34;&#34;&#34;
+    public get a copy of the friends array method
+
+    should only be used in fight
+    &#34;&#34;&#34;
     temp = self.friends.copy()
     return temp</code></pre>
 </details>
@@ -399,6 +524,37 @@ class Team:
 </summary>
 <pre><code class="python">def getMoney(self) -&gt; int:
     return self.money</code></pre>
+</details>
+</dd>
+<dt id="src.Team.Team.getMoveOrder"><code class="name flex">
+<span>def <span class="ident">getMoveOrder</span></span>(<span>self) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public get start of fight move order</p>
+<p>kinda shitty code, probably refactor</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getMoveOrder(self) -&gt; list:
+    &#34;&#34;&#34;
+    public get start of fight move order
+
+    kinda shitty code, probably refactor
+    &#34;&#34;&#34;
+    team_sob = []
+
+    for i in range(len(self.friends)):
+        if len(team_sob) == 0:
+            team_sob.append(i)
+        else:
+            for j in range(len(team_sob)):
+                if self.friends[team_sob[j]].getDmg() &lt; self.friends[i].getDmg():
+                    team_sob.insert(j, i)
+                    break
+                elif j == len(team_sob) - 1:
+                    team_sob.append(i)
+    return team_sob</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.getRound"><code class="name flex">
@@ -439,6 +595,21 @@ class Team:
     pass</code></pre>
 </details>
 </dd>
+<dt id="src.Team.Team.loseLife"><code class="name flex">
+<span>def <span class="ident">loseLife</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def loseLife(self, amt: int) -&gt; None:
+    self.life -= amt
+    if self.life &lt;= 0:
+        self.alive = False</code></pre>
+</details>
+</dd>
 <dt id="src.Team.Team.moveFriend"><code class="name flex">
 <span>def <span class="ident">moveFriend</span></span>(<span>self, pos1, pos2) ‑> None</span>
 </code></dt>
@@ -469,6 +640,21 @@ class Team:
     # onStartOfTurn - for stuff like the swan</code></pre>
 </details>
 </dd>
+<dt id="src.Team.Team.rollShop"><code class="name flex">
+<span>def <span class="ident">rollShop</span></span>(<span>self) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def rollShop(self) -&gt; None:
+    if self.money &gt; 1:
+        self.shop.roll()
+        self.money -= 1</code></pre>
+</details>
+</dd>
 <dt id="src.Team.Team.sellFriend"><code class="name flex">
 <span>def <span class="ident">sellFriend</span></span>(<span>self, friend_pos: int) ‑> None</span>
 </code></dt>
@@ -487,7 +673,7 @@ class Team:
 </details>
 </dd>
 <dt id="src.Team.Team.setState"><code class="name flex">
-<span>def <span class="ident">setState</span></span>(<span>self, move)</span>
+<span>def <span class="ident">setState</span></span>(<span>self, move: list)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Converts a move state array to the correct move
@@ -496,7 +682,7 @@ Then completes that move</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def setState(self, move):
+<pre><code class="python">def setState(self, move: list):
     &#34;&#34;&#34;
     Converts a move state array to the correct move
     Then completes that move
@@ -528,13 +714,17 @@ Then completes that move</p></div>
 <li><code><a title="src.Team.Team.buyFood" href="#src.Team.Team.buyFood">buyFood</a></code></li>
 <li><code><a title="src.Team.Team.buyFriend" href="#src.Team.Team.buyFriend">buyFriend</a></code></li>
 <li><code><a title="src.Team.Team.endTurn" href="#src.Team.Team.endTurn">endTurn</a></code></li>
+<li><code><a title="src.Team.Team.getAlive" href="#src.Team.Team.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Team.Team.getFriendCopy" href="#src.Team.Team.getFriendCopy">getFriendCopy</a></code></li>
 <li><code><a title="src.Team.Team.getLife" href="#src.Team.Team.getLife">getLife</a></code></li>
 <li><code><a title="src.Team.Team.getMoney" href="#src.Team.Team.getMoney">getMoney</a></code></li>
+<li><code><a title="src.Team.Team.getMoveOrder" href="#src.Team.Team.getMoveOrder">getMoveOrder</a></code></li>
 <li><code><a title="src.Team.Team.getRound" href="#src.Team.Team.getRound">getRound</a></code></li>
 <li><code><a title="src.Team.Team.getState" href="#src.Team.Team.getState">getState</a></code></li>
+<li><code><a title="src.Team.Team.loseLife" href="#src.Team.Team.loseLife">loseLife</a></code></li>
 <li><code><a title="src.Team.Team.moveFriend" href="#src.Team.Team.moveFriend">moveFriend</a></code></li>
 <li><code><a title="src.Team.Team.nextTurn" href="#src.Team.Team.nextTurn">nextTurn</a></code></li>
+<li><code><a title="src.Team.Team.rollShop" href="#src.Team.Team.rollShop">rollShop</a></code></li>
 <li><code><a title="src.Team.Team.sellFriend" href="#src.Team.Team.sellFriend">sellFriend</a></code></li>
 <li><code><a title="src.Team.Team.setState" href="#src.Team.Team.setState">setState</a></code></li>
 </ul>

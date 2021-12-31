@@ -27,14 +27,13 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from abc import ABC
-from src.Food.Effect import Effect
-from src.Food.Effect.Effects import NoneEffect
+from src.Effect import Effect
+from src.Effect.Effects import NoneEffect
 
 
 class Food(ABC):
     &#34;&#34;&#34;
     Food Base Class
-
     &#34;&#34;&#34;
 
     ### Init ###
@@ -87,16 +86,15 @@ class Food(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
-        return out_str</code></pre>
+        return out_str
+
+    def __bool__(self):
+        return True</code></pre>
 </details>
 </section>
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="src.Food.Effect" href="Effect/index.html">src.Food.Effect</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt><code class="name"><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -116,7 +114,7 @@ class Food(ABC):
 <dl>
 <dt id="src.Food.Food"><code class="flex name class">
 <span>class <span class="ident">Food</span></span>
-<span>(</span><span>temp_hp: int = 0, temp_dmg: int = 0, perm_hp: int = 0, perm_dmg: int = 0, effect: <a title="src.Food.Effect.Effect" href="Effect/index.html#src.Food.Effect.Effect">Effect</a> = src.Food.Effect.Effects.NoneEffect, cost: int = 3)</span>
+<span>(</span><span>temp_hp: int = 0, temp_dmg: int = 0, perm_hp: int = 0, perm_dmg: int = 0, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = src.Effect.Effects.NoneEffect, cost: int = 3)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Food Base Class</p>
@@ -128,7 +126,6 @@ class Food(ABC):
 <pre><code class="python">class Food(ABC):
     &#34;&#34;&#34;
     Food Base Class
-
     &#34;&#34;&#34;
 
     ### Init ###
@@ -181,7 +178,10 @@ class Food(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
-        return out_str</code></pre>
+        return out_str
+
+    def __bool__(self):
+        return True</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -200,6 +200,7 @@ class Food(ABC):
 <li><a title="src.Food.Foods.Melon" href="Foods.html#src.Food.Foods.Melon">Melon</a></li>
 <li><a title="src.Food.Foods.Milk" href="Foods.html#src.Food.Foods.Milk">Milk</a></li>
 <li><a title="src.Food.Foods.Mushroom" href="Foods.html#src.Food.Foods.Mushroom">Mushroom</a></li>
+<li><a title="src.Food.Foods.NoneFood" href="Foods.html#src.Food.Foods.NoneFood">NoneFood</a></li>
 <li><a title="src.Food.Foods.Pear" href="Foods.html#src.Food.Foods.Pear">Pear</a></li>
 <li><a title="src.Food.Foods.Pill" href="Foods.html#src.Food.Foods.Pill">Pill</a></li>
 <li><a title="src.Food.Foods.Pizza" href="Foods.html#src.Food.Foods.Pizza">Pizza</a></li>
@@ -223,7 +224,7 @@ class Food(ABC):
 </details>
 </dd>
 <dt id="src.Food.Food.getEffect"><code class="name flex">
-<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Food.Effect.Effect" href="Effect/index.html#src.Food.Effect.Effect">Effect</a></span>
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a></span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -281,7 +282,6 @@ class Food(ABC):
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="src.Food.Effect" href="Effect/index.html">src.Food.Effect</a></code></li>
 <li><code><a title="src.Food.FoodGenerator" href="FoodGenerator.html">src.Food.FoodGenerator</a></code></li>
 <li><code><a title="src.Food.Foods" href="Foods.html">src.Food.Foods</a></code></li>
 </ul>

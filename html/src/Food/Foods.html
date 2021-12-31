@@ -29,6 +29,14 @@
 <pre><code class="python">from src.Food import Food
 
 
+class NoneFood(Food):
+    def __init__(self):
+        super().__init__()
+
+    def __bool__(self):
+        return False
+
+
 class Apple(Food):
     def __init__(self):
         super().__init__()
@@ -343,6 +351,29 @@ class Milk(Food):
 <li>abc.ABC</li>
 </ul>
 </dd>
+<dt id="src.Food.Foods.NoneFood"><code class="flex name class">
+<span>class <span class="ident">NoneFood</span></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Food Base Class</p>
+<p>Constructor method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class NoneFood(Food):
+    def __init__(self):
+        super().__init__()
+
+    def __bool__(self):
+        return False</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Food.Food" href="index.html#src.Food.Food">Food</a></li>
+<li>abc.ABC</li>
+</ul>
+</dd>
 <dt id="src.Food.Foods.Pear"><code class="flex name class">
 <span>class <span class="ident">Pear</span></span>
 </code></dt>
@@ -511,6 +542,9 @@ class Milk(Food):
 </li>
 <li>
 <h4><code><a title="src.Food.Foods.Mushroom" href="#src.Food.Foods.Mushroom">Mushroom</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Food.Foods.NoneFood" href="#src.Food.Foods.NoneFood">NoneFood</a></code></h4>
 </li>
 <li>
 <h4><code><a title="src.Food.Foods.Pear" href="#src.Food.Foods.Pear">Pear</a></code></h4>

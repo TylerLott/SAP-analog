@@ -38,7 +38,20 @@ class Fight:
         sob2 = self.team2.getMoveOrder()
 
         for i in range(5):
-            self.team1Friends[i].onStartOfBattle()
-            self.team2Friends[i].onStartOfBattle()
+            self.team1Friends[sob1[i]].onStartOfBattle()
+            self.team2Friends[sob2[i]].onStartOfBattle()
+
+            # purge out dead animals
+
+        while len(self.team1Friends) > 0 or len(self.team2Friends) > 0:
+            pass
+            # trigger animal onBeforeAttack()
+            # front animals attack
+            # if not faint           -> trigger animals onHurt()
+            # if faint               -> trigger animal onFaint()
+            #   if summon on faint   -> trigger all animals onFriendSummoned()
+            #   if summon on faint, only fill up to 5 animal length
+            # if front animal faints -> trigger behind animal onFriendAheadFaint()
+            # if not                 -> trigger behind animal onFriendAheadAttack()
 
     ### Private ###

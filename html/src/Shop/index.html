@@ -26,22 +26,24 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from src.Animal.Animals import Animal
-from src.Food.Foods import Food
+<pre><code class="python">from src.Animal import Animal
+from src.Animal.Animals import NoneAnimal
+from src.Food import Food
+from src.Food.Foods import NoneFood
 from src.Animal.AnimalGenerator import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 
 
 class Shop:
     &#34;&#34;&#34;
-    Shop class
+    Shop Base Class
 
-    round 1-2: teir 1
-    round 3-4: teir 1, 2
-    round 5-6: teir 1, 2, 3
-    round 7-8: teir 1, 2, 3, 4
-    round 9-10: teir 1, 2, 3, 4, 5
-    round 11+: all teirs
+    round 1-2: tier 1
+    round 3-4: tier 1, 2
+    round 5-6: tier 1, 2, 3
+    round 7-8: tier 1, 2, 3, 4
+    round 9-10: tier 1, 2, 3, 4, 5
+    round 11+: all tiers
 
     round 1-4: 3 animals
     round 5-8: 4 animals
@@ -64,13 +66,12 @@ class Shop:
 
     ### Getters ###
 
-    def getShop(self):
-        return self.animals + self.items
-
-    def getMoney(self):
-        return self.money
-
     def getMaxTier(self):
+        &#34;&#34;&#34;
+        public get max shop animal tier method
+
+        returns highest tier
+        &#34;&#34;&#34;
         if 1 &lt;= self.round &lt;= 2:
             return 1
         if 3 &lt;= self.round &lt;= 4:
@@ -85,18 +86,40 @@ class Shop:
             return 6
 
     def checkAnimal(self, position: int) -&gt; Animal:
+        &#34;&#34;&#34;
+        public check animal method
+
+        returns animal from shop position, without removing from shop
+        &#34;&#34;&#34;
         return self.animals[position]
+
+    def checkFood(self, position: int) -&gt; Food:
+        &#34;&#34;&#34;
+        public check food method
+
+        returns food from shop position, without removing from shop
+        &#34;&#34;&#34;
+        return self.items[position]
+
+    def getState(self):
+        &#34;&#34;&#34;
+        public get shop state method
+
+        returns shop state array
+        &#34;&#34;&#34;
+        pass
 
     ### Setters ###
 
     def buyAnimal(self, position: int) -&gt; Animal:
+
         animal = self.animals[position]
-        self.animals[position] = None
+        self.animals[position] = NoneAnimal()
         return animal
 
     def buyFood(self, position: int) -&gt; Food:
         food = self.items[position]
-        self.items[position] = None
+        self.items[position] = NoneFood()
         return food
 
     ### Actions ###
@@ -110,11 +133,11 @@ class Shop:
     def setRound(self, round: int):
         self.round = round
         if self.round == 3:
-            self.items = [None] * 2
+            self.items = [NoneFood()] * 2
         if self.round == 5:
-            self.animals = [None] * 4
+            self.animals = [NoneAnimal()] * 4
         if self.round == 9:
-            self.animals = [None] * 5
+            self.animals = [NoneAnimal()] * 5
         self.roll()
 
     ### Private ###
@@ -154,13 +177,13 @@ class Shop:
 <span>class <span class="ident">Shop</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Shop class</p>
-<p>round 1-2: teir 1
-round 3-4: teir 1, 2
-round 5-6: teir 1, 2, 3
-round 7-8: teir 1, 2, 3, 4
-round 9-10: teir 1, 2, 3, 4, 5
-round 11+: all teirs</p>
+<div class="desc"><p>Shop Base Class</p>
+<p>round 1-2: tier 1
+round 3-4: tier 1, 2
+round 5-6: tier 1, 2, 3
+round 7-8: tier 1, 2, 3, 4
+round 9-10: tier 1, 2, 3, 4, 5
+round 11+: all tiers</p>
 <p>round 1-4: 3 animals
 round 5-8: 4 animals
 round 9+:
@@ -173,14 +196,14 @@ round 3+: 2 food</p></div>
 </summary>
 <pre><code class="python">class Shop:
     &#34;&#34;&#34;
-    Shop class
+    Shop Base Class
 
-    round 1-2: teir 1
-    round 3-4: teir 1, 2
-    round 5-6: teir 1, 2, 3
-    round 7-8: teir 1, 2, 3, 4
-    round 9-10: teir 1, 2, 3, 4, 5
-    round 11+: all teirs
+    round 1-2: tier 1
+    round 3-4: tier 1, 2
+    round 5-6: tier 1, 2, 3
+    round 7-8: tier 1, 2, 3, 4
+    round 9-10: tier 1, 2, 3, 4, 5
+    round 11+: all tiers
 
     round 1-4: 3 animals
     round 5-8: 4 animals
@@ -203,13 +226,12 @@ round 3+: 2 food</p></div>
 
     ### Getters ###
 
-    def getShop(self):
-        return self.animals + self.items
-
-    def getMoney(self):
-        return self.money
-
     def getMaxTier(self):
+        &#34;&#34;&#34;
+        public get max shop animal tier method
+
+        returns highest tier
+        &#34;&#34;&#34;
         if 1 &lt;= self.round &lt;= 2:
             return 1
         if 3 &lt;= self.round &lt;= 4:
@@ -224,18 +246,40 @@ round 3+: 2 food</p></div>
             return 6
 
     def checkAnimal(self, position: int) -&gt; Animal:
+        &#34;&#34;&#34;
+        public check animal method
+
+        returns animal from shop position, without removing from shop
+        &#34;&#34;&#34;
         return self.animals[position]
+
+    def checkFood(self, position: int) -&gt; Food:
+        &#34;&#34;&#34;
+        public check food method
+
+        returns food from shop position, without removing from shop
+        &#34;&#34;&#34;
+        return self.items[position]
+
+    def getState(self):
+        &#34;&#34;&#34;
+        public get shop state method
+
+        returns shop state array
+        &#34;&#34;&#34;
+        pass
 
     ### Setters ###
 
     def buyAnimal(self, position: int) -&gt; Animal:
+
         animal = self.animals[position]
-        self.animals[position] = None
+        self.animals[position] = NoneAnimal()
         return animal
 
     def buyFood(self, position: int) -&gt; Food:
         food = self.items[position]
-        self.items[position] = None
+        self.items[position] = NoneFood()
         return food
 
     ### Actions ###
@@ -249,11 +293,11 @@ round 3+: 2 food</p></div>
     def setRound(self, round: int):
         self.round = round
         if self.round == 3:
-            self.items = [None] * 2
+            self.items = [NoneFood()] * 2
         if self.round == 5:
-            self.animals = [None] * 4
+            self.animals = [NoneAnimal()] * 4
         if self.round == 9:
-            self.animals = [None] * 5
+            self.animals = [NoneAnimal()] * 5
         self.roll()
 
     ### Private ###
@@ -291,8 +335,9 @@ round 3+: 2 food</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def buyAnimal(self, position: int) -&gt; Animal:
+
     animal = self.animals[position]
-    self.animals[position] = None
+    self.animals[position] = NoneAnimal()
     return animal</code></pre>
 </details>
 </dd>
@@ -307,7 +352,7 @@ round 3+: 2 food</p></div>
 </summary>
 <pre><code class="python">def buyFood(self, position: int) -&gt; Food:
     food = self.items[position]
-    self.items[position] = None
+    self.items[position] = NoneFood()
     return food</code></pre>
 </details>
 </dd>
@@ -315,25 +360,56 @@ round 3+: 2 food</p></div>
 <span>def <span class="ident">checkAnimal</span></span>(<span>self, position: int) ‑> <a title="src.Animal.Animal" href="../Animal/index.html#src.Animal.Animal">Animal</a></span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>public check animal method</p>
+<p>returns animal from shop position, without removing from shop</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def checkAnimal(self, position: int) -&gt; Animal:
+    &#34;&#34;&#34;
+    public check animal method
+
+    returns animal from shop position, without removing from shop
+    &#34;&#34;&#34;
     return self.animals[position]</code></pre>
+</details>
+</dd>
+<dt id="src.Shop.Shop.checkFood"><code class="name flex">
+<span>def <span class="ident">checkFood</span></span>(<span>self, position: int) ‑> <a title="src.Food.Food" href="../Food/index.html#src.Food.Food">Food</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>public check food method</p>
+<p>returns food from shop position, without removing from shop</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def checkFood(self, position: int) -&gt; Food:
+    &#34;&#34;&#34;
+    public check food method
+
+    returns food from shop position, without removing from shop
+    &#34;&#34;&#34;
+    return self.items[position]</code></pre>
 </details>
 </dd>
 <dt id="src.Shop.Shop.getMaxTier"><code class="name flex">
 <span>def <span class="ident">getMaxTier</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>public get max shop animal tier method</p>
+<p>returns highest tier</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def getMaxTier(self):
+    &#34;&#34;&#34;
+    public get max shop animal tier method
+
+    returns highest tier
+    &#34;&#34;&#34;
     if 1 &lt;= self.round &lt;= 2:
         return 1
     if 3 &lt;= self.round &lt;= 4:
@@ -348,30 +424,23 @@ round 3+: 2 food</p></div>
         return 6</code></pre>
 </details>
 </dd>
-<dt id="src.Shop.Shop.getMoney"><code class="name flex">
-<span>def <span class="ident">getMoney</span></span>(<span>self)</span>
+<dt id="src.Shop.Shop.getState"><code class="name flex">
+<span>def <span class="ident">getState</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>public get shop state method</p>
+<p>returns shop state array</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def getMoney(self):
-    return self.money</code></pre>
-</details>
-</dd>
-<dt id="src.Shop.Shop.getShop"><code class="name flex">
-<span>def <span class="ident">getShop</span></span>(<span>self)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def getShop(self):
-    return self.animals + self.items</code></pre>
+<pre><code class="python">def getState(self):
+    &#34;&#34;&#34;
+    public get shop state method
+
+    returns shop state array
+    &#34;&#34;&#34;
+    pass</code></pre>
 </details>
 </dd>
 <dt id="src.Shop.Shop.roll"><code class="name flex">
@@ -402,11 +471,11 @@ round 3+: 2 food</p></div>
 <pre><code class="python">def setRound(self, round: int):
     self.round = round
     if self.round == 3:
-        self.items = [None] * 2
+        self.items = [NoneFood()] * 2
     if self.round == 5:
-        self.animals = [None] * 4
+        self.animals = [NoneAnimal()] * 4
     if self.round == 9:
-        self.animals = [None] * 5
+        self.animals = [NoneAnimal()] * 5
     self.roll()</code></pre>
 </details>
 </dd>
@@ -434,9 +503,9 @@ round 3+: 2 food</p></div>
 <li><code><a title="src.Shop.Shop.buyAnimal" href="#src.Shop.Shop.buyAnimal">buyAnimal</a></code></li>
 <li><code><a title="src.Shop.Shop.buyFood" href="#src.Shop.Shop.buyFood">buyFood</a></code></li>
 <li><code><a title="src.Shop.Shop.checkAnimal" href="#src.Shop.Shop.checkAnimal">checkAnimal</a></code></li>
+<li><code><a title="src.Shop.Shop.checkFood" href="#src.Shop.Shop.checkFood">checkFood</a></code></li>
 <li><code><a title="src.Shop.Shop.getMaxTier" href="#src.Shop.Shop.getMaxTier">getMaxTier</a></code></li>
-<li><code><a title="src.Shop.Shop.getMoney" href="#src.Shop.Shop.getMoney">getMoney</a></code></li>
-<li><code><a title="src.Shop.Shop.getShop" href="#src.Shop.Shop.getShop">getShop</a></code></li>
+<li><code><a title="src.Shop.Shop.getState" href="#src.Shop.Shop.getState">getState</a></code></li>
 <li><code><a title="src.Shop.Shop.roll" href="#src.Shop.Shop.roll">roll</a></code></li>
 <li><code><a title="src.Shop.Shop.setRound" href="#src.Shop.Shop.setRound">setRound</a></code></li>
 </ul>

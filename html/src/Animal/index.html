@@ -27,11 +27,10 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from abc import ABC
-from random import randrange
 
-from src.Food.Effect import Effect
-from src.Food.Effect.Effects import NoneEffect
-from src.Food.Foods import Food
+from src.Effect import Effect
+from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
+from src.Food import Food
 
 
 class Animal(ABC):
@@ -53,7 +52,7 @@ class Animal(ABC):
         self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
         self.ability = ability
         self.effect = effect
-        self.dmgModifier = 1
+        self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
 
         # Derived
@@ -194,7 +193,17 @@ class Animal(ABC):
 
     # Normal On Events
     def onHit(self, dmgAmt):
-        self.hp -= round(dmgAmt * self.dmgModifier)
+        dmg_taken = (
+            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
+        )
+        if type(self.effect) == MelonEffect:
+            dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
+            self.setEffect(NoneEffect())
+        if type(self.effect) == CoconutEffect:
+            dmg_taken = 0
+            self.setEffect(NoneEffect())
+
+        self.hp -= dmg_taken
         if self.hp &lt;= 0:
             self.alive = False
 
@@ -304,7 +313,7 @@ class Animal(ABC):
             self.addBaseDmg(perm_buff[1])
             self.onEat()
 
-    def __nonzero__(self):
+    def __bool__(self):
         &#34;&#34;&#34;override boolean value of animal&#34;&#34;&#34;
         return True</code></pre>
 </details>
@@ -331,7 +340,7 @@ class Animal(ABC):
 <dl>
 <dt id="src.Animal.Animal"><code class="flex name class">
 <span>class <span class="ident">Animal</span></span>
-<span>(</span><span>health: int, dmg: int, effect: <a title="src.Food.Effect.Effect" href="../Food/Effect/index.html#src.Food.Effect.Effect">Effect</a> = src.Food.Effect.Effects.NoneEffect, ability: str = 'None')</span>
+<span>(</span><span>health: int, dmg: int, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = src.Effect.Effects.NoneEffect, ability: str = 'None')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Animal base class</p></div>
@@ -358,7 +367,7 @@ class Animal(ABC):
         self.exp = 1  # above 5: level 3, above 3: level 2, less: level 1
         self.ability = ability
         self.effect = effect
-        self.dmgModifier = 1
+        self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
 
         # Derived
@@ -499,7 +508,17 @@ class Animal(ABC):
 
     # Normal On Events
     def onHit(self, dmgAmt):
-        self.hp -= round(dmgAmt * self.dmgModifier)
+        dmg_taken = (
+            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
+        )
+        if type(self.effect) == MelonEffect:
+            dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
+            self.setEffect(NoneEffect())
+        if type(self.effect) == CoconutEffect:
+            dmg_taken = 0
+            self.setEffect(NoneEffect())
+
+        self.hp -= dmg_taken
         if self.hp &lt;= 0:
             self.alive = False
 
@@ -609,7 +628,7 @@ class Animal(ABC):
             self.addBaseDmg(perm_buff[1])
             self.onEat()
 
-    def __nonzero__(self):
+    def __bool__(self):
         &#34;&#34;&#34;override boolean value of animal&#34;&#34;&#34;
         return True</code></pre>
 </details>
@@ -626,6 +645,7 @@ class Animal(ABC):
 <li><a title="src.Animal.Animals.Bison" href="Animals.html#src.Animal.Animals.Bison">Bison</a></li>
 <li><a title="src.Animal.Animals.Blowfish" href="Animals.html#src.Animal.Animals.Blowfish">Blowfish</a></li>
 <li><a title="src.Animal.Animals.Boar" href="Animals.html#src.Animal.Animals.Boar">Boar</a></li>
+<li><a title="src.Animal.Animals.Bus" href="Animals.html#src.Animal.Animals.Bus">Bus</a></li>
 <li><a title="src.Animal.Animals.Camel" href="Animals.html#src.Animal.Animals.Camel">Camel</a></li>
 <li><a title="src.Animal.Animals.Cat" href="Animals.html#src.Animal.Animals.Cat">Cat</a></li>
 <li><a title="src.Animal.Animals.Cow" href="Animals.html#src.Animal.Animals.Cow">Cow</a></li>
@@ -790,7 +810,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.getEffect"><code class="name flex">
-<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Food.Effect.Effect" href="../Food/Effect/index.html#src.Food.Effect.Effect">Effect</a></span>
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>public get animal effect method</p></div>
@@ -1003,7 +1023,17 @@ Ability should be string describing animal abilities, if any</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onHit(self, dmgAmt):
-    self.hp -= round(dmgAmt * self.dmgModifier)
+    dmg_taken = (
+        dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
+    )
+    if type(self.effect) == MelonEffect:
+        dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
+        self.setEffect(NoneEffect())
+    if type(self.effect) == CoconutEffect:
+        dmg_taken = 0
+        self.setEffect(NoneEffect())
+
+    self.hp -= dmg_taken
     if self.hp &lt;= 0:
         self.alive = False</code></pre>
 </details>
@@ -1074,7 +1104,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.setEffect"><code class="name flex">
-<span>def <span class="ident">setEffect</span></span>(<span>self, effect: <a title="src.Food.Effect.Effect" href="../Food/Effect/index.html#src.Food.Effect.Effect">Effect</a>) ‑> None</span>
+<span>def <span class="ident">setEffect</span></span>(<span>self, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a>) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>public set effect method</p></div>

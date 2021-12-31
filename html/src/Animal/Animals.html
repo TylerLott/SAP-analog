@@ -26,8 +26,8 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from src.Food.Effect import Effect
-from src.Animal import Animal
+<pre><code class="python">from src.Animal import Animal
+from src.Effect.Effects import SplashEffect
 
 
 class NoneAnimal(Animal):
@@ -36,7 +36,7 @@ class NoneAnimal(Animal):
     def __init__(self):
         super().__init__(0, 0)
 
-    def __nonezero__(self):
+    def __bool__(self):
         return False
 
 
@@ -117,6 +117,18 @@ class Boar(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 6
+
+
+class Bus(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 5
+
+        super().__init__(
+            default_health + health, default_dmg + dmg, effect=SplashEffect()
+        )
+        self.tier = 4
 
 
 class Camel(Animal):
@@ -1017,6 +1029,58 @@ class Worm(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 6</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.addBaseDmg" href="index.html#src.Animal.Animal.addBaseDmg">addBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.addBaseHp" href="index.html#src.Animal.Animal.addBaseHp">addBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.addTempDmg" href="index.html#src.Animal.Animal.addTempDmg">addTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.addTempHp" href="index.html#src.Animal.Animal.addTempHp">addTempHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
+<li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.getExp" href="index.html#src.Animal.Animal.getExp">getExp</a></code></li>
+<li><code><a title="src.Animal.Animal.getHp" href="index.html#src.Animal.Animal.getHp">getHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getLevel" href="index.html#src.Animal.Animal.getLevel">getLevel</a></code></li>
+<li><code><a title="src.Animal.Animal.getState" href="index.html#src.Animal.Animal.getState">getState</a></code></li>
+<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.subBaseDmg" href="index.html#src.Animal.Animal.subBaseDmg">subBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.subBaseHp" href="index.html#src.Animal.Animal.subBaseHp">subBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subHp" href="index.html#src.Animal.Animal.subHp">subHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subTempDmg" href="index.html#src.Animal.Animal.subTempDmg">subTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.subTempHp" href="index.html#src.Animal.Animal.subTempHp">subTempHp</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.Bus"><code class="flex name class">
+<span>class <span class="ident">Bus</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Animal base class</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class Bus(Animal):
+    def __init__(self, health, dmg):
+
+        default_health = 5
+        default_dmg = 5
+
+        super().__init__(
+            default_health + health, default_dmg + dmg, effect=SplashEffect()
+        )
+        self.tier = 4</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2364,7 +2428,7 @@ class Worm(Animal):
     def __init__(self):
         super().__init__(0, 0)
 
-    def __nonezero__(self):
+    def __bool__(self):
         return False</code></pre>
 </details>
 <h3>Ancestors</h3>
@@ -3790,6 +3854,9 @@ class Worm(Animal):
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Boar" href="#src.Animal.Animals.Boar">Boar</a></code></h4>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.Bus" href="#src.Animal.Animals.Bus">Bus</a></code></h4>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Camel" href="#src.Animal.Animals.Camel">Camel</a></code></h4>
