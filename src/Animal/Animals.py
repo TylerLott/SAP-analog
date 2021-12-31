@@ -115,13 +115,31 @@ class Beaver(Animal):
 
 
 class Bison(Animal):
+    """
+    Bison Class
+
+    Level 1: End Turn -> Gain +2/+2 if there is a level 3 friend
+    Level 2: End Turn -> Gain +4/+4 if there is a level 3 friend
+    Level 3: End Turn -> Gain +6/+6 if there is a level 3 friend
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 6
+        ability = "End Turn: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onEndOfTurn(self, friends: List[Animal]):
+        isLevel3 = False
+        for i in friends:
+            if i.getLevel() == 3:
+                isLevel3 = True
+        if isLevel3:
+            self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
+            self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Blowfish(Animal):
