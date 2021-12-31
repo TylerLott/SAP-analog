@@ -208,7 +208,7 @@ class Animal(ABC):
     def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self, friends: list):
+    def onBuy(self, friends: list, team):
         pass
 
     def onStartOfTurn(self, team):
@@ -230,6 +230,9 @@ class Animal(ABC):
         pass
 
     def onFriendAheadFaint(self, friends: list, enemies: list):
+        pass
+
+    def onFriendEat(self, friend):
         pass
 
     ### Overrides ###

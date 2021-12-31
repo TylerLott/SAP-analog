@@ -2,7 +2,7 @@ from random import choice
 from typing import List
 
 from src.Animal import Animal
-from src.Effect.Effects import SplashEffect
+from src.Effect.Effects import MelonEffect, SplashEffect
 
 
 class NoneAnimal(Animal):
@@ -666,13 +666,26 @@ class Otter(Animal):
 
 
 class Ox(Animal):
+    """
+    Ox Class
+
+    Level 1: Friend Ahead Faints -> Gain Melon, Gain +2 Dmg
+    Level 2: Friend Ahead Faints -> Gain Melon, Gain +4 Dmg
+    Level 3: Friend Ahead Faints -> Gain Melon, Gain +6 Dmg
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 1
+        ability = "Friend Ahead Faints: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onFriendAheadFaint(self, friends: List[Animal], enemies: List[Animal]):
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
+        # TODO: Apply melon armor
 
 
 class Parrot(Animal):
@@ -740,13 +753,25 @@ class Pig(Animal):
 
 
 class Rabbit(Animal):
+    """
+    Rabbit Class
+
+    Level 1: Friend Eats -> Give additional +1 Health
+    Level 2: Friend Eats -> Give additional +2 Health
+    Level 3: Friend Eats -> Give additional +3 Health
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 3
+        ability = "Friend Eats: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onFriendEat(self, friend: Animal):
+        friend.setBaseHp(friend.getBaseHp() + self.getLevel())
 
 
 class Rat(Animal):
@@ -840,12 +865,52 @@ class Shark(Animal):
 
 
 class Sheep(Animal):
+    """
+    Sheep Class
+
+    Level 1: Faint -> Summon two 2/2 Rams
+    Level 2: Faint -> Summon two 4/4 Rams
+    Level 3: Faint -> Summon two 6/6 Rams
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = "Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 3
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        if len(friends) == 5:
+            friends[pos] = Ram(2 * self.getLevel(), 2 * self.getLevel())
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+        else:
+            friends[pos] = Ram(2 * self.getLevel(), 2 * self.getLevel())
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+            friends.insert(pos, Ram(2 * self.getLevel(), 2 * self.getLevel()))
+            for i in friends:
+                i.onFriendSummoned(friends, friends[pos])
+
+
+class Ram(Animal):
+    """
+    Ram Class
+
+    Can only be summoned by Sheep
+    """
+
+    def __init__(self, health, dmg):
+
+        default_health = 0
+        default_dmg = 0
+        ability = "None"
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
 
 
@@ -905,13 +970,29 @@ class Sloth(Animal):
 
 
 class Snail(Animal):
+    """
+    Snail Class
+
+    Level 1: Buy -> if lost last battle, give all +2/+1
+    Level 2: Buy -> if lost last battle, give all +4/+2
+    Level 3: Buy -> if lost last battle, give all +6/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = "Buy: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onBuy(self, friends: List[Animal], team):
+        if not team.wonLast:
+            for i in friends:
+                if i != self:
+                    i.setBaseHp(i.getBaseHp() + self.getLevel())
+                    i.setBaseDmg(i.getBaseDmg() + 2 * self.getLevel())
 
 
 class Snake(Animal):
@@ -1005,13 +1086,26 @@ class Turkey(Animal):
 
 
 class Turtle(Animal):
+    """
+    Turtle Class
+
+    Level 1: Faint -> give 1 friend behind melon armor
+    Level 2: Faint -> give 2 friend behind melon armor
+    Level 3: Faint -> give 3 friend behind melon armor
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = "Faint: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        for i in range(1, self.getLevel() + 1):
+            friends[i] += MelonEffect()
 
 
 class Whale(Animal):

@@ -20,6 +20,7 @@ class Team:
         self.alive = True
         self.money = 10
         self.friends = [NoneAnimal()] * 5
+        self.wonLast = True
 
     ### Getters ###
 
