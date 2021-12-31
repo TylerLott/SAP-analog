@@ -140,7 +140,7 @@ class Animal(ABC):
         self.temp_dmg = amt
         self.__recalcDmg()
 
-    def subHp(self, amt: int) -&gt; None:
+    def subHp(self, amt: int, friends: list, enemies: list) -&gt; None:
         &#34;&#34;&#34;
         public subtract from hp method
 
@@ -155,6 +155,7 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt &gt; 0:
             self.base_hp -= amt
+        self.onHurt(friends, enemies)
         return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
@@ -235,7 +236,7 @@ class Animal(ABC):
     def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self, friends: list):
+    def onBuy(self, friends: list, team):
         pass
 
     def onStartOfTurn(self, team):
@@ -257,6 +258,9 @@ class Animal(ABC):
         pass
 
     def onFriendAheadFaint(self, friends: list, enemies: list):
+        pass
+
+    def onFriendEat(self, friend):
         pass
 
     ### Overrides ###
@@ -457,7 +461,7 @@ class Animal(ABC):
         self.temp_dmg = amt
         self.__recalcDmg()
 
-    def subHp(self, amt: int) -&gt; None:
+    def subHp(self, amt: int, friends: list, enemies: list) -&gt; None:
         &#34;&#34;&#34;
         public subtract from hp method
 
@@ -472,6 +476,7 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt &gt; 0:
             self.base_hp -= amt
+        self.onHurt(friends, enemies)
         return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
@@ -552,7 +557,7 @@ class Animal(ABC):
     def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self, friends: list):
+    def onBuy(self, friends: list, team):
         pass
 
     def onStartOfTurn(self, team):
@@ -574,6 +579,9 @@ class Animal(ABC):
         pass
 
     def onFriendAheadFaint(self, friends: list, enemies: list):
+        pass
+
+    def onFriendEat(self, friend):
         pass
 
     ### Overrides ###
@@ -689,6 +697,7 @@ class Animal(ABC):
 <li><a title="src.Animal.Animals.Penguin" href="Animals.html#src.Animal.Animals.Penguin">Penguin</a></li>
 <li><a title="src.Animal.Animals.Pig" href="Animals.html#src.Animal.Animals.Pig">Pig</a></li>
 <li><a title="src.Animal.Animals.Rabbit" href="Animals.html#src.Animal.Animals.Rabbit">Rabbit</a></li>
+<li><a title="src.Animal.Animals.Ram" href="Animals.html#src.Animal.Animals.Ram">Ram</a></li>
 <li><a title="src.Animal.Animals.Rat" href="Animals.html#src.Animal.Animals.Rat">Rat</a></li>
 <li><a title="src.Animal.Animals.Rhino" href="Animals.html#src.Animal.Animals.Rhino">Rhino</a></li>
 <li><a title="src.Animal.Animals.Rooster" href="Animals.html#src.Animal.Animals.Rooster">Rooster</a></li>
@@ -914,7 +923,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onBuy"><code class="name flex">
-<span>def <span class="ident">onBuy</span></span>(<span>self, friends: list)</span>
+<span>def <span class="ident">onBuy</span></span>(<span>self, friends: list, team)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -922,7 +931,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onBuy(self, friends: list):
+<pre><code class="python">def onBuy(self, friends: list, team):
     pass</code></pre>
 </details>
 </dd>
@@ -1001,6 +1010,19 @@ Ability should be string describing animal abilities, if any</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onFriendAheadFaint(self, friends: list, enemies: list):
+    pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.onFriendEat"><code class="name flex">
+<span>def <span class="ident">onFriendEat</span></span>(<span>self, friend)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendEat(self, friend):
     pass</code></pre>
 </details>
 </dd>
@@ -1225,7 +1247,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.subHp"><code class="name flex">
-<span>def <span class="ident">subHp</span></span>(<span>self, amt: int) ‑> None</span>
+<span>def <span class="ident">subHp</span></span>(<span>self, amt: int, friends: list, enemies: list) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"><p>public subtract from hp method</p>
@@ -1235,7 +1257,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subHp(self, amt: int) -&gt; None:
+<pre><code class="python">def subHp(self, amt: int, friends: list, enemies: list) -&gt; None:
     &#34;&#34;&#34;
     public subtract from hp method
 
@@ -1250,6 +1272,7 @@ Ability should be string describing animal abilities, if any</p></div>
             self.temp_hp = 0
     if amt &gt; 0:
         self.base_hp -= amt
+    self.onHurt(friends, enemies)
     return self.__recalcHp()</code></pre>
 </details>
 </dd>
@@ -1300,6 +1323,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.onFoodBought" href="#src.Animal.Animal.onFoodBought">onFoodBought</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendAheadAttack" href="#src.Animal.Animal.onFriendAheadAttack">onFriendAheadAttack</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendAheadFaint" href="#src.Animal.Animal.onFriendAheadFaint">onFriendAheadFaint</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendEat" href="#src.Animal.Animal.onFriendEat">onFriendEat</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSold" href="#src.Animal.Animal.onFriendSold">onFriendSold</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSummoned" href="#src.Animal.Animal.onFriendSummoned">onFriendSummoned</a></code></li>
 <li><code><a title="src.Animal.Animal.onHit" href="#src.Animal.Animal.onHit">onHit</a></code></li>
