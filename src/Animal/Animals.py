@@ -862,6 +862,12 @@ class Spider(Animal):
         pos = self.getPosition(friends)
         friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
 
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        for i in others:
+            friends[i].onFriendSummoned(friends, friends[pos])
+
 
 class Squirrel(Animal):
     def __init__(self, health, dmg):
