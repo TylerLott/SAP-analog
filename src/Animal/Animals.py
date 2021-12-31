@@ -51,8 +51,15 @@ class Badger(Animal):
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 3
 
-    def onFaint(self):
-        pass
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        amt = self.dmg * self.getLevel()
+        if pos > 0:
+            friends[pos - 1].subHp(amt, friends, enemies)
+            friends[pos + 1].subHp(amt, friends, enemies)
+        else:
+            friends[pos + 1].subHp(amt, friends, enemies)
+            enemies[0].subHp(amt, friends, enemies)
 
 
 class Bat(Animal):
@@ -345,10 +352,10 @@ class Elephant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
 
-    def onBeforeAttack(self, friends: List[Animal]) -> None:
+    def onBeforeAttack(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos = self.getPosition(friends)
         for i in range(1, self.getLevel() + 1):
-            friends[pos + i].subHp(1)
+            friends[pos + i].subHp(1, friends, enemies)
 
 
 class Fish(Animal):
@@ -459,9 +466,9 @@ class Hedgehog(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         amt = 2 * self.getLevel()
         for i in friends:
-            i.subHp(amt)
+            i.subHp(amt, friends, enemies)
         for i in enemies:
-            i.subHp(amt)
+            i.subHp(amt, friends, enemies)
 
 
 class Hippo(Animal):
@@ -538,7 +545,7 @@ class Mosquito(Animal):
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]) -> None:
         animal = choice(enemies)
-        animal.subHp(1 * self.getLevel())
+        animal.subHp(1 * self.getLevel(), friends, enemies)
 
 
 class Monkey(Animal):

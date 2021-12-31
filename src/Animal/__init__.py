@@ -112,7 +112,7 @@ class Animal(ABC):
         self.temp_dmg = amt
         self.__recalcDmg()
 
-    def subHp(self, amt: int) -> None:
+    def subHp(self, amt: int, friends: list, enemies: list) -> None:
         """
         public subtract from hp method
 
@@ -127,6 +127,7 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt > 0:
             self.base_hp -= amt
+        self.onHurt(friends, enemies)
         return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -> None:
