@@ -333,23 +333,50 @@ class Dragon(Animal):
 
 
 class Duck(Animal):
+    &#34;&#34;&#34;
+    Duck Class
+
+    Level 1: Sell -&gt; Give shop pets +1 Health
+    Level 2: Sell -&gt; Give shop pets +2 Health
+    Level 3: Sell -&gt; Give shop pets +3 Health
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = &#34;Sell: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
+
+    def onSell(self, friends: List[Animal], team):
+        for i in team.shop.animals:
+            i.setBaseHp(i.getBaseHp() + 1 * self.getLevel())
 
 
 class Elephant(Animal):
+    &#34;&#34;&#34;
+    Elephant Class
+
+    Level 1: Before Attack -&gt; Deal 1 Dmg to 1 friend behind
+    Level 2: Before Attack -&gt; Deal 1 Dmg to 2 friends behind
+    Level 3: Before Attack -&gt; Deal 1 Dmg to 3 friends behind
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 3
+        ability = &#34;Before Attack: Attack&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onBeforeAttack(self, friends: List[Animal]) -&gt; None:
+        pos = self.getPosition(friends)
+        for i in range(1, self.getLevel() + 1):
+            friends[pos + i].subHp(1)
 
 
 class Fish(Animal):
@@ -384,13 +411,29 @@ class Fish(Animal):
 
 
 class Flamingo(Animal):
+    &#34;&#34;&#34;
+    Flamingo Class
+
+    Level 1: Faint -&gt; Give the two friends behind +1/+1
+    Level 2: Faint -&gt; Give the two friends behind +2/+2
+    Level 3: Faint -&gt; Give the two friends behind +3/+3
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 3
+        ability = &#34;Faint: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+        pos = self.getPosition(friends)
+        amt = 1 * self.getLevel()
+        for i in range(1, 3):
+            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
 
 
 class Fly(Animal):
@@ -424,13 +467,29 @@ class Gorilla(Animal):
 
 
 class Hedgehog(Animal):
+    &#34;&#34;&#34;
+    Hedgehog class
+
+    Level 1: Faint -&gt; Deal 2 Dmg to all
+    Level 2: Faint -&gt; Deal 4 Dmg to all
+    Level 3: Faint -&gt; Deal 6 Dmg to all
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 3
+        ability = &#34;Faint: Attack&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        amt = 2 * self.getLevel()
+        for i in friends:
+            i.subHp(amt)
+        for i in enemies:
+            i.subHp(amt)
 
 
 class Hippo(Animal):
@@ -454,7 +513,7 @@ class Horse(Animal):
         self.tier = 1
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal) -&gt; None:
-        friend.addTempDmg(1 * self.getLevel())
+        friend.setTempDmg(friend.getTempDmg() + 1 * self.getLevel())
 
 
 class Kangaroo(Animal):
@@ -571,13 +630,25 @@ class Parrot(Animal):
 
 
 class Peacock(Animal):
+    &#34;&#34;&#34;
+    Peacock Class
+
+    Level 1: Hurt -&gt; gain +2 attack
+    Level 2: Hurt -&gt; gain +4 attack
+    Level 3: Hurt -&gt; gain +6 attack
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 1
+        ability = &#34;Hurt: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Penguin(Animal):
@@ -623,6 +694,14 @@ class Rabbit(Animal):
 
 
 class Rat(Animal):
+    &#34;&#34;&#34;
+    Rat Class
+
+    Level 1: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 2: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 3: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
@@ -630,6 +709,28 @@ class Rat(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        if len(enemies) &lt; 5:
+            enemies.append(DirtyRat())
+
+
+class DirtyRat(Animal):
+    &#34;&#34;&#34;
+    Dirty Rat Class
+
+    Can only be summoned on death of rat, attacks enemy team from back
+    &#34;&#34;&#34;
+
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+    # TODO: make dirty rat attack enemies
 
 
 class Rhino(Animal):
@@ -693,13 +794,31 @@ class Sheep(Animal):
 
 
 class Shrimp(Animal):
+    &#34;&#34;&#34;
+    Shrimp Class
+
+    Level 1: Friend Sold -&gt; Give random friend +1 Health
+    Level 2: Friend Sold -&gt; Give random friend +2 Health
+    Level 3: Friend Sold -&gt; Give random friend +3 Health
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 2
+        ability = &#34;Friend Sold: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFriendSold(self, friends: List[Animal]):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+        friend = choice(others)
+
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
 
 
 class Skunk(Animal):
@@ -750,13 +869,32 @@ class Snake(Animal):
 
 
 class Spider(Animal):
+    &#34;&#34;&#34;
+    Spider Class
+
+    Level 1: Faint -&gt; Summon a level 1 tier 3 pet as a 2/2
+    Level 2: Faint -&gt; Summon a level 2 tier 3 pet as a 2/2
+    Level 3: Faint -&gt; Summon a level 3 tier 3 pet as a 2/2
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = &#34;Faint: Summon&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        for i in others:
+            friends[i].onFriendSummoned(friends, friends[pos])
 
 
 class Squirrel(Animal):
@@ -837,7 +975,63 @@ class Worm(Animal):
         default_dmg = 2
 
         super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 4</code></pre>
+        self.tier = 4
+
+
+### Functions ###
+
+animals = {
+    1: [Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig],
+    2: [Crab, Dodo, Elephant, Flamingo, Hedgehog, Peacock, Rat, Shrimp, Spider, Swan],
+    3: [
+        Badger,
+        Blowfish,
+        Camel,
+        Dog,
+        Giraffe,
+        Kangaroo,
+        Ox,
+        Rabbit,
+        Sheep,
+        Snail,
+        Turtle,
+    ],
+    4: [
+        Bison,
+        Deer,
+        Dolphin,
+        Hippo,
+        Parrot,
+        Penguin,
+        Rooster,
+        Skunk,
+        Squirrel,
+        Whale,
+        Worm,
+    ],
+    5: [Cow, Crocodile, Monkey, Rhino, Scorpion, Seal, Shark, Turkey],
+    6: [Boar, Cat, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger],
+}
+
+
+def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; Animal:
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += animals[i]
+    animal = choice(possible)
+    return animal(health_mod, dmg_mod)
+
+
+def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -&gt; Animal:
+    animal = choice(animals[tier])()
+    animal.setBaseHp(health)
+    animal.setBaseDmg(dmg)
+    return animal
+
+
+if __name__ == &#34;__main__&#34;:
+    for i in range(10):
+        print(getRandomAnimal(3, 0, 0))</code></pre>
 </details>
 </section>
 <section>
@@ -845,6 +1039,42 @@ class Worm(Animal):
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="src.Animal.Animals.getRandomAnimal"><code class="name flex">
+<span>def <span class="ident">getRandomAnimal</span></span>(<span>maxTier: int, health_mod: int = 0, dmg_mod: int = 0) ‑> <a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; Animal:
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += animals[i]
+    animal = choice(possible)
+    return animal(health_mod, dmg_mod)</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animals.getRandomTierAnimal"><code class="name flex">
+<span>def <span class="ident">getRandomTierAnimal</span></span>(<span>tier, level: int, health: int, dmg: int) ‑> <a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -&gt; Animal:
+    animal = choice(animals[tier])()
+    animal.setBaseHp(health)
+    animal.setBaseDmg(dmg)
+    return animal</code></pre>
+</details>
+</dd>
+</dl>
 </section>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
@@ -1787,6 +2017,64 @@ Level 3: faint -&gt; summon a 3/3 cricket</p></div>
 </li>
 </ul>
 </dd>
+<dt id="src.Animal.Animals.DirtyRat"><code class="flex name class">
+<span>class <span class="ident">DirtyRat</span></span>
+<span>(</span><span>health, dmg)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Dirty Rat Class</p>
+<p>Can only be summoned on death of rat, attacks enemy team from back</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class DirtyRat(Animal):
+    &#34;&#34;&#34;
+    Dirty Rat Class
+
+    Can only be summoned on death of rat, attacks enemy team from back
+    &#34;&#34;&#34;
+
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+    # TODO: make dirty rat attack enemies</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
+<li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.getExp" href="index.html#src.Animal.Animal.getExp">getExp</a></code></li>
+<li><code><a title="src.Animal.Animal.getHp" href="index.html#src.Animal.Animal.getHp">getHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getLevel" href="index.html#src.Animal.Animal.getLevel">getLevel</a></code></li>
+<li><code><a title="src.Animal.Animal.getPosition" href="index.html#src.Animal.Animal.getPosition">getPosition</a></code></li>
+<li><code><a title="src.Animal.Animal.getState" href="index.html#src.Animal.Animal.getState">getState</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subHp" href="index.html#src.Animal.Animal.subHp">subHp</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
 <dt id="src.Animal.Animals.Dodo"><code class="flex name class">
 <span>class <span class="ident">Dodo</span></span>
 <span>(</span><span>health, dmg)</span>
@@ -2029,25 +2317,58 @@ Level 3: Start of Battle -&gt; give 150% of dodo dmg to friend ahead</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Duck Class</p>
+<p>Level 1: Sell -&gt; Give shop pets +1 Health
+Level 2: Sell -&gt; Give shop pets +2 Health
+Level 3: Sell -&gt; Give shop pets +3 Health</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Duck(Animal):
+    &#34;&#34;&#34;
+    Duck Class
+
+    Level 1: Sell -&gt; Give shop pets +1 Health
+    Level 2: Sell -&gt; Give shop pets +2 Health
+    Level 3: Sell -&gt; Give shop pets +3 Health
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = &#34;Sell: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 1</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1
+
+    def onSell(self, friends: List[Animal], team):
+        for i in team.shop.animals:
+            i.setBaseHp(i.getBaseHp() + 1 * self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Duck.onSell"><code class="name flex">
+<span>def <span class="ident">onSell</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], team)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onSell(self, friends: List[Animal], team):
+    for i in team.shop.animals:
+        i.setBaseHp(i.getBaseHp() + 1 * self.getLevel())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -2078,25 +2399,60 @@ Level 3: Start of Battle -&gt; give 150% of dodo dmg to friend ahead</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Elephant Class</p>
+<p>Level 1: Before Attack -&gt; Deal 1 Dmg to 1 friend behind
+Level 2: Before Attack -&gt; Deal 1 Dmg to 2 friends behind
+Level 3: Before Attack -&gt; Deal 1 Dmg to 3 friends behind</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Elephant(Animal):
+    &#34;&#34;&#34;
+    Elephant Class
+
+    Level 1: Before Attack -&gt; Deal 1 Dmg to 1 friend behind
+    Level 2: Before Attack -&gt; Deal 1 Dmg to 2 friends behind
+    Level 3: Before Attack -&gt; Deal 1 Dmg to 3 friends behind
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 3
+        ability = &#34;Before Attack: Attack&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onBeforeAttack(self, friends: List[Animal]) -&gt; None:
+        pos = self.getPosition(friends)
+        for i in range(1, self.getLevel() + 1):
+            friends[pos + i].subHp(1)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Elephant.onBeforeAttack"><code class="name flex">
+<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onBeforeAttack(self, friends: List[Animal]) -&gt; None:
+    pos = self.getPosition(friends)
+    for i in range(1, self.getLevel() + 1):
+        friends[pos + i].subHp(1)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -2225,25 +2581,64 @@ Level 3: None</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Flamingo Class</p>
+<p>Level 1: Faint -&gt; Give the two friends behind +1/+1
+Level 2: Faint -&gt; Give the two friends behind +2/+2
+Level 3: Faint -&gt; Give the two friends behind +3/+3</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Flamingo(Animal):
+    &#34;&#34;&#34;
+    Flamingo Class
+
+    Level 1: Faint -&gt; Give the two friends behind +1/+1
+    Level 2: Faint -&gt; Give the two friends behind +2/+2
+    Level 3: Faint -&gt; Give the two friends behind +3/+3
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 3
+        ability = &#34;Faint: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+        pos = self.getPosition(friends)
+        amt = 1 * self.getLevel()
+        for i in range(1, 3):
+            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Flamingo.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+    pos = self.getPosition(friends)
+    amt = 1 * self.getLevel()
+    for i in range(1, 3):
+        friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+        friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -2421,25 +2816,64 @@ Level 3: None</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Hedgehog class</p>
+<p>Level 1: Faint -&gt; Deal 2 Dmg to all
+Level 2: Faint -&gt; Deal 4 Dmg to all
+Level 3: Faint -&gt; Deal 6 Dmg to all</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Hedgehog(Animal):
+    &#34;&#34;&#34;
+    Hedgehog class
+
+    Level 1: Faint -&gt; Deal 2 Dmg to all
+    Level 2: Faint -&gt; Deal 4 Dmg to all
+    Level 3: Faint -&gt; Deal 6 Dmg to all
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 3
+        ability = &#34;Faint: Attack&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        amt = 2 * self.getLevel()
+        for i in friends:
+            i.subHp(amt)
+        for i in enemies:
+            i.subHp(amt)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Hedgehog.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+    amt = 2 * self.getLevel()
+    for i in friends:
+        i.subHp(amt)
+    for i in enemies:
+        i.subHp(amt)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -2535,7 +2969,7 @@ Level 3: None</p></div>
         self.tier = 1
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal) -&gt; None:
-        friend.addTempDmg(1 * self.getLevel())</code></pre>
+        friend.setTempDmg(friend.getTempDmg() + 1 * self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2554,7 +2988,7 @@ Level 3: None</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onFriendSummoned(self, friends: List[Animal], friend: Animal) -&gt; None:
-    friend.addTempDmg(1 * self.getLevel())</code></pre>
+    friend.setTempDmg(friend.getTempDmg() + 1 * self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -3109,25 +3543,56 @@ Level 3: Buy -&gt; give random friend +3/+3</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Peacock Class</p>
+<p>Level 1: Hurt -&gt; gain +2 attack
+Level 2: Hurt -&gt; gain +4 attack
+Level 3: Hurt -&gt; gain +6 attack</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Peacock(Animal):
+    &#34;&#34;&#34;
+    Peacock Class
+
+    Level 1: Hurt -&gt; gain +2 attack
+    Level 2: Hurt -&gt; gain +4 attack
+    Level 3: Hurt -&gt; gain +6 attack
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 1
+        ability = &#34;Hurt: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Peacock.onHurt"><code class="name flex">
+<span>def <span class="ident">onHurt</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+    self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -3336,25 +3801,57 @@ Level 3: Sell -&gt; Give 3 extra gold</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Rat Class</p>
+<p>Level 1: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+Level 2: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+Level 3: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Rat(Animal):
+    &#34;&#34;&#34;
+    Rat Class
+
+    Level 1: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 2: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 3: Faint -&gt; Summons 1/1 Dirty Rat at the back of the enemy team
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 4
 
         super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        if len(enemies) &lt; 5:
+            enemies.append(DirtyRat())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Rat.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+    if len(enemies) &lt; 5:
+        enemies.append(DirtyRat())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -3679,25 +4176,68 @@ Level 3: Sell -&gt; Give 3 extra gold</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Shrimp Class</p>
+<p>Level 1: Friend Sold -&gt; Give random friend +1 Health
+Level 2: Friend Sold -&gt; Give random friend +2 Health
+Level 3: Friend Sold -&gt; Give random friend +3 Health</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Shrimp(Animal):
+    &#34;&#34;&#34;
+    Shrimp Class
+
+    Level 1: Friend Sold -&gt; Give random friend +1 Health
+    Level 2: Friend Sold -&gt; Give random friend +2 Health
+    Level 3: Friend Sold -&gt; Give random friend +3 Health
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 2
+        ability = &#34;Friend Sold: Buff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onFriendSold(self, friends: List[Animal]):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+        friend = choice(others)
+
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Shrimp.onFriendSold"><code class="name flex">
+<span>def <span class="ident">onFriendSold</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendSold(self, friends: List[Animal]):
+    pos = self.getPosition(friends)
+
+    others = list(range(len(friends) - 1))
+    others.remove(pos)
+    friend = choice(others)
+
+    friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -3932,25 +4472,70 @@ Level 3: Sell -&gt; Give 3 extra gold</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Spider Class</p>
+<p>Level 1: Faint -&gt; Summon a level 1 tier 3 pet as a 2/2
+Level 2: Faint -&gt; Summon a level 2 tier 3 pet as a 2/2
+Level 3: Faint -&gt; Summon a level 3 tier 3 pet as a 2/2</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Spider(Animal):
+    &#34;&#34;&#34;
+    Spider Class
+
+    Level 1: Faint -&gt; Summon a level 1 tier 3 pet as a 2/2
+    Level 2: Faint -&gt; Summon a level 2 tier 3 pet as a 2/2
+    Level 3: Faint -&gt; Summon a level 3 tier 3 pet as a 2/2
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = &#34;Faint: Summon&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        for i in others:
+            friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Spider.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+    pos = self.getPosition(friends)
+    friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
+
+    others = list(range(len(friends) - 1))
+    others.remove(pos)
+
+    for i in others:
+        friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -4363,6 +4948,12 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 <li><code><a title="src.Animal" href="index.html">src.Animal</a></code></li>
 </ul>
 </li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="src.Animal.Animals.getRandomAnimal" href="#src.Animal.Animals.getRandomAnimal">getRandomAnimal</a></code></li>
+<li><code><a title="src.Animal.Animals.getRandomTierAnimal" href="#src.Animal.Animals.getRandomTierAnimal">getRandomTierAnimal</a></code></li>
+</ul>
+</li>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
@@ -4426,6 +5017,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 <h4><code><a title="src.Animal.Animals.Deer" href="#src.Animal.Animals.Deer">Deer</a></code></h4>
 </li>
 <li>
+<h4><code><a title="src.Animal.Animals.DirtyRat" href="#src.Animal.Animals.DirtyRat">DirtyRat</a></code></h4>
+</li>
+<li>
 <h4><code><a title="src.Animal.Animals.Dodo" href="#src.Animal.Animals.Dodo">Dodo</a></code></h4>
 <ul class="">
 <li><code><a title="src.Animal.Animals.Dodo.onStartOfBattle" href="#src.Animal.Animals.Dodo.onStartOfBattle">onStartOfBattle</a></code></li>
@@ -4442,9 +5036,15 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Duck" href="#src.Animal.Animals.Duck">Duck</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Duck.onSell" href="#src.Animal.Animals.Duck.onSell">onSell</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Elephant" href="#src.Animal.Animals.Elephant">Elephant</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Elephant.onBeforeAttack" href="#src.Animal.Animals.Elephant.onBeforeAttack">onBeforeAttack</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Fish" href="#src.Animal.Animals.Fish">Fish</a></code></h4>
@@ -4454,6 +5054,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Flamingo" href="#src.Animal.Animals.Flamingo">Flamingo</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Flamingo.onFaint" href="#src.Animal.Animals.Flamingo.onFaint">onFaint</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Fly" href="#src.Animal.Animals.Fly">Fly</a></code></h4>
@@ -4466,6 +5069,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Hedgehog" href="#src.Animal.Animals.Hedgehog">Hedgehog</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Hedgehog.onFaint" href="#src.Animal.Animals.Hedgehog.onFaint">onFaint</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Hippo" href="#src.Animal.Animals.Hippo">Hippo</a></code></h4>
@@ -4511,6 +5117,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Peacock" href="#src.Animal.Animals.Peacock">Peacock</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Peacock.onHurt" href="#src.Animal.Animals.Peacock.onHurt">onHurt</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Penguin" href="#src.Animal.Animals.Penguin">Penguin</a></code></h4>
@@ -4526,6 +5135,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Rat" href="#src.Animal.Animals.Rat">Rat</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Rat.onFaint" href="#src.Animal.Animals.Rat.onFaint">onFaint</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Rhino" href="#src.Animal.Animals.Rhino">Rhino</a></code></h4>
@@ -4547,6 +5159,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Shrimp" href="#src.Animal.Animals.Shrimp">Shrimp</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Shrimp.onFriendSold" href="#src.Animal.Animals.Shrimp.onFriendSold">onFriendSold</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Skunk" href="#src.Animal.Animals.Skunk">Skunk</a></code></h4>
@@ -4562,6 +5177,9 @@ Level 3: Start of Turn -&gt; +3 gold</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Spider" href="#src.Animal.Animals.Spider">Spider</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Spider.onFaint" href="#src.Animal.Animals.Spider.onFaint">onFaint</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Squirrel" href="#src.Animal.Animals.Squirrel">Squirrel</a></code></h4>

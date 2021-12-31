@@ -214,10 +214,10 @@ class Animal(ABC):
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
     # These should recurse down until there is nothing left
 
-    def onFaint(self, friends: list):
+    def onFaint(self, friends: list, enemies: list):
         pass
 
-    def onSell(self, friends: list, team):
+    def onSell(self, friends: list, team, shop):
         pass
 
     def onEat(self, friends: list):
@@ -241,7 +241,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self):
+    def onBeforeAttack(self, friends: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):
@@ -327,10 +327,6 @@ class Animal(ABC):
 <section>
 <h2 class="section-title" id="header-submodules">Sub-modules</h2>
 <dl>
-<dt><code class="name"><a title="src.Animal.AnimalGenerator" href="AnimalGenerator.html">src.Animal.AnimalGenerator</a></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt><code class="name"><a title="src.Animal.Animals" href="Animals.html">src.Animal.Animals</a></code></dt>
 <dd>
 <div class="desc"></div>
@@ -535,10 +531,10 @@ class Animal(ABC):
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
     # These should recurse down until there is nothing left
 
-    def onFaint(self, friends: list):
+    def onFaint(self, friends: list, enemies: list):
         pass
 
-    def onSell(self, friends: list, team):
+    def onSell(self, friends: list, team, shop):
         pass
 
     def onEat(self, friends: list):
@@ -562,7 +558,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self):
+    def onBeforeAttack(self, friends: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):
@@ -665,6 +661,7 @@ class Animal(ABC):
 <li><a title="src.Animal.Animals.Cricket" href="Animals.html#src.Animal.Animals.Cricket">Cricket</a></li>
 <li><a title="src.Animal.Animals.Crocodile" href="Animals.html#src.Animal.Animals.Crocodile">Crocodile</a></li>
 <li><a title="src.Animal.Animals.Deer" href="Animals.html#src.Animal.Animals.Deer">Deer</a></li>
+<li><a title="src.Animal.Animals.DirtyRat" href="Animals.html#src.Animal.Animals.DirtyRat">DirtyRat</a></li>
 <li><a title="src.Animal.Animals.Dodo" href="Animals.html#src.Animal.Animals.Dodo">Dodo</a></li>
 <li><a title="src.Animal.Animals.Dog" href="Animals.html#src.Animal.Animals.Dog">Dog</a></li>
 <li><a title="src.Animal.Animals.Dolphin" href="Animals.html#src.Animal.Animals.Dolphin">Dolphin</a></li>
@@ -904,7 +901,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onBeforeAttack"><code class="name flex">
-<span>def <span class="ident">onBeforeAttack</span></span>(<span>self)</span>
+<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -912,7 +909,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onBeforeAttack(self):
+<pre><code class="python">def onBeforeAttack(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
@@ -956,7 +953,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFaint"><code class="name flex">
-<span>def <span class="ident">onFaint</span></span>(<span>self, friends: list)</span>
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -964,7 +961,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFaint(self, friends: list):
+<pre><code class="python">def onFaint(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
@@ -1085,7 +1082,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onSell"><code class="name flex">
-<span>def <span class="ident">onSell</span></span>(<span>self, friends: list, team)</span>
+<span>def <span class="ident">onSell</span></span>(<span>self, friends: list, team, shop)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1093,7 +1090,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onSell(self, friends: list, team):
+<pre><code class="python">def onSell(self, friends: list, team, shop):
     pass</code></pre>
 </details>
 </dd>
@@ -1274,7 +1271,6 @@ Ability should be string describing animal abilities, if any</p></div>
 </li>
 <li><h3><a href="#header-submodules">Sub-modules</a></h3>
 <ul>
-<li><code><a title="src.Animal.AnimalGenerator" href="AnimalGenerator.html">src.Animal.AnimalGenerator</a></code></li>
 <li><code><a title="src.Animal.Animals" href="Animals.html">src.Animal.Animals</a></code></li>
 </ul>
 </li>
