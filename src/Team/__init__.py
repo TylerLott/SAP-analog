@@ -43,6 +43,26 @@ class Team:
     def getAlive(self) -> bool:
         return self.alive
 
+    def getMoveOrder(self) -> list:
+        """
+        public get start of fight move order
+
+        kinda shitty code, probably refactor
+        """
+        team_sob = []
+
+        for i in range(len(self.friends)):
+            if len(team_sob) == 0:
+                team_sob.append(i)
+            else:
+                for j in range(len(team_sob)):
+                    if self.friends[team_sob[j]].getDmg() < self.friends[i].getDmg():
+                        team_sob.insert(j, i)
+                        break
+                    elif j == len(team_sob) - 1:
+                        team_sob.append(i)
+        return team_sob
+
     ### Setters ###
 
     def moveFriend(self, pos1, pos2) -> None:
@@ -119,7 +139,7 @@ class Team:
 
     ### State ###
 
-    def setState(self, move):
+    def setState(self, move: list):
         """
         Converts a move state array to the correct move
         Then completes that move

@@ -34,48 +34,11 @@ class Fight:
         """
 
         # get start of fight move order for each team
-        sob1, sob2 = self.__getStartOfBattle()
+        sob1 = self.team1.getMoveOrder()
+        sob2 = self.team2.getMoveOrder()
 
-        pass
+        for i in range(5):
+            self.team1Friends[i].onStartOfBattle()
+            self.team2Friends[i].onStartOfBattle()
 
     ### Private ###
-
-    def __getStartOfBattle(self) -> list:
-        """
-        private get start of battle method
-
-        returns two arrays containing the array positions of start of battle moves
-
-        this is shitty code and should be refactored
-        """
-        team1_sob = []
-
-        for i in range(len(self.team1Friends)):
-            if len(team1_sob) == 0:
-                team1_sob.append(i)
-            else:
-                for j in team1_sob:
-                    if (
-                        self.team1Friends[team1_sob[j]].getDmg()
-                        < self.team1Friends[i].getDmg()
-                    ):
-                        team1_sob.insert(j, i)
-                        break
-                team1_sob.append(i)
-
-        team2_sob = []
-
-        for i in range(len(self.team2Friends)):
-            if len(team2_sob) == 0:
-                team2_sob.append(i)
-            else:
-                for j in team2_sob:
-                    if (
-                        self.team2Friends[team2_sob[j]].getDmg()
-                        < self.team2Friends[i].getDmg()
-                    ):
-                        team2_sob.insert(j, i)
-                        break
-                team2_sob.append(i)
-
-        return team1_sob, team2_sob
