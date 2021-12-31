@@ -162,6 +162,14 @@ class Team:
         """
         Converts a move state array to the correct move
         Then completes that move
+
+        moves:
+        - buy animal
+        - sell animal
+        - buy food
+        - move animals
+        - roll
+        - end turn
         """
         pass
 
