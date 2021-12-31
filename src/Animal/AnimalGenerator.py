@@ -41,17 +41,13 @@ animals = {
 
 
 def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -> Animal:
-    if maxTier == 1:
-        tier = 1
-    else:
-        tier = randint(1, maxTier - 1)
-    animal = randint(0, len(animals[tier]) - 1)
-    return animals[tier][animal](health_mod, dmg_mod)
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += animals[i]
+    animal = randint(0, len(possible) - 1)
+    return possible[animal](health_mod, dmg_mod)
 
 
 if __name__ == "__main__":
-    count = 0
-    for i in animals.keys():
-        count += len(animals[i])
-
-    print(count)
+    for i in range(10):
+        print(getRandomAnimal(3, 0, 0))

@@ -3,7 +3,6 @@ from abc import ABC
 from src.Effect import Effect
 from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
 from src.Food import Food
-from src.Team import Team
 
 
 class Animal(ABC):
@@ -219,7 +218,7 @@ class Animal(ABC):
     def onFriendSold(self, friends: list):
         pass
 
-    def onFriendSummoned(self, friends: list):
+    def onFriendSummoned(self, friends: list, friend):
         pass
 
     def onFriendAheadAttack(self, friends: list, enemies: list):
