@@ -139,6 +139,12 @@ class Animal(ABC):
 
     #### Private ####
 
+    def __getPosition(self, friends: list) -> int:
+        """private method to get the animals position in a list"""
+        for i in range(len(friends) - 1):
+            if friends[i] == self:
+                return i
+
     def __setHp(self, amt: int) -> None:
         """private set hp method"""
         self.base_hp = amt
@@ -181,6 +187,7 @@ class Animal(ABC):
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
+    # These should recurse down until there is nothing left
 
     def onFaint(self, friends: list):
         pass

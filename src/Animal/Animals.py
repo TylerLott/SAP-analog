@@ -1,3 +1,6 @@
+from random import choice
+from typing import List
+
 from src.Animal import Animal
 from src.Effect.Effects import SplashEffect
 
@@ -13,7 +16,13 @@ class NoneAnimal(Animal):
 
 
 class Ant(Animal):
-    """Ant Class"""
+    """
+    Ant Class
+
+    level 1: faint -> give random friend +2/+1
+    level 2: faint -> give random friend +4/+2
+    level 3: faint -> give random friend +6/+3
+    """
 
     def __init__(self, health: int, dmg: int):
 
@@ -24,8 +33,13 @@ class Ant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self):
-        pass
+    def onFaint(self, friends: List[Animal]) -> None:
+        pos = self.__getPosition(friends)
+        possible = range(len(friends) - 1)
+        possible.remove(pos)
+        friend = choice(possible)
+        friends[friend].addBaseHp(1 * self.getLevel())
+        friends[friend].addBaseDmg(2 * self.getLevel())
 
 
 class Badger(Animal):
@@ -52,6 +66,14 @@ class Bat(Animal):
 
 
 class Beaver(Animal):
+    """
+    Beaver Class
+
+    Level 1: sell -> give 2 random friends +1 health
+    Level 2: sell -> give 2 random friends +2 health
+    Level 3: sell -> give 2 random friends +3 health
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
@@ -59,6 +81,20 @@ class Beaver(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 1
+
+    def onSell(self, friends: List[Animal]) -> None:
+        pos = self.__getPosition(friends)
+        possible = range(len(friends) - 1)
+        possible.remove(pos)
+        if len(possible) < 1:
+            return
+        elif len(possible) < 2:
+            friend = possible
+            friends[friend[0]].addBaseHp(1 * self.getLevel())
+        else:
+            friend = choice(possible, k=2)
+            friends[friend[0]].addBaseHp(1 * self.getLevel())
+            friends[friend[1]].addBaseHp(1 * self.getLevel())
 
 
 class Bison(Animal):
@@ -144,13 +180,34 @@ class Crab(Animal):
 
 
 class Cricket(Animal):
-    def __init__(self, health, dmg):
+    """
+    Cricket Class
+
+    Level 1: faint -> summon a 1/1 cricket
+    Level 2: faint -> summon a 2/2 cricket
+    Level 3: faint -> summon a 3/3 cricket
+    """
+
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 1
+
+    def onFaint(self, friends: List[Animal]) -> None:
+        pos = self.__getPosition(friends)
+
+        others = range(len(friends) - 1)
+        others.remove(pos)
+
+        friends[pos] = Cricket()
+        friends[pos].__setHp(1 * self.getLevel())
+        friends[pos].__setDmg(1 * self.getLevel())
+
+        for i in others:
+            friends[i].onFriendSummoned(friends, friends[pos])
 
 
 class Crocodile(Animal):
@@ -311,6 +368,9 @@ class Horse(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 1
+
+    def onFriendSummoned(self, friends: List[Animal], friend: Animal) -> None:
+        friend.addTempDmg(1 * self.getLevel())
 
 
 class Kangaroo(Animal):
