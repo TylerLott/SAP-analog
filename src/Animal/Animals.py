@@ -43,12 +43,21 @@ class Ant(Animal):
 
 
 class Badger(Animal):
+    """
+    Badger Class
+
+    Level 1: Faint -> Deal 1x attack damage to adjacent animals
+    Level 2: Faint -> Deal 2x attack damage to adjacent animals
+    Level 3: Faint -> Deal 3x attack damage to adjacent animals
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 5
+        ability = "Faint: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
@@ -59,7 +68,7 @@ class Badger(Animal):
             friends[pos + 1].subHp(amt, friends, enemies)
         else:
             friends[pos + 1].subHp(amt, friends, enemies)
-            enemies[0].subHp(amt, friends, enemies)
+            enemies[0].subHp(amt, enemies, friends)
 
 
 class Bat(Animal):
@@ -116,13 +125,27 @@ class Bison(Animal):
 
 
 class Blowfish(Animal):
+    """
+    Blowfish Class
+
+    Level 1: Hurt -> Deal 2 damage to random enemy
+    Level 2: Hurt -> Deal 4 damage to random enemy
+    Level 3: Hurt -> Deal 6 damage to random enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 3
+        ability = "Hurt: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        animal = choice(enemies)
+        # enemies and friends are flipped because it it hurting an enemy
+        animal.subHp(2 * self.getLevel(), enemies, friends)
 
 
 class Boar(Animal):
@@ -148,13 +171,27 @@ class Bus(Animal):
 
 
 class Camel(Animal):
+    """
+    Camel Class
+
+    Level 1: Hurt -> give friend behind +1/+2
+    Level 2: Hurt -> give friend behind +2/+4
+    Level 3: Hurt -> give friend behind +3/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 2
+        ability = "Hurt: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos + 1].setBaseHp(friends[pos + 1].getBaseHp() + 2 * self.getLevel())
+        friends[pos + 1].setBaseDmg(friends[pos + 1].getBaseDmg() + 1 * self.getLevel())
 
 
 class Cat(Animal):
@@ -282,13 +319,26 @@ class Dodo(Animal):
 
 
 class Dog(Animal):
+    """
+    Dog Class
+
+    Level 1: Friend Summoned -> gain +1/+1
+    Level 2: Friend Summoned -> gain +2/+2
+    Level 3: Friend Summoned -> gain +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = "Friend Summoned: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onFriendSummoned(self, friends: List[Animal], friend: Animal):
+        self.setBaseHp(self.getBaseHp + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg + self.getLevel())
 
 
 class Dolphin(Animal):
@@ -426,13 +476,27 @@ class Fly(Animal):
 
 
 class Giraffe(Animal):
+    """
+    Giraffe Class
+
+    Level 1: End Turn -> Give friend ahead +1/+1
+    Level 2: End Turn -> Give friend ahead +2/+2
+    Level 3: End Turn -> Give friend ahead +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 2
+        ability = "End Turn: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onEndOfTurn(self, friends: List[Animal]) -> None:
+        pos = self.getPosition(friends)
+        friends[pos - 1].setBaseHp(friends[pos - 1].getBaseHp() + self.getLevel())
+        friends[pos - 1].setBaseDmg(friends[pos - 1].getBaseDmg() + self.getLevel())
 
 
 class Gorilla(Animal):
@@ -468,7 +532,7 @@ class Hedgehog(Animal):
         for i in friends:
             i.subHp(amt, friends, enemies)
         for i in enemies:
-            i.subHp(amt, friends, enemies)
+            i.subHp(amt, enemies, friends)
 
 
 class Hippo(Animal):
@@ -496,13 +560,26 @@ class Horse(Animal):
 
 
 class Kangaroo(Animal):
+    """
+    Kangaroo Class
+
+    Level 1: Friend Ahead Attack -> Gain +2/+2
+    Level 2: Friend Ahead Attack -> Gain +4/+4
+    Level 3: Friend Ahead Attack -> Gain +6/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = "Friend Ahead Attack: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 3
+
+    def onFriendAheadAttack(self, friends: list, enemies: list):
+        self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Leopard(Animal):
@@ -545,7 +622,7 @@ class Mosquito(Animal):
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]) -> None:
         animal = choice(enemies)
-        animal.subHp(1 * self.getLevel(), friends, enemies)
+        animal.subHp(1 * self.getLevel(), enemies, friends)
 
 
 class Monkey(Animal):
