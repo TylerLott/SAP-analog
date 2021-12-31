@@ -40,12 +40,11 @@ foods = {
 
 
 def getRandomFood(maxTier: int) -&gt; Food:
-    if maxTier == 1:
-        tier = 1
-    else:
-        tier = randint(1, maxTier - 1)
-    food = randint(0, len(foods[tier]) - 1)
-    return foods[tier][food]()</code></pre>
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += foods[i]
+    food = randint(0, len(possible) - 1)
+    return possible[food]()</code></pre>
 </details>
 </section>
 <section>
@@ -65,12 +64,11 @@ def getRandomFood(maxTier: int) -&gt; Food:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def getRandomFood(maxTier: int) -&gt; Food:
-    if maxTier == 1:
-        tier = 1
-    else:
-        tier = randint(1, maxTier - 1)
-    food = randint(0, len(foods[tier]) - 1)
-    return foods[tier][food]()</code></pre>
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += foods[i]
+    food = randint(0, len(possible) - 1)
+    return possible[food]()</code></pre>
 </details>
 </dd>
 </dl>

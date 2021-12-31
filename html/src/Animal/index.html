@@ -65,9 +65,21 @@ class Animal(ABC):
         &#34;&#34;&#34;public get hp method&#34;&#34;&#34;
         return self.hp
 
+    def getBaseHp(self) -&gt; int:
+        return self.base_hp
+
+    def getTempHp(self) -&gt; int:
+        return self.temp_hp
+
     def getDmg(self) -&gt; int:
         &#34;&#34;&#34;public get dmg method&#34;&#34;&#34;
         return self.dmg
+
+    def getBaseDmg(self) -&gt; int:
+        return self.base_dmg
+
+    def getTempDmg(self) -&gt; int:
+        return self.temp_dmg
 
     def getLevel(self) -&gt; int:
         &#34;&#34;&#34;public get animal level method&#34;&#34;&#34;
@@ -100,90 +112,81 @@ class Animal(ABC):
         &#34;&#34;&#34;public get animal state method&#34;&#34;&#34;
         pass
 
+    def getPosition(self, friends: list) -&gt; int:
+        &#34;&#34;&#34;public method to get the animals position in a list&#34;&#34;&#34;
+        for i in range(len(friends) - 1):
+            if friends[i] == self:
+                return i
+
     #### Setters ####
 
-    def addBaseHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to base hp method&#34;&#34;&#34;
-        self.base_hp += amt
+    def setBaseHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set base hp&#34;&#34;&#34;
+        self.base_hp = amt
         self.__recalcHp()
 
-    def addTempHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to temp hp method&#34;&#34;&#34;
-        self.temp_hp += amt
-        self.__recalcHp()
-
-    def subBaseHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public subtract from base hp method&#34;&#34;&#34;
-        self.base_hp -= amt
-        self.__recalcHp()
-
-    def subTempHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;
-        public subtract from temp hp method
-        sets temp hp to 0 if -1 is passed
-        &#34;&#34;&#34;
-        if amt == -1:
-            self.temp_hp = 0
-        else:
-            self.temp_hp -= amt
-        self.__recalcHp()
-
-    def addBaseDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to base damage method&#34;&#34;&#34;
-        self.base_dmg += amt
+    def setBaseDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set base dmg&#34;&#34;&#34;
+        self.base_dmg = amt
         self.__recalcDmg()
 
-    def addTempDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to temp damage method&#34;&#34;&#34;
-        self.temp_dmg += amt
-        self.__recalcDmg()
+    def setTempHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set temp hp&#34;&#34;&#34;
+        self.temp_hp = amt
+        self.__recalcHp()
 
-    def subBaseDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public subtract from base damage method&#34;&#34;&#34;
-        self.base_dmg -= amt
-        self.__recalcDmg()
-
-    def subTempDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;
-        public subtract from temp damage method
-        sets temp damage to 0 if -1 is passed
-        &#34;&#34;&#34;
-        if amt == -1:
-            self.temp_dmg = 0
-        else:
-            self.temp_dmg -= amt
+    def setTempDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set temp dmg&#34;&#34;&#34;
+        self.temp_dmg = amt
         self.__recalcDmg()
 
     def subHp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;
         public subtract from hp method
+
         only for use in a fight
+
+        removes hp from temp_hp then base_hp
         &#34;&#34;&#34;
-        self.hp -= amt
+        if self.temp_hp &gt; 0:
+            self.temp_hp -= amt
+            if self.temp_hp &lt; 0:
+                amt = abs(self.temp_hp)
+                self.temp_hp = 0
+        if amt &gt; 0:
+            self.base_hp -= amt
+        return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
         &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
         self.effect = effect
 
-    #### Private ####
-
-    def __setHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;private set hp method&#34;&#34;&#34;
+    def setHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public set hp method&#34;&#34;&#34;
         self.base_hp = amt
         self.__recalcHp()
 
-    def __setDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;private set damage method&#34;&#34;&#34;
+    def setDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public set damage method&#34;&#34;&#34;
         self.base_dmg = amt
         self.__recalcDmg()
+
+    #### Private ####
 
     def __setExp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;private set exp method&#34;&#34;&#34;
         self.exp = amt
 
-    def __recalcHp(self):
-        &#34;&#34;&#34;private recalcuate total hp method&#34;&#34;&#34;
+    def __recalcHp(self) -&gt; bool:
+        &#34;&#34;&#34;
+        private recalcuate total hp method
+
+        returns whether the animal is still alive
+        &#34;&#34;&#34;
         self.hp = self.temp_hp + self.base_hp
+        if self.hp &lt; 0:
+            self.alive = False
+        return self.alive
 
     def __recalcDmg(self):
         &#34;&#34;&#34;private recalcuate total damage method&#34;&#34;&#34;
@@ -207,50 +210,53 @@ class Animal(ABC):
         if self.hp &lt;= 0:
             self.alive = False
 
-    # Special On Events
-    def onFaint(self):
+    ### Special On Events ###
+    # These are passed friends or enemy lists of animals so they can be used in shop or fight
+    # These should recurse down until there is nothing left
+
+    def onFaint(self, friends: list):
         pass
 
-    def onSell(self):
+    def onSell(self, friends: list, team):
         pass
 
-    def onEat(self):
+    def onEat(self, friends: list):
         pass
 
-    def onEndOfTurn(self):
+    def onEndOfTurn(self, friends: list):
         pass
 
-    def onLevelUp(self):
+    def onLevelUp(self, friends: list):
         pass
 
-    def onFoodBought(self):
+    def onFoodBought(self, friends: list):
         pass
 
-    def onStartOfBattle(self):
+    def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self):
+    def onBuy(self, friends: list):
         pass
 
-    def onStartOfTurn(self):
+    def onStartOfTurn(self, team):
         pass
 
     def onBeforeAttack(self):
         pass
 
-    def onHurt(self):
+    def onHurt(self, friends: list, enemies: list):
         pass
 
-    def onFriendSold(self):
+    def onFriendSold(self, friends: list):
         pass
 
-    def onFriendSummoned(self):
+    def onFriendSummoned(self, friends: list, friend):
         pass
 
-    def onFriendAheadAttack(self):
+    def onFriendAheadAttack(self, friends: list, enemies: list):
         pass
 
-    def onFriendAheadFaint(self):
+    def onFriendAheadFaint(self, friends: list, enemies: list):
         pass
 
     ### Overrides ###
@@ -380,9 +386,21 @@ class Animal(ABC):
         &#34;&#34;&#34;public get hp method&#34;&#34;&#34;
         return self.hp
 
+    def getBaseHp(self) -&gt; int:
+        return self.base_hp
+
+    def getTempHp(self) -&gt; int:
+        return self.temp_hp
+
     def getDmg(self) -&gt; int:
         &#34;&#34;&#34;public get dmg method&#34;&#34;&#34;
         return self.dmg
+
+    def getBaseDmg(self) -&gt; int:
+        return self.base_dmg
+
+    def getTempDmg(self) -&gt; int:
+        return self.temp_dmg
 
     def getLevel(self) -&gt; int:
         &#34;&#34;&#34;public get animal level method&#34;&#34;&#34;
@@ -415,90 +433,81 @@ class Animal(ABC):
         &#34;&#34;&#34;public get animal state method&#34;&#34;&#34;
         pass
 
+    def getPosition(self, friends: list) -&gt; int:
+        &#34;&#34;&#34;public method to get the animals position in a list&#34;&#34;&#34;
+        for i in range(len(friends) - 1):
+            if friends[i] == self:
+                return i
+
     #### Setters ####
 
-    def addBaseHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to base hp method&#34;&#34;&#34;
-        self.base_hp += amt
+    def setBaseHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set base hp&#34;&#34;&#34;
+        self.base_hp = amt
         self.__recalcHp()
 
-    def addTempHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to temp hp method&#34;&#34;&#34;
-        self.temp_hp += amt
-        self.__recalcHp()
-
-    def subBaseHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public subtract from base hp method&#34;&#34;&#34;
-        self.base_hp -= amt
-        self.__recalcHp()
-
-    def subTempHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;
-        public subtract from temp hp method
-        sets temp hp to 0 if -1 is passed
-        &#34;&#34;&#34;
-        if amt == -1:
-            self.temp_hp = 0
-        else:
-            self.temp_hp -= amt
-        self.__recalcHp()
-
-    def addBaseDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to base damage method&#34;&#34;&#34;
-        self.base_dmg += amt
+    def setBaseDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set base dmg&#34;&#34;&#34;
+        self.base_dmg = amt
         self.__recalcDmg()
 
-    def addTempDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public add to temp damage method&#34;&#34;&#34;
-        self.temp_dmg += amt
-        self.__recalcDmg()
+    def setTempHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set temp hp&#34;&#34;&#34;
+        self.temp_hp = amt
+        self.__recalcHp()
 
-    def subBaseDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;public subtract from base damage method&#34;&#34;&#34;
-        self.base_dmg -= amt
-        self.__recalcDmg()
-
-    def subTempDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;
-        public subtract from temp damage method
-        sets temp damage to 0 if -1 is passed
-        &#34;&#34;&#34;
-        if amt == -1:
-            self.temp_dmg = 0
-        else:
-            self.temp_dmg -= amt
+    def setTempDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public method to set temp dmg&#34;&#34;&#34;
+        self.temp_dmg = amt
         self.__recalcDmg()
 
     def subHp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;
         public subtract from hp method
+
         only for use in a fight
+
+        removes hp from temp_hp then base_hp
         &#34;&#34;&#34;
-        self.hp -= amt
+        if self.temp_hp &gt; 0:
+            self.temp_hp -= amt
+            if self.temp_hp &lt; 0:
+                amt = abs(self.temp_hp)
+                self.temp_hp = 0
+        if amt &gt; 0:
+            self.base_hp -= amt
+        return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
         &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
         self.effect = effect
 
-    #### Private ####
-
-    def __setHp(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;private set hp method&#34;&#34;&#34;
+    def setHp(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public set hp method&#34;&#34;&#34;
         self.base_hp = amt
         self.__recalcHp()
 
-    def __setDmg(self, amt: int) -&gt; None:
-        &#34;&#34;&#34;private set damage method&#34;&#34;&#34;
+    def setDmg(self, amt: int) -&gt; None:
+        &#34;&#34;&#34;public set damage method&#34;&#34;&#34;
         self.base_dmg = amt
         self.__recalcDmg()
+
+    #### Private ####
 
     def __setExp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;private set exp method&#34;&#34;&#34;
         self.exp = amt
 
-    def __recalcHp(self):
-        &#34;&#34;&#34;private recalcuate total hp method&#34;&#34;&#34;
+    def __recalcHp(self) -&gt; bool:
+        &#34;&#34;&#34;
+        private recalcuate total hp method
+
+        returns whether the animal is still alive
+        &#34;&#34;&#34;
         self.hp = self.temp_hp + self.base_hp
+        if self.hp &lt; 0:
+            self.alive = False
+        return self.alive
 
     def __recalcDmg(self):
         &#34;&#34;&#34;private recalcuate total damage method&#34;&#34;&#34;
@@ -522,50 +531,53 @@ class Animal(ABC):
         if self.hp &lt;= 0:
             self.alive = False
 
-    # Special On Events
-    def onFaint(self):
+    ### Special On Events ###
+    # These are passed friends or enemy lists of animals so they can be used in shop or fight
+    # These should recurse down until there is nothing left
+
+    def onFaint(self, friends: list):
         pass
 
-    def onSell(self):
+    def onSell(self, friends: list, team):
         pass
 
-    def onEat(self):
+    def onEat(self, friends: list):
         pass
 
-    def onEndOfTurn(self):
+    def onEndOfTurn(self, friends: list):
         pass
 
-    def onLevelUp(self):
+    def onLevelUp(self, friends: list):
         pass
 
-    def onFoodBought(self):
+    def onFoodBought(self, friends: list):
         pass
 
-    def onStartOfBattle(self):
+    def onStartOfBattle(self, friends: list, enemies: list):
         pass
 
-    def onBuy(self):
+    def onBuy(self, friends: list):
         pass
 
-    def onStartOfTurn(self):
+    def onStartOfTurn(self, team):
         pass
 
     def onBeforeAttack(self):
         pass
 
-    def onHurt(self):
+    def onHurt(self, friends: list, enemies: list):
         pass
 
-    def onFriendSold(self):
+    def onFriendSold(self, friends: list):
         pass
 
-    def onFriendSummoned(self):
+    def onFriendSummoned(self, friends: list, friend):
         pass
 
-    def onFriendAheadAttack(self):
+    def onFriendAheadAttack(self, friends: list, enemies: list):
         pass
 
-    def onFriendAheadFaint(self):
+    def onFriendAheadFaint(self, friends: list, enemies: list):
         pass
 
     ### Overrides ###
@@ -703,66 +715,6 @@ class Animal(ABC):
 </ul>
 <h3>Methods</h3>
 <dl>
-<dt id="src.Animal.Animal.addBaseDmg"><code class="name flex">
-<span>def <span class="ident">addBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public add to base damage method</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def addBaseDmg(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public add to base damage method&#34;&#34;&#34;
-    self.base_dmg += amt
-    self.__recalcDmg()</code></pre>
-</details>
-</dd>
-<dt id="src.Animal.Animal.addBaseHp"><code class="name flex">
-<span>def <span class="ident">addBaseHp</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public add to base hp method</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def addBaseHp(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public add to base hp method&#34;&#34;&#34;
-    self.base_hp += amt
-    self.__recalcHp()</code></pre>
-</details>
-</dd>
-<dt id="src.Animal.Animal.addTempDmg"><code class="name flex">
-<span>def <span class="ident">addTempDmg</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public add to temp damage method</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def addTempDmg(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public add to temp damage method&#34;&#34;&#34;
-    self.temp_dmg += amt
-    self.__recalcDmg()</code></pre>
-</details>
-</dd>
-<dt id="src.Animal.Animal.addTempHp"><code class="name flex">
-<span>def <span class="ident">addTempHp</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public add to temp hp method</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def addTempHp(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public add to temp hp method&#34;&#34;&#34;
-    self.temp_hp += amt
-    self.__recalcHp()</code></pre>
-</details>
-</dd>
 <dt id="src.Animal.Animal.getAbility"><code class="name flex">
 <span>def <span class="ident">getAbility</span></span>(<span>self) ‑> str</span>
 </code></dt>
@@ -779,6 +731,32 @@ Ability should be string describing animal abilities, if any</p></div>
     Ability should be string describing animal abilities, if any
     &#34;&#34;&#34;
     return self.ability</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getBaseDmg"><code class="name flex">
+<span>def <span class="ident">getBaseDmg</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getBaseDmg(self) -&gt; int:
+    return self.base_dmg</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getBaseHp"><code class="name flex">
+<span>def <span class="ident">getBaseHp</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getBaseHp(self) -&gt; int:
+    return self.base_hp</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.getCost"><code class="name flex">
@@ -869,6 +847,22 @@ Ability should be string describing animal abilities, if any</p></div>
     return 1</code></pre>
 </details>
 </dd>
+<dt id="src.Animal.Animal.getPosition"><code class="name flex">
+<span>def <span class="ident">getPosition</span></span>(<span>self, friends: list) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public method to get the animals position in a list</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getPosition(self, friends: list) -&gt; int:
+    &#34;&#34;&#34;public method to get the animals position in a list&#34;&#34;&#34;
+    for i in range(len(friends) - 1):
+        if friends[i] == self:
+            return i</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.getState"><code class="name flex">
 <span>def <span class="ident">getState</span></span>(<span>self) ‑> list</span>
 </code></dt>
@@ -881,6 +875,32 @@ Ability should be string describing animal abilities, if any</p></div>
 <pre><code class="python">def getState(self) -&gt; list:
     &#34;&#34;&#34;public get animal state method&#34;&#34;&#34;
     pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getTempDmg"><code class="name flex">
+<span>def <span class="ident">getTempDmg</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTempDmg(self) -&gt; int:
+    return self.temp_dmg</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getTempHp"><code class="name flex">
+<span>def <span class="ident">getTempHp</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTempHp(self) -&gt; int:
+    return self.temp_hp</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onBeforeAttack"><code class="name flex">
@@ -897,7 +917,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onBuy"><code class="name flex">
-<span>def <span class="ident">onBuy</span></span>(<span>self)</span>
+<span>def <span class="ident">onBuy</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -905,12 +925,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onBuy(self):
+<pre><code class="python">def onBuy(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onEat"><code class="name flex">
-<span>def <span class="ident">onEat</span></span>(<span>self)</span>
+<span>def <span class="ident">onEat</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -918,12 +938,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onEat(self):
+<pre><code class="python">def onEat(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onEndOfTurn"><code class="name flex">
-<span>def <span class="ident">onEndOfTurn</span></span>(<span>self)</span>
+<span>def <span class="ident">onEndOfTurn</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -931,12 +951,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onEndOfTurn(self):
+<pre><code class="python">def onEndOfTurn(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFaint"><code class="name flex">
-<span>def <span class="ident">onFaint</span></span>(<span>self)</span>
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -944,12 +964,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFaint(self):
+<pre><code class="python">def onFaint(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFoodBought"><code class="name flex">
-<span>def <span class="ident">onFoodBought</span></span>(<span>self)</span>
+<span>def <span class="ident">onFoodBought</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -957,12 +977,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFoodBought(self):
+<pre><code class="python">def onFoodBought(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFriendAheadAttack"><code class="name flex">
-<span>def <span class="ident">onFriendAheadAttack</span></span>(<span>self)</span>
+<span>def <span class="ident">onFriendAheadAttack</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -970,12 +990,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFriendAheadAttack(self):
+<pre><code class="python">def onFriendAheadAttack(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFriendAheadFaint"><code class="name flex">
-<span>def <span class="ident">onFriendAheadFaint</span></span>(<span>self)</span>
+<span>def <span class="ident">onFriendAheadFaint</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -983,12 +1003,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFriendAheadFaint(self):
+<pre><code class="python">def onFriendAheadFaint(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFriendSold"><code class="name flex">
-<span>def <span class="ident">onFriendSold</span></span>(<span>self)</span>
+<span>def <span class="ident">onFriendSold</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -996,12 +1016,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFriendSold(self):
+<pre><code class="python">def onFriendSold(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFriendSummoned"><code class="name flex">
-<span>def <span class="ident">onFriendSummoned</span></span>(<span>self)</span>
+<span>def <span class="ident">onFriendSummoned</span></span>(<span>self, friends: list, friend)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1009,7 +1029,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFriendSummoned(self):
+<pre><code class="python">def onFriendSummoned(self, friends: list, friend):
     pass</code></pre>
 </details>
 </dd>
@@ -1039,7 +1059,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onHurt"><code class="name flex">
-<span>def <span class="ident">onHurt</span></span>(<span>self)</span>
+<span>def <span class="ident">onHurt</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1047,12 +1067,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onHurt(self):
+<pre><code class="python">def onHurt(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onLevelUp"><code class="name flex">
-<span>def <span class="ident">onLevelUp</span></span>(<span>self)</span>
+<span>def <span class="ident">onLevelUp</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1060,12 +1080,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onLevelUp(self):
+<pre><code class="python">def onLevelUp(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onSell"><code class="name flex">
-<span>def <span class="ident">onSell</span></span>(<span>self)</span>
+<span>def <span class="ident">onSell</span></span>(<span>self, friends: list, team)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1073,12 +1093,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onSell(self):
+<pre><code class="python">def onSell(self, friends: list, team):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onStartOfBattle"><code class="name flex">
-<span>def <span class="ident">onStartOfBattle</span></span>(<span>self)</span>
+<span>def <span class="ident">onStartOfBattle</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1086,12 +1106,12 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onStartOfBattle(self):
+<pre><code class="python">def onStartOfBattle(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onStartOfTurn"><code class="name flex">
-<span>def <span class="ident">onStartOfTurn</span></span>(<span>self)</span>
+<span>def <span class="ident">onStartOfTurn</span></span>(<span>self, team)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1099,8 +1119,53 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onStartOfTurn(self):
+<pre><code class="python">def onStartOfTurn(self, team):
     pass</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setBaseDmg"><code class="name flex">
+<span>def <span class="ident">setBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public method to set base dmg</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setBaseDmg(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public method to set base dmg&#34;&#34;&#34;
+    self.base_dmg = amt
+    self.__recalcDmg()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setBaseHp"><code class="name flex">
+<span>def <span class="ident">setBaseHp</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public method to set base hp</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setBaseHp(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public method to set base hp&#34;&#34;&#34;
+    self.base_hp = amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setDmg"><code class="name flex">
+<span>def <span class="ident">setDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public set damage method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setDmg(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public set damage method&#34;&#34;&#34;
+    self.base_dmg = amt
+    self.__recalcDmg()</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.setEffect"><code class="name flex">
@@ -1117,33 +1182,48 @@ Ability should be string describing animal abilities, if any</p></div>
     self.effect = effect</code></pre>
 </details>
 </dd>
-<dt id="src.Animal.Animal.subBaseDmg"><code class="name flex">
-<span>def <span class="ident">subBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
+<dt id="src.Animal.Animal.setHp"><code class="name flex">
+<span>def <span class="ident">setHp</span></span>(<span>self, amt: int) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>public subtract from base damage method</p></div>
+<div class="desc"><p>public set hp method</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subBaseDmg(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public subtract from base damage method&#34;&#34;&#34;
-    self.base_dmg -= amt
+<pre><code class="python">def setHp(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public set hp method&#34;&#34;&#34;
+    self.base_hp = amt
+    self.__recalcHp()</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.setTempDmg"><code class="name flex">
+<span>def <span class="ident">setTempDmg</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public method to set temp dmg</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setTempDmg(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public method to set temp dmg&#34;&#34;&#34;
+    self.temp_dmg = amt
     self.__recalcDmg()</code></pre>
 </details>
 </dd>
-<dt id="src.Animal.Animal.subBaseHp"><code class="name flex">
-<span>def <span class="ident">subBaseHp</span></span>(<span>self, amt: int) ‑> None</span>
+<dt id="src.Animal.Animal.setTempHp"><code class="name flex">
+<span>def <span class="ident">setTempHp</span></span>(<span>self, amt: int) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>public subtract from base hp method</p></div>
+<div class="desc"><p>public method to set temp hp</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def subBaseHp(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;public subtract from base hp method&#34;&#34;&#34;
-    self.base_hp -= amt
+<pre><code class="python">def setTempHp(self, amt: int) -&gt; None:
+    &#34;&#34;&#34;public method to set temp hp&#34;&#34;&#34;
+    self.temp_hp = amt
     self.__recalcHp()</code></pre>
 </details>
 </dd>
@@ -1151,8 +1231,9 @@ Ability should be string describing animal abilities, if any</p></div>
 <span>def <span class="ident">subHp</span></span>(<span>self, amt: int) ‑> None</span>
 </code></dt>
 <dd>
-<div class="desc"><p>public subtract from hp method
-only for use in a fight</p></div>
+<div class="desc"><p>public subtract from hp method</p>
+<p>only for use in a fight</p>
+<p>removes hp from temp_hp then base_hp</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -1160,53 +1241,19 @@ only for use in a fight</p></div>
 <pre><code class="python">def subHp(self, amt: int) -&gt; None:
     &#34;&#34;&#34;
     public subtract from hp method
+
     only for use in a fight
+
+    removes hp from temp_hp then base_hp
     &#34;&#34;&#34;
-    self.hp -= amt</code></pre>
-</details>
-</dd>
-<dt id="src.Animal.Animal.subTempDmg"><code class="name flex">
-<span>def <span class="ident">subTempDmg</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public subtract from temp damage method
-sets temp damage to 0 if -1 is passed</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def subTempDmg(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;
-    public subtract from temp damage method
-    sets temp damage to 0 if -1 is passed
-    &#34;&#34;&#34;
-    if amt == -1:
-        self.temp_dmg = 0
-    else:
-        self.temp_dmg -= amt
-    self.__recalcDmg()</code></pre>
-</details>
-</dd>
-<dt id="src.Animal.Animal.subTempHp"><code class="name flex">
-<span>def <span class="ident">subTempHp</span></span>(<span>self, amt: int) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public subtract from temp hp method
-sets temp hp to 0 if -1 is passed</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def subTempHp(self, amt: int) -&gt; None:
-    &#34;&#34;&#34;
-    public subtract from temp hp method
-    sets temp hp to 0 if -1 is passed
-    &#34;&#34;&#34;
-    if amt == -1:
-        self.temp_hp = 0
-    else:
+    if self.temp_hp &gt; 0:
         self.temp_hp -= amt
-    self.__recalcHp()</code></pre>
+        if self.temp_hp &lt; 0:
+            amt = abs(self.temp_hp)
+            self.temp_hp = 0
+    if amt &gt; 0:
+        self.base_hp -= amt
+    return self.__recalcHp()</code></pre>
 </details>
 </dd>
 </dl>
@@ -1236,18 +1283,19 @@ sets temp hp to 0 if -1 is passed</p></div>
 <li>
 <h4><code><a title="src.Animal.Animal" href="#src.Animal.Animal">Animal</a></code></h4>
 <ul class="two-column">
-<li><code><a title="src.Animal.Animal.addBaseDmg" href="#src.Animal.Animal.addBaseDmg">addBaseDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.addBaseHp" href="#src.Animal.Animal.addBaseHp">addBaseHp</a></code></li>
-<li><code><a title="src.Animal.Animal.addTempDmg" href="#src.Animal.Animal.addTempDmg">addTempDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.addTempHp" href="#src.Animal.Animal.addTempHp">addTempHp</a></code></li>
 <li><code><a title="src.Animal.Animal.getAbility" href="#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getBaseDmg" href="#src.Animal.Animal.getBaseDmg">getBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getBaseHp" href="#src.Animal.Animal.getBaseHp">getBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="#src.Animal.Animal.getEffect">getEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.getExp" href="#src.Animal.Animal.getExp">getExp</a></code></li>
 <li><code><a title="src.Animal.Animal.getHp" href="#src.Animal.Animal.getHp">getHp</a></code></li>
 <li><code><a title="src.Animal.Animal.getLevel" href="#src.Animal.Animal.getLevel">getLevel</a></code></li>
+<li><code><a title="src.Animal.Animal.getPosition" href="#src.Animal.Animal.getPosition">getPosition</a></code></li>
 <li><code><a title="src.Animal.Animal.getState" href="#src.Animal.Animal.getState">getState</a></code></li>
+<li><code><a title="src.Animal.Animal.getTempDmg" href="#src.Animal.Animal.getTempDmg">getTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getTempHp" href="#src.Animal.Animal.getTempHp">getTempHp</a></code></li>
 <li><code><a title="src.Animal.Animal.onBeforeAttack" href="#src.Animal.Animal.onBeforeAttack">onBeforeAttack</a></code></li>
 <li><code><a title="src.Animal.Animal.onBuy" href="#src.Animal.Animal.onBuy">onBuy</a></code></li>
 <li><code><a title="src.Animal.Animal.onEat" href="#src.Animal.Animal.onEat">onEat</a></code></li>
@@ -1264,12 +1312,14 @@ sets temp hp to 0 if -1 is passed</p></div>
 <li><code><a title="src.Animal.Animal.onSell" href="#src.Animal.Animal.onSell">onSell</a></code></li>
 <li><code><a title="src.Animal.Animal.onStartOfBattle" href="#src.Animal.Animal.onStartOfBattle">onStartOfBattle</a></code></li>
 <li><code><a title="src.Animal.Animal.onStartOfTurn" href="#src.Animal.Animal.onStartOfTurn">onStartOfTurn</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseDmg" href="#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseHp" href="#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setDmg" href="#src.Animal.Animal.setDmg">setDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setEffect" href="#src.Animal.Animal.setEffect">setEffect</a></code></li>
-<li><code><a title="src.Animal.Animal.subBaseDmg" href="#src.Animal.Animal.subBaseDmg">subBaseDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.subBaseHp" href="#src.Animal.Animal.subBaseHp">subBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setHp" href="#src.Animal.Animal.setHp">setHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempDmg" href="#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempHp" href="#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
 <li><code><a title="src.Animal.Animal.subHp" href="#src.Animal.Animal.subHp">subHp</a></code></li>
-<li><code><a title="src.Animal.Animal.subTempDmg" href="#src.Animal.Animal.subTempDmg">subTempDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.subTempHp" href="#src.Animal.Animal.subTempHp">subTempHp</a></code></li>
 </ul>
 </li>
 </ul>

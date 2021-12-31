@@ -315,13 +315,27 @@ class Duck(Animal):
 
 
 class Elephant(Animal):
+    """
+    Elephant Class
+
+    Level 1: Before Attack -> Deal 1 Dmg to 1 friend behind
+    Level 2: Before Attack -> Deal 1 Dmg to 2 friends behind
+    Level 3: Before Attack -> Deal 1 Dmg to 3 friends behind
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 3
+        ability = "Before Attack: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onBeforeAttack(self, friends: List[Animal]) -> None:
+        pos = self.getPosition(friends)
+        for i in range(1, self.getLevel() + 1):
+            friends[pos + i].subHp(1)
 
 
 class Fish(Animal):
@@ -356,13 +370,29 @@ class Fish(Animal):
 
 
 class Flamingo(Animal):
+    """
+    Flamingo Class
+
+    Level 1: Faint -> Give the two friends behind +1/+1
+    Level 2: Faint -> Give the two friends behind +2/+2
+    Level 3: Faint -> Give the two friends behind +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 3
+        ability = "Faint: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
+        pos = self.getPosition(friends)
+        amt = 1 * self.getLevel()
+        for i in range(1, 3):
+            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
 
 
 class Fly(Animal):
@@ -396,13 +426,29 @@ class Gorilla(Animal):
 
 
 class Hedgehog(Animal):
+    """
+    Hedgehog class
+
+    Level 1: Faint -> Deal 2 Dmg to all
+    Level 2: Faint -> Deal 4 Dmg to all
+    Level 3: Faint -> Deal 6 Dmg to all
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 3
+        ability = "Faint: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        amt = 2 * self.getLevel()
+        for i in friends:
+            i.subHp(amt)
+        for i in enemies:
+            i.subHp(amt)
 
 
 class Hippo(Animal):
@@ -543,13 +589,25 @@ class Parrot(Animal):
 
 
 class Peacock(Animal):
+    """
+    Peacock Class
+
+    Level 1: Hurt -> gain +2 attack
+    Level 2: Hurt -> gain +4 attack
+    Level 3: Hurt -> gain +6 attack
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 1
+        ability = "Hurt: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Penguin(Animal):
@@ -595,6 +653,14 @@ class Rabbit(Animal):
 
 
 class Rat(Animal):
+    """
+    Rat Class
+
+    Level 1: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 2: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
+    Level 3: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
@@ -602,6 +668,28 @@ class Rat(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        if len(enemies) < 5:
+            enemies.append(DirtyRat())
+
+
+class DirtyRat(Animal):
+    """
+    Dirty Rat Class
+
+    Can only be summoned on death of rat, attacks enemy team from back
+    """
+
+    def __init__(self, health, dmg):
+
+        default_health = 1
+        default_dmg = 1
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 2
+
+    # TODO: make dirty rat attack enemies
 
 
 class Rhino(Animal):
@@ -665,13 +753,31 @@ class Sheep(Animal):
 
 
 class Shrimp(Animal):
+    """
+    Shrimp Class
+
+    Level 1: Friend Sold -> Give random friend +1 Health
+    Level 2: Friend Sold -> Give random friend +2 Health
+    Level 3: Friend Sold -> Give random friend +3 Health
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 2
+        ability = "Friend Sold: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFriendSold(self, friends: List[Animal]):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+        friend = choice(others)
+
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
 
 
 class Skunk(Animal):

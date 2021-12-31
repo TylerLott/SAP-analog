@@ -186,7 +186,7 @@ class Animal(ABC):
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
     # These should recurse down until there is nothing left
 
-    def onFaint(self, friends: list):
+    def onFaint(self, friends: list, enemies: list):
         pass
 
     def onSell(self, friends: list, team):
@@ -213,7 +213,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self):
+    def onBeforeAttack(self, friends: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):

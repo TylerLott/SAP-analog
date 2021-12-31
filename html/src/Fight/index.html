@@ -69,6 +69,19 @@ class Fight:
             self.team1Friends[sob1[i]].onStartOfBattle()
             self.team2Friends[sob2[i]].onStartOfBattle()
 
+            # purge out dead animals
+
+        while len(self.team1Friends) &gt; 0 or len(self.team2Friends) &gt; 0:
+            pass
+            # trigger animal onBeforeAttack()
+            # front animals attack
+            # if not faint           -&gt; trigger animals onHurt()
+            # if faint               -&gt; trigger animal onFaint()
+            #   if summon on faint   -&gt; trigger all animals onFriendSummoned()
+            #   if summon on faint, only fill up to 5 animal length
+            # if front animal faints -&gt; trigger behind animal onFriendAheadFaint()
+            # if not                 -&gt; trigger behind animal onFriendAheadAttack()
+
     ### Private ###</code></pre>
 </details>
 </section>
@@ -131,6 +144,19 @@ class Fight:
             self.team1Friends[sob1[i]].onStartOfBattle()
             self.team2Friends[sob2[i]].onStartOfBattle()
 
+            # purge out dead animals
+
+        while len(self.team1Friends) &gt; 0 or len(self.team2Friends) &gt; 0:
+            pass
+            # trigger animal onBeforeAttack()
+            # front animals attack
+            # if not faint           -&gt; trigger animals onHurt()
+            # if faint               -&gt; trigger animal onFaint()
+            #   if summon on faint   -&gt; trigger all animals onFriendSummoned()
+            #   if summon on faint, only fill up to 5 animal length
+            # if front animal faints -&gt; trigger behind animal onFriendAheadFaint()
+            # if not                 -&gt; trigger behind animal onFriendAheadAttack()
+
     ### Private ###</code></pre>
 </details>
 <h3>Methods</h3>
@@ -186,7 +212,20 @@ onFriendAheadAttack if not faint</p></div>
 
     for i in range(5):
         self.team1Friends[sob1[i]].onStartOfBattle()
-        self.team2Friends[sob2[i]].onStartOfBattle()</code></pre>
+        self.team2Friends[sob2[i]].onStartOfBattle()
+
+        # purge out dead animals
+
+    while len(self.team1Friends) &gt; 0 or len(self.team2Friends) &gt; 0:
+        pass
+        # trigger animal onBeforeAttack()
+        # front animals attack
+        # if not faint           -&gt; trigger animals onHurt()
+        # if faint               -&gt; trigger animal onFaint()
+        #   if summon on faint   -&gt; trigger all animals onFriendSummoned()
+        #   if summon on faint, only fill up to 5 animal length
+        # if front animal faints -&gt; trigger behind animal onFriendAheadFaint()
+        # if not                 -&gt; trigger behind animal onFriendAheadAttack()</code></pre>
 </details>
 </dd>
 </dl>

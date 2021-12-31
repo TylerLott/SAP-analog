@@ -26,7 +26,8 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from src.Animal.Animals import NoneAnimal
+<pre><code class="python">from src.Animal import Animal
+from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
 
 
@@ -98,23 +99,27 @@ class Team:
 
     def sellFriend(self, friend_pos: int) -&gt; None:
         if self.friends[friend_pos]:
-            self.money += self.friends[friend_pos].getLevel()
+            self.add_money(self.friends[friend_pos].getLevel())
             self.friends[friend_pos] = None
             # onSell
             # onFriendSell
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
+        friend = self.friends[friend_pos]
         if self.money &gt;= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)
-            if not self.friends[friend_pos]:
+            if not friend:
                 self.money -= animal.getCost()
-                self.friends[friend_pos] = animal
-                # onBuy
+                friend = animal
+                friend.onBuy()
                 # onFriendSummoned
-            elif self.friends[friend_pos].__class__ == animal.__class__:
+            elif friend.__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
-                self.friends += animal
+                origin_level = friend.getLevel()
+                friend += animal
+                if friend.getLevel() &gt; origin_level:
+                    friend.onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -&gt; None:
         food = self.shop.checkFood(shop_pos)
@@ -130,22 +135,34 @@ class Team:
         if self.life &lt;= 0:
             self.alive = False
 
+    def add_money(self, amt: int) -&gt; None:
+        self.money += amt
+
+    ### For Tests ###
+
+    def forceAddAnimal(self, position: int, animal: Animal):
+        self.friends[position] = animal
+
     ### Private ###
 
     def __onSell(self) -&gt; None:
         pass
 
-    def __onFriendSell(self) -&gt; None:
+    def __onFriendSold(self) -&gt; None:
         pass
 
     def __onBuy(self) -&gt; None:
         pass
-
-    def __onFriendSummon(self) -&gt; None:
-        pass
+        # run on onFriendSummoned as well
 
     def __onStartOfTurn(self) -&gt; None:
-        pass
+        for i in self.friends:
+            i.onStartOfTurn(self)
+
+    def __resetTemps(self) -&gt; None:
+        for i in self.friends:
+            i.setTempDmg(0)
+            i.setTempHp(0)
 
     ### Actions ###
 
@@ -159,11 +176,13 @@ class Team:
         pass
 
     def nextTurn(self) -&gt; None:
-        # remove all temp hp
+
         self.round += 1
         self.shop.setRound(self.round)
         self.money = 10
-        # onStartOfTurn - for stuff like the swan
+
+        self.__resetTemps()
+        self.__onStartOfTurn()
 
     ### State ###
 
@@ -171,6 +190,14 @@ class Team:
         &#34;&#34;&#34;
         Converts a move state array to the correct move
         Then completes that move
+
+        moves:
+        - buy animal
+        - sell animal
+        - buy food
+        - move animals
+        - roll
+        - end turn
         &#34;&#34;&#34;
         pass
 
@@ -298,23 +325,27 @@ This class also has it's own instance of a shop</p></div>
 
     def sellFriend(self, friend_pos: int) -&gt; None:
         if self.friends[friend_pos]:
-            self.money += self.friends[friend_pos].getLevel()
+            self.add_money(self.friends[friend_pos].getLevel())
             self.friends[friend_pos] = None
             # onSell
             # onFriendSell
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
+        friend = self.friends[friend_pos]
         if self.money &gt;= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)
-            if not self.friends[friend_pos]:
+            if not friend:
                 self.money -= animal.getCost()
-                self.friends[friend_pos] = animal
-                # onBuy
+                friend = animal
+                friend.onBuy()
                 # onFriendSummoned
-            elif self.friends[friend_pos].__class__ == animal.__class__:
+            elif friend.__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
-                self.friends += animal
+                origin_level = friend.getLevel()
+                friend += animal
+                if friend.getLevel() &gt; origin_level:
+                    friend.onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -&gt; None:
         food = self.shop.checkFood(shop_pos)
@@ -330,22 +361,34 @@ This class also has it's own instance of a shop</p></div>
         if self.life &lt;= 0:
             self.alive = False
 
+    def add_money(self, amt: int) -&gt; None:
+        self.money += amt
+
+    ### For Tests ###
+
+    def forceAddAnimal(self, position: int, animal: Animal):
+        self.friends[position] = animal
+
     ### Private ###
 
     def __onSell(self) -&gt; None:
         pass
 
-    def __onFriendSell(self) -&gt; None:
+    def __onFriendSold(self) -&gt; None:
         pass
 
     def __onBuy(self) -&gt; None:
         pass
-
-    def __onFriendSummon(self) -&gt; None:
-        pass
+        # run on onFriendSummoned as well
 
     def __onStartOfTurn(self) -&gt; None:
-        pass
+        for i in self.friends:
+            i.onStartOfTurn(self)
+
+    def __resetTemps(self) -&gt; None:
+        for i in self.friends:
+            i.setTempDmg(0)
+            i.setTempHp(0)
 
     ### Actions ###
 
@@ -359,11 +402,13 @@ This class also has it's own instance of a shop</p></div>
         pass
 
     def nextTurn(self) -&gt; None:
-        # remove all temp hp
+
         self.round += 1
         self.shop.setRound(self.round)
         self.money = 10
-        # onStartOfTurn - for stuff like the swan
+
+        self.__resetTemps()
+        self.__onStartOfTurn()
 
     ### State ###
 
@@ -371,6 +416,14 @@ This class also has it's own instance of a shop</p></div>
         &#34;&#34;&#34;
         Converts a move state array to the correct move
         Then completes that move
+
+        moves:
+        - buy animal
+        - sell animal
+        - buy food
+        - move animals
+        - roll
+        - end turn
         &#34;&#34;&#34;
         pass
 
@@ -411,6 +464,19 @@ This class also has it's own instance of a shop</p></div>
 </details>
 <h3>Methods</h3>
 <dl>
+<dt id="src.Team.Team.add_money"><code class="name flex">
+<span>def <span class="ident">add_money</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def add_money(self, amt: int) -&gt; None:
+    self.money += amt</code></pre>
+</details>
+</dd>
 <dt id="src.Team.Team.buyFood"><code class="name flex">
 <span>def <span class="ident">buyFood</span></span>(<span>self, shop_pos: int, position: int) ‑> None</span>
 </code></dt>
@@ -441,16 +507,20 @@ This class also has it's own instance of a shop</p></div>
 </summary>
 <pre><code class="python">def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
     animal = self.shop.checkAnimal(shop_pos)
+    friend = self.friends[friend_pos]
     if self.money &gt;= animal.getCost():
         animal = self.shop.buyAnimal(shop_pos)
-        if not self.friends[friend_pos]:
+        if not friend:
             self.money -= animal.getCost()
-            self.friends[friend_pos] = animal
-            # onBuy
+            friend = animal
+            friend.onBuy()
             # onFriendSummoned
-        elif self.friends[friend_pos].__class__ == animal.__class__:
+        elif friend.__class__ == animal.__class__:
             # iadd is overridden for animal so this works
-            self.friends += animal</code></pre>
+            origin_level = friend.getLevel()
+            friend += animal
+            if friend.getLevel() &gt; origin_level:
+                friend.onLevelUp()</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.endTurn"><code class="name flex">
@@ -465,6 +535,19 @@ This class also has it's own instance of a shop</p></div>
 <pre><code class="python">def endTurn(self) -&gt; None:
     # onEndOfTurn
     pass</code></pre>
+</details>
+</dd>
+<dt id="src.Team.Team.forceAddAnimal"><code class="name flex">
+<span>def <span class="ident">forceAddAnimal</span></span>(<span>self, position: int, animal: <a title="src.Animal.Animal" href="../Animal/index.html#src.Animal.Animal">Animal</a>)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def forceAddAnimal(self, position: int, animal: Animal):
+    self.friends[position] = animal</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.getAlive"><code class="name flex">
@@ -633,11 +716,13 @@ This class also has it's own instance of a shop</p></div>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def nextTurn(self) -&gt; None:
-    # remove all temp hp
+
     self.round += 1
     self.shop.setRound(self.round)
     self.money = 10
-    # onStartOfTurn - for stuff like the swan</code></pre>
+
+    self.__resetTemps()
+    self.__onStartOfTurn()</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.rollShop"><code class="name flex">
@@ -666,7 +751,7 @@ This class also has it's own instance of a shop</p></div>
 </summary>
 <pre><code class="python">def sellFriend(self, friend_pos: int) -&gt; None:
     if self.friends[friend_pos]:
-        self.money += self.friends[friend_pos].getLevel()
+        self.add_money(self.friends[friend_pos].getLevel())
         self.friends[friend_pos] = None
         # onSell
         # onFriendSell</code></pre>
@@ -677,7 +762,14 @@ This class also has it's own instance of a shop</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Converts a move state array to the correct move
-Then completes that move</p></div>
+Then completes that move</p>
+<p>moves:
+- buy animal
+- sell animal
+- buy food
+- move animals
+- roll
+- end turn</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -686,6 +778,14 @@ Then completes that move</p></div>
     &#34;&#34;&#34;
     Converts a move state array to the correct move
     Then completes that move
+
+    moves:
+    - buy animal
+    - sell animal
+    - buy food
+    - move animals
+    - roll
+    - end turn
     &#34;&#34;&#34;
     pass</code></pre>
 </details>
@@ -711,9 +811,11 @@ Then completes that move</p></div>
 <li>
 <h4><code><a title="src.Team.Team" href="#src.Team.Team">Team</a></code></h4>
 <ul class="two-column">
+<li><code><a title="src.Team.Team.add_money" href="#src.Team.Team.add_money">add_money</a></code></li>
 <li><code><a title="src.Team.Team.buyFood" href="#src.Team.Team.buyFood">buyFood</a></code></li>
 <li><code><a title="src.Team.Team.buyFriend" href="#src.Team.Team.buyFriend">buyFriend</a></code></li>
 <li><code><a title="src.Team.Team.endTurn" href="#src.Team.Team.endTurn">endTurn</a></code></li>
+<li><code><a title="src.Team.Team.forceAddAnimal" href="#src.Team.Team.forceAddAnimal">forceAddAnimal</a></code></li>
 <li><code><a title="src.Team.Team.getAlive" href="#src.Team.Team.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Team.Team.getFriendCopy" href="#src.Team.Team.getFriendCopy">getFriendCopy</a></code></li>
 <li><code><a title="src.Team.Team.getLife" href="#src.Team.Team.getLife">getLife</a></code></li>
