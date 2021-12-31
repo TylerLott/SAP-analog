@@ -1,3 +1,4 @@
+from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
 
@@ -105,6 +106,11 @@ class Team:
         self.life -= amt
         if self.life <= 0:
             self.alive = False
+
+    ### For Tests ###
+
+    def forceAddAnimal(self, position: int, animal: Animal):
+        self.friends[position] = animal
 
     ### Private ###
 

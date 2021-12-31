@@ -72,7 +72,13 @@ class Animal(ABC):
         """public get animal state method"""
         pass
 
-    #### Setters ####
+    def getPosition(self, friends: list) -> int:
+        """public method to get the animals position in a list"""
+        for i in range(len(friends) - 1):
+            if friends[i] == self:
+                return i
+
+        #### Setters ####
 
     def addBaseHp(self, amt: int) -> None:
         """public add to base hp method"""
@@ -137,23 +143,17 @@ class Animal(ABC):
         """public set effect method"""
         self.effect = effect
 
-    #### Private ####
-
-    def __getPosition(self, friends: list) -> int:
-        """private method to get the animals position in a list"""
-        for i in range(len(friends) - 1):
-            if friends[i] == self:
-                return i
-
-    def __setHp(self, amt: int) -> None:
-        """private set hp method"""
+    def setHp(self, amt: int) -> None:
+        """public set hp method"""
         self.base_hp = amt
         self.__recalcHp()
 
-    def __setDmg(self, amt: int) -> None:
-        """private set damage method"""
+    def setDmg(self, amt: int) -> None:
+        """public set damage method"""
         self.base_dmg = amt
         self.__recalcDmg()
+
+    #### Private ####
 
     def __setExp(self, amt: int) -> None:
         """private set exp method"""

@@ -24,7 +24,7 @@ class Ant(Animal):
     level 3: faint -> give random friend +6/+3
     """
 
-    def __init__(self, health: int, dmg: int):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 2
@@ -34,8 +34,8 @@ class Ant(Animal):
         self.tier = 1
 
     def onFaint(self, friends: List[Animal]) -> None:
-        pos = self.__getPosition(friends)
-        possible = range(len(friends) - 1)
+        pos = self.getPosition(friends)
+        possible = list(range(len(friends) - 1))
         possible.remove(pos)
         friend = choice(possible)
         friends[friend].addBaseHp(1 * self.getLevel())
@@ -74,17 +74,18 @@ class Beaver(Animal):
     Level 3: sell -> give 2 random friends +3 health
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
+        ability = "Sell: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
     def onSell(self, friends: List[Animal]) -> None:
-        pos = self.__getPosition(friends)
-        possible = range(len(friends) - 1)
+        pos = self.getPosition(friends)
+        possible = list(range(len(friends) - 1))
         possible.remove(pos)
         if len(possible) < 1:
             return
@@ -192,19 +193,20 @@ class Cricket(Animal):
 
         default_health = 2
         default_dmg = 1
+        ability = "Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
     def onFaint(self, friends: List[Animal]) -> None:
-        pos = self.__getPosition(friends)
+        pos = self.getPosition(friends)
 
-        others = range(len(friends) - 1)
+        others = list(range(len(friends) - 1))
         others.remove(pos)
 
         friends[pos] = Cricket()
-        friends[pos].__setHp(1 * self.getLevel())
-        friends[pos].__setDmg(1 * self.getLevel())
+        friends[pos].setHp(1 * self.getLevel())
+        friends[pos].setDmg(1 * self.getLevel())
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
@@ -361,12 +363,13 @@ class Hippo(Animal):
 
 
 class Horse(Animal):
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 2
+        ability = "Friend Summoned: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal) -> None:
