@@ -2,7 +2,7 @@ from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Food import Food
 from src.Food.Foods import NoneFood
-from src.Animal.AnimalGenerator import getRandomAnimal
+from src.Animal.Animals import getRandomAnimal
 from src.Food.FoodGenerator import getRandomFood
 
 

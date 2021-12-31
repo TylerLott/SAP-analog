@@ -472,7 +472,7 @@ class Horse(Animal):
         self.tier = 1
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal) -> None:
-        friend.addTempDmg(1 * self.getLevel())
+        friend.setTempDmg(friend.getTempDmg() + 1 * self.getLevel())
 
 
 class Kangaroo(Animal):
@@ -828,13 +828,26 @@ class Snake(Animal):
 
 
 class Spider(Animal):
+    """
+    Spider Class
+
+    Level 1: Faint -> Summon a level 1 tier 3 pet as a 2/2
+    Level 2: Faint -> Summon a level 2 tier 3 pet as a 2/2
+    Level 3: Faint -> Summon a level 3 tier 3 pet as a 2/2
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = "Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
 
 
 class Squirrel(Animal):
@@ -916,3 +929,59 @@ class Worm(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 4
+
+
+### Functions ###
+
+animals = {
+    1: [Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig],
+    2: [Crab, Dodo, Elephant, Flamingo, Hedgehog, Peacock, Rat, Shrimp, Spider, Swan],
+    3: [
+        Badger,
+        Blowfish,
+        Camel,
+        Dog,
+        Giraffe,
+        Kangaroo,
+        Ox,
+        Rabbit,
+        Sheep,
+        Snail,
+        Turtle,
+    ],
+    4: [
+        Bison,
+        Deer,
+        Dolphin,
+        Hippo,
+        Parrot,
+        Penguin,
+        Rooster,
+        Skunk,
+        Squirrel,
+        Whale,
+        Worm,
+    ],
+    5: [Cow, Crocodile, Monkey, Rhino, Scorpion, Seal, Shark, Turkey],
+    6: [Boar, Cat, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger],
+}
+
+
+def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -> Animal:
+    possible = []
+    for i in range(1, maxTier + 1):
+        possible += animals[i]
+    animal = choice(possible)
+    return animal(health_mod, dmg_mod)
+
+
+def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
+    animal = choice(animals[tier])()
+    animal.setBaseHp(health)
+    animal.setBaseDmg(dmg)
+    return animal
+
+
+if __name__ == "__main__":
+    for i in range(10):
+        print(getRandomAnimal(3, 0, 0))
