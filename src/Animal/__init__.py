@@ -189,7 +189,7 @@ class Animal(ABC):
     def onFaint(self, friends: list, enemies: list):
         pass
 
-    def onSell(self, friends: list, team):
+    def onSell(self, friends: list, team, shop):
         pass
 
     def onEat(self, friends: list):

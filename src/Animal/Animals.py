@@ -305,13 +305,26 @@ class Dragon(Animal):
 
 
 class Duck(Animal):
+    """
+    Duck Class
+
+    Level 1: Sell -> Give shop pets +1 Health
+    Level 2: Sell -> Give shop pets +2 Health
+    Level 3: Sell -> Give shop pets +3 Health
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = "Sell: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
+
+    def onSell(self, friends: List[Animal], team):
+        for i in team.shop.animals:
+            i.setBaseHp(i.getBaseHp() + 1 * self.getLevel())
 
 
 class Elephant(Animal):
