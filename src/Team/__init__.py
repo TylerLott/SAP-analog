@@ -71,7 +71,7 @@ class Team:
 
     def sellFriend(self, friend_pos: int) -> None:
         if self.friends[friend_pos]:
-            self.money += self.friends[friend_pos].getLevel()
+            self.add_money(self.friends[friend_pos].getLevel())
             self.friends[friend_pos] = None
             # onSell
             # onFriendSell
@@ -107,6 +107,9 @@ class Team:
         if self.life <= 0:
             self.alive = False
 
+    def add_money(self, amt: int) -> None:
+        self.money += amt
+
     ### For Tests ###
 
     def forceAddAnimal(self, position: int, animal: Animal):
@@ -122,12 +125,16 @@ class Team:
 
     def __onBuy(self) -> None:
         pass
-
-    def __onFriendSummon(self) -> None:
-        pass
+        # run on onFriendSummoned as well
 
     def __onStartOfTurn(self) -> None:
-        pass
+        for i in self.friends:
+            i.onStartOfTurn(self)
+
+    def __resetTemps(self) -> None:
+        for i in self.friends:
+            i.setTempDmg(0)
+            i.setTempHp(0)
 
     ### Actions ###
 
@@ -141,11 +148,13 @@ class Team:
         pass
 
     def nextTurn(self) -> None:
-        # remove all temp hp
+
         self.round += 1
         self.shop.setRound(self.round)
         self.money = 10
-        # onStartOfTurn - for stuff like the swan
+
+        self.__resetTemps()
+        self.__onStartOfTurn()
 
     ### State ###
 

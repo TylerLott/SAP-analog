@@ -78,64 +78,35 @@ class Animal(ABC):
             if friends[i] == self:
                 return i
 
-        #### Setters ####
+    #### Setters ####
 
-    def addBaseHp(self, amt: int) -> None:
-        """public add to base hp method"""
-        self.base_hp += amt
+    def setBaseHp(self, amt: int) -> None:
+        """public method to set base hp"""
+        self.base_hp = amt
         self.__recalcHp()
 
-    def addTempHp(self, amt: int) -> None:
-        """public add to temp hp method"""
-        self.temp_hp += amt
-        self.__recalcHp()
-
-    def subBaseHp(self, amt: int) -> None:
-        """public subtract from base hp method"""
-        self.base_hp -= amt
-        self.__recalcHp()
-
-    def subTempHp(self, amt: int) -> None:
-        """
-        public subtract from temp hp method
-        sets temp hp to 0 if -1 is passed
-        """
-        if amt == -1:
-            self.temp_hp = 0
-        else:
-            self.temp_hp -= amt
-        self.__recalcHp()
-
-    def addBaseDmg(self, amt: int) -> None:
-        """public add to base damage method"""
-        self.base_dmg += amt
+    def setBaseDmg(self, amt: int) -> None:
+        """public method to set base dmg"""
+        self.base_dmg = amt
         self.__recalcDmg()
 
-    def addTempDmg(self, amt: int) -> None:
-        """public add to temp damage method"""
-        self.temp_dmg += amt
-        self.__recalcDmg()
+    def setTempHp(self, amt: int) -> None:
+        """public method to set temp hp"""
+        self.temp_hp = amt
+        self.__recalcHp()
 
-    def subBaseDmg(self, amt: int) -> None:
-        """public subtract from base damage method"""
-        self.base_dmg -= amt
-        self.__recalcDmg()
-
-    def subTempDmg(self, amt: int) -> None:
-        """
-        public subtract from temp damage method
-        sets temp damage to 0 if -1 is passed
-        """
-        if amt == -1:
-            self.temp_dmg = 0
-        else:
-            self.temp_dmg -= amt
+    def setTempDmg(self, amt: int) -> None:
+        """public method to set temp dmg"""
+        self.temp_dmg = amt
         self.__recalcDmg()
 
     def subHp(self, amt: int) -> None:
         """
         public subtract from hp method
+
         only for use in a fight
+
+        removes hp from temp_hp then base_hp
         """
         self.hp -= amt
 
@@ -213,7 +184,7 @@ class Animal(ABC):
     def onBuy(self, friends: list):
         pass
 
-    def onStartOfTurn(self, friends: list):
+    def onStartOfTurn(self, team):
         pass
 
     def onBeforeAttack(self):

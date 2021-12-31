@@ -637,6 +637,14 @@ class Squirrel(Animal):
 
 
 class Swan(Animal):
+    """
+    Swan Class
+
+    Level 1: Start of Turn -> +1 gold
+    Level 2: Start of Turn -> +2 gold
+    Level 3: Start of Turn -> +3 gold
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
@@ -644,6 +652,9 @@ class Swan(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 2
+
+    def onStartOfTurn(self, team) -> None:
+        team.add_money(1 * self.getLevel())
 
 
 class Tiger(Animal):
