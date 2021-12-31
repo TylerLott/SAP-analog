@@ -37,9 +37,21 @@ class Animal(ABC):
         """public get hp method"""
         return self.hp
 
+    def getBaseHp(self) -> int:
+        return self.base_hp
+
+    def getTempHp(self) -> int:
+        return self.temp_hp
+
     def getDmg(self) -> int:
         """public get dmg method"""
         return self.dmg
+
+    def getBaseDmg(self) -> int:
+        return self.base_dmg
+
+    def getTempDmg(self) -> int:
+        return self.temp_dmg
 
     def getLevel(self) -> int:
         """public get animal level method"""
@@ -177,7 +189,7 @@ class Animal(ABC):
     def onFaint(self, friends: list):
         pass
 
-    def onSell(self, friends: list):
+    def onSell(self, friends: list, team):
         pass
 
     def onEat(self, friends: list):

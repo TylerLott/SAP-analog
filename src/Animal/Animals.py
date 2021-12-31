@@ -171,13 +171,28 @@ class Cow(Animal):
 
 
 class Crab(Animal):
+    """
+    Crab Class
+
+    Level 1: Buy -> Copy health from most healthy friend
+    Level 2: Buy -> Copy health from most healthy friend
+    Level 3: Buy -> Copy health from most healthy friend
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 3
+        ability = "Buy: Copy Health"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onBuy(self, friends: List[Animal]) -> None:
+        high_health = 0
+        for i in friends:
+            high_health = i.getHp() if i.getHp() > high_health else high_health
+        self.setHp(high_health)
 
 
 class Cricket(Animal):
@@ -233,13 +248,30 @@ class Deer(Animal):
 
 
 class Dodo(Animal):
+    """
+    Dodo Class
+
+    Level 1: Start of Battle -> give 50% of dodo dmg to friend ahead
+    Level 2: Start of Battle -> give 100% of dodo dmg to friend ahead
+    Level 3: Start of Battle -> give 150% of dodo dmg to friend ahead
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 2
+        ability = "Start of Battle: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]) -> None:
+        pos = self.getPosition(friends)
+        if pos == 0:
+            return
+        animal = friends[pos - 1]
+        amt = round(self.dmg * 0.5 * self.getLevel())
+        animal.setTempDmg(animal.getTempDmg() + amt)
 
 
 class Dog(Animal):
@@ -293,13 +325,34 @@ class Elephant(Animal):
 
 
 class Fish(Animal):
+    """
+    Fish Class
+
+    Level 1: Level-up -> give all friends +1/+1
+    Level 2: Level-up -> give all friends +2/+2
+    Level 3: None
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 2
+        ability = "Level-up: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
+
+    def onLevelUp(self, friends: List[Animal]) -> None:
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        amt = 1 if self.getLevel() == 1 else 2
+
+        for i in others:
+            friends[i].setBaseHp(friends[i].getBaseHp() + amt)
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)
 
 
 class Flamingo(Animal):
@@ -407,13 +460,26 @@ class Mammoth(Animal):
 
 
 class Mosquito(Animal):
+    """
+    Mosquito Class
+
+    Level 1: Start of Battle -> Deal 1 Dmg to random enemy
+    Level 2: Start of Battle -> Deal 2 Dmg to random enemy
+    Level 3: Start of Battle -> Deal 3 Dmg to random enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = "Start of Battle: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]) -> None:
+        animal = choice(enemies)
+        animal.subHp(1 * self.getLevel())
 
 
 class Monkey(Animal):
@@ -427,6 +493,14 @@ class Monkey(Animal):
 
 
 class Otter(Animal):
+    """
+    Otter Class
+
+    Level 1: Buy -> give random friend +1/+1
+    Level 2: Buy -> give random friend +2/+2
+    Level 3: Buy -> give random friend +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
@@ -434,6 +508,18 @@ class Otter(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 1
+
+    def onBuy(self, friends: List[Animal]):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        friend = choice(others)
+        amt = 1 * self.getLevel()
+
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + amt)
+        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + amt)
 
 
 class Ox(Animal):
@@ -477,13 +563,25 @@ class Penguin(Animal):
 
 
 class Pig(Animal):
+    """
+    Pig Class
+
+    Level 1: Sell -> Give 1 extra gold
+    Level 2: Sell -> Give 2 extra gold
+    Level 3: Sell -> Give 3 extra gold
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 3
+        ability = "Sell: Extra Gold"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
+
+    def onSell(self, friends: List[Animal], team):
+        team.add_money(1 * self.getLevel())
 
 
 class Rabbit(Animal):
@@ -587,12 +685,19 @@ class Skunk(Animal):
 
 
 class Sloth(Animal):
+    """
+    Sloth Class
+
+    No abilities
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 1
+        ability = "Moral Support"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
 
