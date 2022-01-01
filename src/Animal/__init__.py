@@ -26,6 +26,7 @@ class Animal(ABC):
         self.effect = effect
         self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
+        self.tier = 1
 
         # Derived
         self.hp = self.temp_hp + self.base_hp
@@ -89,6 +90,9 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+
+    def getTier(self) -> int:
+        return self.tier
 
     #### Setters ####
 
@@ -235,7 +239,10 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
-    def onFriendFaint(self):
+    def onFriendFaint(self, friends: list):
+        pass
+
+    def onFriendBought(self, friends: list, friend):
         pass
 
     ### Overrides ###

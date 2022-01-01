@@ -3,7 +3,7 @@ from typing import List
 from math import floor
 
 from src.Animal import Animal
-from src.Effect.Effects import MelonEffect, PoisonEffect, SplashEffect
+from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
 from src.Food.Foods import Milk
 
 
@@ -169,13 +169,26 @@ class Blowfish(Animal):
 
 
 class Boar(Animal):
+    """
+    Boar Class
+
+    Level 1: Before Attack -> Gain +2/+2
+    Level 2: Before Attack -> Gain +4/+4
+    Level 3: Before Attack -> Gain +6/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 8
+        ability = "Before Attack: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onBeforeAttack(self, friends: list):
+        self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Camel(Animal):
@@ -203,13 +216,24 @@ class Camel(Animal):
 
 
 class Cat(Animal):
+    """
+    Cat Class
+
+    Level 1: Food buffs are 2x
+    Level 2: Food buffs are 3x
+    Level 3: Food buffs are 4x
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 4
+        ability = "Enhance Food"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    # TODO figure out how to implement this
 
 
 class Cow(Animal):
@@ -437,13 +461,34 @@ class Dolphin(Animal):
 
 
 class Dragon(Animal):
+    """
+    Dragon Class
+
+    Level 1: Buy tier 1 friend -> Give all friends +1/+1
+    Level 2: Buy tier 1 friend -> Give all friends +2/+2
+    Level 3: Buy tier 1 friend -> Give all friends +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 8
         default_dmg = 6
+        ability = "Friend Buy: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onFriendBought(self, friends: List[Animal], friend: Animal):
+        if not friend.getTier() == 1:
+            return
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        for i in others:
+            i.setBaseHp(i.getBaseHp() + self.getLevel())
+            i.setBaseDmg(i.getBaseDmg() + self.getLevel())
 
 
 class Duck(Animal):
@@ -551,13 +596,26 @@ class Flamingo(Animal):
 
 
 class Fly(Animal):
+    """
+    Fly Class
+
+    Level 1: Friend Faints -> Summon a 5/5 fly in it's place
+    Level 2: Friend Faints -> Summon a 10/10 fly in it's place
+    Level 3: Friend Faints -> Summon a 15/15 fly in it's place
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 5
+        ability = "Friend Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onFriendFaint(self, friends: List[Animal]):
+        # TODO figure out how to find location to insert fly
+        return super().onFriendFaint()
 
 
 class Giraffe(Animal):
@@ -585,13 +643,23 @@ class Giraffe(Animal):
 
 
 class Gorilla(Animal):
+    """
+    Gorilla Class
+
+    All Levels: Hurt -> Gain coconut shield
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 9
         default_dmg = 6
+        ability = "Hurt: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onHurt(self, friends: list, enemies: list):
+        self.effect = CoconutEffect()
 
 
 class Hedgehog(Animal):
@@ -679,23 +747,56 @@ class Kangaroo(Animal):
 
 
 class Leopard(Animal):
+    """
+    Leopard Class
+
+    Level 1: Start of battle -> Deal 50% attack damage to 1 random enemy
+    Level 2: Start of battle -> Deal 50% attack damage to 2 random enemies
+    Level 3: Start of battle -> Deal 50% attack damage to 3 random enemies
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 10
+        ability = "Start of Battle: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onStartOfBattle(self, friends: list, enemies: List[Animal]):
+        animals = choice(enemies, k=self.getLevel())
+        for i in animals:
+            i.subHp(round(self.getDmg() * 0.5), enemies, friends)
 
 
 class Mammoth(Animal):
+    """
+    Mammoth Class
+
+    Level 1: Faint -> Give all friends +2/+2
+    Level 2: Faint -> Give all friends +4/+4
+    Level 3: Faint -> Give all friends +6/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 10
         default_dmg = 3
+        ability = "Faint: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onFaint(self, friends: List[Animal], enemies: list):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        for i in others:
+            friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + 2 * self.getLevel())
 
 
 class Mosquito(Animal):
@@ -1239,13 +1340,27 @@ class Snail(Animal):
 
 
 class Snake(Animal):
+    """
+    Snake Class
+
+    Level 1: Friend Ahead Attacks -> Deal 5 damage to random enemy
+    Level 2: Friend Ahead Attacks -> Deal 10 damage to random enemy
+    Level 3: Friend Ahead Attacks -> Deal 15 damage to random enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 6
+        ability = "Friend Ahead Attack: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    def onFriendAheadAttack(self, friends: list, enemies: List[Animal]):
+        animal = choice(enemies)
+
+        animal.subHp(5 * self.getLevel(), enemies, friends)
 
 
 class Spider(Animal):
@@ -1323,13 +1438,24 @@ class Swan(Animal):
 
 
 class Tiger(Animal):
+    """
+    Tiger Class
+
+    Level 1: Friend ahead repeated their ability as if they were a level 1
+    Level 2: Friend ahead repeated their ability as if they were a level 2
+    Level 3: Friend ahead repeated their ability as if they were a level 3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 3
         default_dmg = 4
+        ability = "Buff Friend"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
+
+    # TODO figure out how to implement this
 
 
 class Turkey(Animal):
