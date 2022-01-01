@@ -61,15 +61,24 @@ class Fight:
             self.__purgeDead()
 
         while len(self.team1Friends) > 0 or len(self.team2Friends) > 0:
-            pass
             # trigger animal onBeforeAttack()
+            self.team1Friends[0].onBeforeAttack(self.team1Friends)
+            self.team2Friends[0].onBeforeAttack(self.team2Friends)
+
             # front animals attack
-            # if not faint           -> trigger animals onHurt()
-            # if faint               -> trigger animal onFaint()
-            #   if summon on faint   -> trigger all animals onFriendSummoned()
-            #   if summon on faint, only fill up to 5 animal length
-            # if front animal faints -> trigger behind animal onFriendAheadFaint()
-            # if not                 -> trigger behind animal onFriendAheadAttack()
+            self.team1Friends[0].attack(self.team2Friends)
+            self.team2Friends[0].attack(self.team1Friends)
+
+            # trigger behind animal onFriendAheadAttack()
+            self.team1Friends[1].onFriendAheadAttack(
+                self.team1Friends, self.team2Friends
+            )
+            self.team2Friends[1].onFriendAheadAttack(
+                self.team2Friends, self.team1Friends
+            )
+
+            # purge dead
+            self.__purgeDead()
 
     ### Private ###
 
@@ -77,7 +86,17 @@ class Fight:
         """private method to purge dead animals"""
         for i in self.team1Friends:
             if not i.getAlive():
+                ind = self.team1Friends.index(i)
+                i.onFaint(self.team1Friends, self.team2Friends)
+                self.team1Friends[ind + 1].onFriendAheadFaint(
+                    self.team1Friends, self.team2Friends
+                )
                 self.team1Friends.remove(i)
         for i in self.team2Friends:
             if not i.getAlive():
+                ind = self.team2Friends.index(i)
+                i.onFaint(self.team2Friends, self.team1Friends)
+                self.team2Friends[ind + 1].onFriendAheadFaint(
+                    self.team2Friends, self.team1Friends
+                )
                 self.team2Friends.remove(i)

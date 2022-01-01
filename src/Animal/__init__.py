@@ -176,6 +176,10 @@ class Animal(ABC):
     #### On Events ####
 
     # Normal On Events
+
+    def attack(self, enemies):
+        pass
+
     def onHit(self, dmgAmt):
         dmg_taken = (
             dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier > 1 else 1
