@@ -80,8 +80,8 @@ class Fight:
 
         while len(self.team1Friends) > 0 and len(self.team2Friends) > 0:
             # trigger animal onBeforeAttack()
-            self.team1Friends[0].onBeforeAttack(self.team1Friends)
-            self.team2Friends[0].onBeforeAttack(self.team2Friends)
+            self.team1Friends[0].onBeforeAttack(self.team1Friends, self.team2Friends)
+            self.team2Friends[0].onBeforeAttack(self.team2Friends, self.team1Friends)
 
             # front animals attack
             self.team1Friends[0].attack(self.team1Friends, self.team2Friends)

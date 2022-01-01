@@ -227,7 +227,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):

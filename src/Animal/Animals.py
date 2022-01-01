@@ -200,7 +200,7 @@ class Boar(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
@@ -479,8 +479,8 @@ class Dog(Animal):
         self.tier = 3
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal):
-        self.setBaseHp(self.getBaseHp + self.getLevel())
-        self.setBaseDmg(self.getBaseDmg + self.getLevel())
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 
 class Dolphin(Animal):
@@ -1114,7 +1114,7 @@ class Rat(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         if len(enemies) < 5:
-            enemies.append(DirtyRat())
+            enemies.append(DirtyRat(0, 0))
 
 
 class DirtyRat(Animal):
@@ -1737,7 +1737,7 @@ def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -> Anim
 
 
 def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
-    animal = choice(animals[tier])()
+    animal = choice(animals[tier])(0, 0)
     animal.setBaseHp(health)
     animal.setBaseDmg(dmg)
     # TODO apply level to new animal
