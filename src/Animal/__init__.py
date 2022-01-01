@@ -94,6 +94,7 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+        return 0
 
     def getTier(self) -> int:
         return self.tier
@@ -263,7 +264,9 @@ class Animal(ABC):
         out_str += "|" + f'{"Damage: "+ str(self.dmg):^30}' + "|\n"
         out_str += "|" + f'{"Exp Level: "+ str(self.getLevel()):^30}' + "|\n"
         out_str += "|" + f'{"Ability: " + self.getAbility():^30}' + "|\n"
-        out_str += "|" + f'{"Effect: "+ self.getEffect().__name__:^30}' + "|\n"
+        out_str += (
+            "|" + f'{"Effect: "+ self.getEffect().__class__.__name__:^30}' + "|\n"
+        )
         out_str += "|" + f'{"Cost: "+ str(self.cost):^30}' + "|\n"
         out_str += "|==============================|\n"
 

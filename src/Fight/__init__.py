@@ -111,8 +111,8 @@ class Fight:
         elif len(self.team2Friends) > len(self.team1Friends):
             self.team1.loseLife(1)
 
-        print(self.team1)
-        print(self.team2)
+        # print(self.team1)
+        # print(self.team2)
 
     ### Private ###
 
@@ -137,7 +137,7 @@ class Fight:
             if not i.getAlive():
                 ind = self.team1Friends.index(i)
                 i.onFaint(self.team1Friends, self.team2Friends)
-                if len(self.team1Friends) > 1:
+                if len(self.team1Friends) > 1 + ind:
                     self.team1Friends[ind + 1].onFriendAheadFaint(
                         self.team1Friends, self.team2Friends
                     )
@@ -147,7 +147,7 @@ class Fight:
             if not i.getAlive():
                 ind = self.team2Friends.index(i)
                 i.onFaint(self.team2Friends, self.team1Friends)
-                if len(self.team2Friends) > 1:
+                if len(self.team2Friends) > 1 + ind:
                     self.team2Friends[ind + 1].onFriendAheadFaint(
                         self.team2Friends, self.team1Friends
                     )

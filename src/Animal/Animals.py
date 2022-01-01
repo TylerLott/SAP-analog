@@ -40,14 +40,15 @@ class Ant(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
-        possible.remove(pos)
 
-        if len(possible) == 0:
+        if len(possible) <= 1:
             return
+        else:
+            possible.remove(pos)
 
         friend = choice(possible)
         friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
-        friends[friend].addBaseDmg(friends[friend].getBaseHp() + 2 * self.getLevel())
+        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())
 
 
 class Badger(Animal):
@@ -329,7 +330,10 @@ class Cricket(Animal):
         pos = self.getPosition(friends)
 
         others = list(range(len(friends) - 1))
-        others.remove(pos)
+        if len(others) <= 1:
+            others = []
+        else:
+            others.remove(pos)
 
         friends[pos] = CricketSpawn(self.getLevel(), self.getLevel())
 

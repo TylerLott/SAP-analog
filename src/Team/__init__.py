@@ -76,7 +76,7 @@ class Team:
     def sellFriend(self, friend_pos: int) -> None:
         if self.friends[friend_pos]:
             self.add_money(self.friends[friend_pos].getLevel())
-            self.friends[friend_pos] = None
+            self.friends[friend_pos] = NoneAnimal()
             # onSell
             # onFriendSell
 
