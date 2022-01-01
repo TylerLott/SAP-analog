@@ -177,8 +177,8 @@ class Animal(ABC):
 
     # Normal On Events
 
-    def attack(self, enemies):
-        pass
+    def attack(self, friends, enemies):
+        enemies[0].subHp(self.getDmg(), friends, enemies)
 
     def onHit(self, dmgAmt):
         dmg_taken = (

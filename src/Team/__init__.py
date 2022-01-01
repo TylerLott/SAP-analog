@@ -81,20 +81,19 @@ class Team:
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
         animal = self.shop.checkAnimal(shop_pos)
-        friend = self.friends[friend_pos]
         if self.money >= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)
-            if not friend:
+            if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                friend = animal
-                friend.onBuy()
+                self.friends[friend_pos] = animal
+                # friend.onBuy(self.friends, self)
                 # onFriendSummoned
-            elif friend.__class__ == animal.__class__:
+            elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
-                origin_level = friend.getLevel()
-                friend += animal
-                if friend.getLevel() > origin_level:
-                    friend.onLevelUp()
+                origin_level = self.friends[friend_pos].getLevel()
+                self.friends[friend_pos] += animal
+                if self.friends[friend_pos].getLevel() > origin_level:
+                    self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -> None:
         food = self.shop.checkFood(shop_pos)
