@@ -1,3 +1,6 @@
+from typing import List
+
+from src.Animal import Animal
 from src.Team import Team
 
 
@@ -36,6 +39,14 @@ class Fight:
         # I might need to make like a move buffer and just load into
         # that rather than recursively calling everything
 
+        # Remove all of the NoneAnimals()
+        for i in self.team1Friends:
+            if i.__class__.__name__ == "NoneAnimal":
+                self.team1Friends.remove(i)
+        for i in self.team2Friends:
+            if i.__class__.__name__ == "NoneAnimal":
+                self.team2Friends.remove(i)
+
         # get start of fight move order for each team
         sob1 = self.team1.getMoveOrder()
         sob2 = self.team2.getMoveOrder()
@@ -47,8 +58,7 @@ class Fight:
             self.team2Friends[sob2[i]].onStartOfBattle(
                 self.team2Friends, self.team1Friends
             )
-
-            # purge out dead animals
+            self.__purgeDead()
 
         while len(self.team1Friends) > 0 or len(self.team2Friends) > 0:
             pass
@@ -62,3 +72,12 @@ class Fight:
             # if not                 -> trigger behind animal onFriendAheadAttack()
 
     ### Private ###
+
+    def __purgeDead(self):
+        """private method to purge dead animals"""
+        for i in self.team1Friends:
+            if not i.getAlive():
+                self.team1Friends.remove(i)
+        for i in self.team2Friends:
+            if not i.getAlive():
+                self.team2Friends.remove(i)

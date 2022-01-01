@@ -1,3 +1,5 @@
+from typing import List
+
 from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
@@ -24,7 +26,7 @@ class Team:
 
     ### Getters ###
 
-    def getFriendCopy(self) -> list:
+    def getFriendCopy(self) -> List[Animal]:
         """
         public get a copy of the friends array method
 

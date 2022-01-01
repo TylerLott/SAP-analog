@@ -34,6 +34,10 @@ class Animal(ABC):
 
     #### Getters ####
 
+    def getAlive(self) -> bool:
+        """public get alive method"""
+        return self.alive
+
     def getHp(self) -> int:
         """public get hp method"""
         return self.hp
