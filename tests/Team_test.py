@@ -18,11 +18,11 @@ class TeamTests(unittest.TestCase):
         t.forceAddAnimal(1, Cricket())
         t.forceAddAnimal(2, Beaver())
         t.forceAddAnimal(3, Horse())
-        t.friends[1].onFaint(t.friends)
+        t.friends[1].onFaint(t.friends, t.friends)
 
         t2 = Team()
         t2.forceAddAnimal(0, Ant())
-        t2.forceAddAnimal(1, Cricket())
+        t2.forceAddAnimal(1, CricketSpawn())
         t2.forceAddAnimal(2, Beaver())
         t2.forceAddAnimal(3, Horse())
         t2.friends[1].setDmg(2)
