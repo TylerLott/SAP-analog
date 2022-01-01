@@ -137,7 +137,7 @@ class Animal(ABC):
         if amt > 0:
             self.base_hp -= amt
         self.onHurt(friends, enemies)
-        return self.__recalcHp()
+        self.__recalcHp()
 
     def setEffect(self, effect: Effect) -> None:
         """public set effect method"""
