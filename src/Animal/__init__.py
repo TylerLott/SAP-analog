@@ -235,6 +235,9 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
+    def onFriendFaint(self):
+        pass
+
     ### Overrides ###
 
     def __str__(self):

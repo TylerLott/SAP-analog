@@ -3,7 +3,8 @@ from typing import List
 from math import floor
 
 from src.Animal import Animal
-from src.Effect.Effects import MelonEffect, SplashEffect
+from src.Effect.Effects import MelonEffect, PoisonEffect, SplashEffect
+from src.Food.Foods import Milk
 
 
 class NoneAnimal(Animal):
@@ -212,13 +213,26 @@ class Cat(Animal):
 
 
 class Cow(Animal):
+    """
+    Cow Class
+
+    Level 1: Buy -> replace shop food with milk that gives +1/+2
+    Level 2: Buy -> replace shop food with milk that gives +2/+4
+    Level 3: Buy -> replace shop food with milk that gives +3/+6
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 4
+        ability = "Buy: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onBuy(self, friends: list, team):
+        for i in range(len(team.shop.items)):
+            team.shop.items[i] = Milk(self.getLevel())
 
 
 class Crab(Animal):
@@ -279,13 +293,25 @@ class Cricket(Animal):
 
 
 class Crocodile(Animal):
+    """
+    Crocodile Class
+
+    Level 1: Start of Battle -> Deal 8 Dmg to last enemy
+    Level 2: Start of Battle -> Deal 16 Dmg to last enemy
+    Level 3: Start of Battle -> Deal 24 Dmg to last enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 8
+        ability = "Start of Battle: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        enemies[-1].subHp(8 * self.getLevel(), enemies, friends)
 
 
 class Deer(Animal):
@@ -696,13 +722,26 @@ class Mosquito(Animal):
 
 
 class Monkey(Animal):
+    """
+    Monkey Class
+
+    Level 1: End Turn -> Give right-most friend +3/+3
+    Level 2: End Turn -> Give right-most friend +6/+6
+    Level 3: End Turn -> Give right-most friend +9/+9
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 1
+        ability = "End Turn: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onEndOfTurn(self, friends: List[Animal]):
+        friends[0].setBaseHp(friends[0].getBaseHp() + 3 * self.getLevel())
+        friends[0].setBaseDmg(friends[0].getBaseDmg() + 3 * self.getLevel())
 
 
 class Otter(Animal):
@@ -901,13 +940,24 @@ class DirtyRat(Animal):
 
 
 class Rhino(Animal):
+    """
+    Rhino Class
+
+    Level 1: Knock Out: Deal 4 damage to first enemy
+    Level 2: Knock Out: Deal 8 damage to first enemy
+    Level 3: Knock Out: Deal 12 damage to first enemy
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 8
         default_dmg = 5
+        ability = "Knock Out: Attack"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    # TODO knock out stuff
 
 
 class Rooster(Animal):
@@ -971,33 +1021,74 @@ class Chick(Animal):
 
 
 class Scorpion(Animal):
+    """
+    Scorpion Class
+
+    No Abilities
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 1
         default_dmg = 1
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(
+            default_health + health, default_dmg + dmg, effect=PoisonEffect()
+        )
         self.tier = 5
 
 
 class Seal(Animal):
+    """
+    Seal Class
+
+    Level 1: Eat -> Give 2 random friends +1/+1
+    Level 2: Eat -> Give 2 random friends +2/+2
+    Level 3: Eat -> Give 2 random friends +3/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 8
         default_dmg = 3
+        ability = "Eat: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onEat(self, friends: List[Animal]):
+        pos = self.getPosition(friends)
+
+        others = list(range(len(friends) - 1))
+        others.remove(pos)
+
+        animals = choice(others, k=2)
+        for i in animals:
+            i.setBaseHp(i.getBaseHp() + self.getLevel())
+            i.setBaseDmg(i.getBaseDmg() + self.getLevel())
 
 
 class Shark(Animal):
+    """
+    Shark Class
+
+    Level 1: Friend Faint -> Gain +2/+1
+    Level 2: Friend Faint -> Gain +4/+2
+    Level 3: Friend Faint -> Gain +6/+3
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 4
+        ability = "Friend Faint: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onFriendFaint(self):
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Sheep(Animal):
@@ -1242,13 +1333,26 @@ class Tiger(Animal):
 
 
 class Turkey(Animal):
+    """
+    Turkey Class
+
+    Level 1: Friend Summoned -> give it +3/+3
+    Level 2: Friend Summoned -> give it +6/+6
+    Level 3: Friend Summoned -> give it +9/+9
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 4
         default_dmg = 3
+        ability = "Friend Summoned: Buff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
+
+    def onFriendSummoned(self, friends: list, friend: Animal):
+        friend.setBaseHp(self.getBaseHp() + 3 * self.getLevel())
+        friend.setBaseDmg(self.getBaseDmg() + 3 * self.getLevel())
 
 
 class Turtle(Animal):
@@ -1308,18 +1412,19 @@ class Whale(Animal):
 
 
 class Worm(Animal):
-    '''
+    """
     Worm Class
 
     Level 1: Eat -> Gain +1/+1
     Level 2: Eat -> Gain +2/+2
     Level 3: Eat -> Gain +3/+3
-    '''
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
-        ability = 'Eat: Buff'
+        ability = "Eat: Buff"
 
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
@@ -1327,6 +1432,7 @@ class Worm(Animal):
     def onEat(self, friends: list):
         self.setBaseHp(self.getBaseHp() + self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + self.getLevel())
+
 
 ### Functions ###
 
@@ -1376,6 +1482,7 @@ def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
     animal = choice(animals[tier])()
     animal.setBaseHp(health)
     animal.setBaseDmg(dmg)
+    # TODO apply level to new animal
     return animal
 
 

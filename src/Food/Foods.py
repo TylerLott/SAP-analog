@@ -90,5 +90,7 @@ class Steak(Food):
 
 
 class Milk(Food):
-    def __init__(self):
+    def __init__(self, level: int):
+        self.hp = 2 * level
+        self.dmg = 1 * level
         super().__init__()
