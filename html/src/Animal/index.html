@@ -54,6 +54,7 @@ class Animal(ABC):
         self.effect = effect
         self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
+        self.tier = 1
 
         # Derived
         self.hp = self.temp_hp + self.base_hp
@@ -117,6 +118,9 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+
+    def getTier(self) -&gt; int:
+        return self.tier
 
     #### Setters ####
 
@@ -263,7 +267,10 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
-    def onFriendFaint(self):
+    def onFriendFaint(self, friends: list):
+        pass
+
+    def onFriendBought(self, friends: list, friend):
         pass
 
     ### Overrides ###
@@ -378,6 +385,7 @@ class Animal(ABC):
         self.effect = effect
         self.dmgTakenModifier = 0  # negative if bad
         self.cost = 3
+        self.tier = 1
 
         # Derived
         self.hp = self.temp_hp + self.base_hp
@@ -441,6 +449,9 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+
+    def getTier(self) -&gt; int:
+        return self.tier
 
     #### Setters ####
 
@@ -587,7 +598,10 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
-    def onFriendFaint(self):
+    def onFriendFaint(self, friends: list):
+        pass
+
+    def onFriendBought(self, friends: list, friend):
         pass
 
     ### Overrides ###
@@ -916,6 +930,19 @@ Ability should be string describing animal abilities, if any</p></div>
     return self.temp_hp</code></pre>
 </details>
 </dd>
+<dt id="src.Animal.Animal.getTier"><code class="name flex">
+<span>def <span class="ident">getTier</span></span>(<span>self) ‑> int</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getTier(self) -&gt; int:
+    return self.tier</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.onBeforeAttack"><code class="name flex">
 <span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list)</span>
 </code></dt>
@@ -1020,6 +1047,19 @@ Ability should be string describing animal abilities, if any</p></div>
     pass</code></pre>
 </details>
 </dd>
+<dt id="src.Animal.Animal.onFriendBought"><code class="name flex">
+<span>def <span class="ident">onFriendBought</span></span>(<span>self, friends: list, friend)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendBought(self, friends: list, friend):
+    pass</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.onFriendEat"><code class="name flex">
 <span>def <span class="ident">onFriendEat</span></span>(<span>self, friend)</span>
 </code></dt>
@@ -1034,7 +1074,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onFriendFaint"><code class="name flex">
-<span>def <span class="ident">onFriendFaint</span></span>(<span>self)</span>
+<span>def <span class="ident">onFriendFaint</span></span>(<span>self, friends: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1042,7 +1082,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFriendFaint(self):
+<pre><code class="python">def onFriendFaint(self, friends: list):
     pass</code></pre>
 </details>
 </dd>
@@ -1335,6 +1375,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.getState" href="#src.Animal.Animal.getState">getState</a></code></li>
 <li><code><a title="src.Animal.Animal.getTempDmg" href="#src.Animal.Animal.getTempDmg">getTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getTempHp" href="#src.Animal.Animal.getTempHp">getTempHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getTier" href="#src.Animal.Animal.getTier">getTier</a></code></li>
 <li><code><a title="src.Animal.Animal.onBeforeAttack" href="#src.Animal.Animal.onBeforeAttack">onBeforeAttack</a></code></li>
 <li><code><a title="src.Animal.Animal.onBuy" href="#src.Animal.Animal.onBuy">onBuy</a></code></li>
 <li><code><a title="src.Animal.Animal.onEat" href="#src.Animal.Animal.onEat">onEat</a></code></li>
@@ -1343,6 +1384,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.onFoodBought" href="#src.Animal.Animal.onFoodBought">onFoodBought</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendAheadAttack" href="#src.Animal.Animal.onFriendAheadAttack">onFriendAheadAttack</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendAheadFaint" href="#src.Animal.Animal.onFriendAheadFaint">onFriendAheadFaint</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendBought" href="#src.Animal.Animal.onFriendBought">onFriendBought</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendEat" href="#src.Animal.Animal.onFriendEat">onFriendEat</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendFaint" href="#src.Animal.Animal.onFriendFaint">onFriendFaint</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSold" href="#src.Animal.Animal.onFriendSold">onFriendSold</a></code></li>
