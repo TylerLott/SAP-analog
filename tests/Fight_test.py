@@ -24,9 +24,7 @@ def dummyTurn(team: Team):
 
 class FightTests(unittest.TestCase):
     def test_simulate(self):
-        # currently takes around 3.3 seconds to sim 1000 full games
-        # Issues with 1/3 of games erroring
-        # error games are forced to end after 100 fights for now, both teams always have 10 health...
+        # currently takes around 7.5 seconds to sim 1000 full games
         team1Wins = 0
         team2Wins = 0
         err = 0
@@ -43,11 +41,6 @@ class FightTests(unittest.TestCase):
                 f.simulate()
 
                 turns += 1
-            if not turns < 100:
-                err += 1
-                err_team1 = t1
-                err_team2 = t2
-                continue
             if t1.getLife() > t2.getLife():
                 team1Wins += 1
             else:
@@ -57,6 +50,3 @@ class FightTests(unittest.TestCase):
         print(
             "Error Games: ", err
         )  # doesn't seem to be a single animal type causing this...
-
-        print(err_team1.friends)
-        print(err_team2.friends)

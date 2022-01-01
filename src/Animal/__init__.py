@@ -133,6 +133,8 @@ class Animal(ABC):
 
         removes hp from temp_hp then base_hp
         """
+        if self.getHp() < 0:
+            return
         if self.temp_hp > 0:
             self.temp_hp -= amt
             if self.temp_hp < 0:
@@ -140,8 +142,8 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt > 0:
             self.base_hp -= amt
-        self.onHurt(friends, enemies)
         self.__recalcHp()
+        self.onHurt(friends, enemies)
 
     def setEffect(self, effect: Effect) -> None:
         """public set effect method"""
@@ -156,6 +158,9 @@ class Animal(ABC):
         """public set damage method"""
         self.base_dmg = amt
         self.__recalcDmg()
+
+    def setAlive(self, isAlive) -> None:
+        self.alive = isAlive
 
     #### Private ####
 

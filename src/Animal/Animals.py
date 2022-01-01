@@ -176,9 +176,12 @@ class Blowfish(Animal):
         self.tier = 3
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
-        if len(enemies) < 0:
+        if len(enemies) <= 0:
             return
-        animal = choice(enemies)
+        if len(enemies) == 1:
+            animal = enemies[0]
+        else:
+            animal = choice(enemies)
         # enemies and friends are flipped because it it hurting an enemy
         animal.subHp(2 * self.getLevel(), enemies, friends)
 
@@ -1632,7 +1635,8 @@ class Turtle(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
             if i < len(friends):
-                friends[i] += MelonEffect()
+                # friends[i] += MelonEffect()
+                pass
 
 
 class Whale(Animal):
@@ -1662,6 +1666,7 @@ class Whale(Animal):
             return
         self.jonah = deepcopy(friends[pos - 1])
         friends[pos - 1].onFaint(friends, enemies)
+        friends[pos - 1].setAlive(False)
         # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
