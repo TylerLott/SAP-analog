@@ -46,17 +46,8 @@ class Fight:
         # that rather than recursively calling everything
 
         # Remove all of the NoneAnimals()
-        newTeam1 = []
-        for i in self.team1Friends:
-            if i:
-                newTeam1.append(i)
-        self.team1Friends = newTeam1
-
-        newTeam2 = []
-        for i in self.team2Friends:
-            if i:
-                newTeam2.append(i)
-        self.team2Friends = newTeam2
+        self.team1Friends = self.__purgeNoneAnimals(self.team1Friends)
+        self.team2Friends = self.__purgeNoneAnimals(self.team2Friends)
 
         # get start of fight move order for each team
         sob1 = self.__getMoveOrder(self.team1Friends)
@@ -76,9 +67,11 @@ class Fight:
                 )
             except:
                 pass
+
             self.__purgeDead()
 
         while len(self.team1Friends) > 0 and len(self.team2Friends) > 0:
+
             # trigger animal onBeforeAttack()
             self.team1Friends[0].onBeforeAttack(self.team1Friends, self.team2Friends)
             self.team2Friends[0].onBeforeAttack(self.team2Friends, self.team1Friends)
@@ -100,6 +93,9 @@ class Fight:
             # purge dead
             self.__purgeDead()
 
+            # Remove all of the NoneAnimals()
+            self.team1Friends = self.__purgeNoneAnimals(self.team1Friends)
+            self.team2Friends = self.__purgeNoneAnimals(self.team2Friends)
         #     print("team 1: ", self.team1Friends)
         #     print("team 2: ", self.team2Friends)
 
@@ -137,7 +133,7 @@ class Fight:
             if not i.getAlive():
                 ind = self.team1Friends.index(i)
                 i.onFaint(self.team1Friends, self.team2Friends)
-                if len(self.team1Friends) > 1 + ind:
+                if len(self.team1Friends) > 1 + ind and self.team1Friends[ind + 1]:
                     self.team1Friends[ind + 1].onFriendAheadFaint(
                         self.team1Friends, self.team2Friends
                     )
@@ -147,9 +143,16 @@ class Fight:
             if not i.getAlive():
                 ind = self.team2Friends.index(i)
                 i.onFaint(self.team2Friends, self.team1Friends)
-                if len(self.team2Friends) > 1 + ind:
+                if len(self.team2Friends) > 1 + ind and self.team2Friends[ind + 1]:
                     self.team2Friends[ind + 1].onFriendAheadFaint(
                         self.team2Friends, self.team1Friends
                     )
                 if i in self.team2Friends:
                     self.team2Friends.remove(i)
+
+    def __purgeNoneAnimals(self, friends: List[Animal]) -> List[Animal]:
+        newTeam = []
+        for i in friends:
+            if i:
+                newTeam.append(i)
+        return newTeam

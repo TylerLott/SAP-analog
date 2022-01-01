@@ -30,8 +30,8 @@ class Shop:
     def __init__(self):
 
         self.round = 1
-        self.animals = [None] * 3
-        self.items = [None] * 1
+        self.animals = [NoneAnimal()] * 3
+        self.items = [NoneAnimal()] * 1
         self.health_modifier = 0
         self.dmg_modifier = 0
         self.roll()

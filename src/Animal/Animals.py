@@ -1,6 +1,7 @@
 from random import choice
 from typing import List
 from math import floor
+from copy import deepcopy
 
 from src.Animal import Animal
 from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
@@ -38,14 +39,10 @@ class Ant(Animal):
         self.tier = 1
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
-        pos = self.getPosition(friends)
-        possible = list(range(len(friends) - 1))
+        pos, possible = getPosAndOthers(self, friends)
 
-        if len(possible) <= 1:
+        if len(possible) == 0:
             return
-        else:
-            possible.remove(pos)
-
         friend = choice(possible)
         friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
         friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())
@@ -75,11 +72,15 @@ class Badger(Animal):
         pos = self.getPosition(friends)
         amt = self.dmg * self.getLevel()
         if pos > 0:
-            friends[pos - 1].subHp(amt, friends, enemies)
-            friends[pos + 1].subHp(amt, friends, enemies)
+            if pos - 1 > -1:
+                friends[pos - 1].subHp(amt, friends, enemies)
+            if pos + 1 < len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
         else:
-            friends[pos + 1].subHp(amt, friends, enemies)
-            enemies[0].subHp(amt, enemies, friends)
+            if pos + 1 < len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
+            if len(enemies) > 0:
+                enemies[0].subHp(amt, enemies, friends)
 
 
 class Bat(Animal):
@@ -175,6 +176,8 @@ class Blowfish(Animal):
         self.tier = 3
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
+        if len(enemies) < 0:
+            return
         animal = choice(enemies)
         # enemies and friends are flipped because it it hurting an enemy
         animal.subHp(2 * self.getLevel(), enemies, friends)
@@ -227,8 +230,13 @@ class Camel(Animal):
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
-        friends[pos + 1].setBaseHp(friends[pos + 1].getBaseHp() + 2 * self.getLevel())
-        friends[pos + 1].setBaseDmg(friends[pos + 1].getBaseDmg() + 1 * self.getLevel())
+        if pos + 1 < len(friends):
+            friends[pos + 1].setBaseHp(
+                friends[pos + 1].getBaseHp() + 2 * self.getLevel()
+            )
+            friends[pos + 1].setBaseDmg(
+                friends[pos + 1].getBaseDmg() + 1 * self.getLevel()
+            )
 
 
 class Cat(Animal):
@@ -593,7 +601,8 @@ class Elephant(Animal):
     def onBeforeAttack(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos = self.getPosition(friends)
         for i in range(1, self.getLevel() + 1):
-            friends[pos + i].subHp(1, friends, enemies)
+            if pos + i < len(friends):
+                friends[pos + i].subHp(1, friends, enemies)
 
 
 class Fish(Animal):
@@ -653,8 +662,9 @@ class Flamingo(Animal):
         pos = self.getPosition(friends)
         amt = 1 * self.getLevel()
         for i in range(1, 3):
-            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
-            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
+            if pos + i < len(friends):
+                friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+                friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
 
 
 class Fly(Animal):
@@ -865,10 +875,7 @@ class Mammoth(Animal):
         self.tier = 6
 
     def onFaint(self, friends: List[Animal], enemies: list):
-        pos = self.getPosition(friends)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        pos, others = getPosAndOthers(self, friends)
 
         for i in others:
             friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
@@ -1498,11 +1505,8 @@ class Spider(Animal):
         self.tier = 2
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
@@ -1627,7 +1631,8 @@ class Turtle(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
-            friends[i] += MelonEffect()
+            if i < len(friends):
+                friends[i] += MelonEffect()
 
 
 class Whale(Animal):
@@ -1652,10 +1657,10 @@ class Whale(Animal):
         self.jonah = NoneAnimal()
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = friends[pos - 1]
+        self.jonah = deepcopy(friends[pos - 1])
         friends[pos - 1].onFaint(friends, enemies)
         # TODO remove eaten friend
 
@@ -1748,6 +1753,19 @@ def getSubset(possible: List[int], k: int) -> List[int]:
     if len(possible) <= k:
         return possible
     return choice(possible, k=k)
+
+
+def getPosAndOthers(friend: Animal, friends: List[Animal]) -> list:
+    # return [pos, [others]]
+    pos = friend.getPosition(friends)
+    possible = list(range(len(friends) - 1))
+
+    if len(possible) <= 1:
+        possible = []
+    else:
+        possible.remove(pos)
+
+    return [pos, possible]
 
 
 if __name__ == "__main__":

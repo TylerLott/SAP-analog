@@ -13,7 +13,11 @@ class Animal(ABC):
     ### Init ###
 
     def __init__(
-        self, health: int, dmg: int, effect: Effect = NoneEffect, ability: str = "None"
+        self,
+        health: int,
+        dmg: int,
+        effect: Effect = NoneEffect(),
+        ability: str = "None",
     ) -> None:
         # Default
         self.temp_hp = 0
