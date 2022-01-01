@@ -44,6 +44,9 @@ class Food(ABC):
 
     ### Setters ###
 
+    def setCost(self, amt: int) -> None:
+        self.cost = amt
+
     ### Overrides ###
 
     def __str__(self):

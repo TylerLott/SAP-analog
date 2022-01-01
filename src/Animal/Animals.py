@@ -1,5 +1,6 @@
 from random import choice
 from typing import List
+from math import floor
 
 from src.Animal import Animal
 from src.Effect.Effects import MelonEffect, SplashEffect
@@ -1078,13 +1079,29 @@ class Shrimp(Animal):
 
 
 class Skunk(Animal):
+    """
+    Skunk Class
+
+    Level 1: Start of Battle -> Reduce the highest health enemy by 33%
+    Level 2: Start of Battle -> Reduce the highest health enemy by 66%
+    Level 3: Start of Battle -> Reduce the highest health enemy by 99%
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 3
+        ability = "Start of Battle: Debuff"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        highest = enemies[0]
+        for i in enemies:
+            if i.getHp() > highest.getHp():
+                highest = i
+        highest.subHp(floor(0.33 * highest.getHp()), enemies, friends)
 
 
 class Sloth(Animal):
@@ -1170,13 +1187,27 @@ class Spider(Animal):
 
 
 class Squirrel(Animal):
+    """
+    Squirrel Class
+
+    Level 1: Start of Turn -> Discount shop food by 1 gold
+    Level 2: Start of Turn -> Discount shop food by 2 gold
+    Level 3: Start of Turn -> Discount shop food by 3 gold
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 2
+        ability = "Start of Turn: Discount"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onStartOfTurn(self, team):
+        for i in team.shop.items:
+            if not i.__class__.__name__ == "Pill":
+                i.setCost(i.getCost() - self.getLevel())
 
 
 class Swan(Animal):
