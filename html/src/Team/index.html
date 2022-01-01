@@ -26,7 +26,10 @@
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">from src.Animal import Animal
+<pre><code class="python">from typing import List
+from copy import deepcopy
+
+from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
 
@@ -52,13 +55,13 @@ class Team:
 
     ### Getters ###
 
-    def getFriendCopy(self) -&gt; list:
+    def getFriendCopy(self) -&gt; List[Animal]:
         &#34;&#34;&#34;
         public get a copy of the friends array method
 
         should only be used in fight
         &#34;&#34;&#34;
-        temp = self.friends.copy()
+        temp = list([deepcopy(i) for i in self.friends])
         return temp
 
     def getRound(self) -&gt; int:
@@ -101,26 +104,25 @@ class Team:
     def sellFriend(self, friend_pos: int) -&gt; None:
         if self.friends[friend_pos]:
             self.add_money(self.friends[friend_pos].getLevel())
-            self.friends[friend_pos] = None
+            self.friends[friend_pos] = NoneAnimal()
             # onSell
             # onFriendSell
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
-        friend = self.friends[friend_pos]
         if self.money &gt;= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)
-            if not friend:
+            if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                friend = animal
-                friend.onBuy()
+                self.friends[friend_pos] = animal
+                # friend.onBuy(self.friends, self)
                 # onFriendSummoned
-            elif friend.__class__ == animal.__class__:
+            elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
-                origin_level = friend.getLevel()
-                friend += animal
-                if friend.getLevel() &gt; origin_level:
-                    friend.onLevelUp()
+                origin_level = self.friends[friend_pos].getLevel()
+                self.friends[friend_pos] += animal
+                if self.friends[friend_pos].getLevel() &gt; origin_level:
+                    self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -&gt; None:
         food = self.shop.checkFood(shop_pos)
@@ -279,13 +281,13 @@ This class also has it's own instance of a shop</p></div>
 
     ### Getters ###
 
-    def getFriendCopy(self) -&gt; list:
+    def getFriendCopy(self) -&gt; List[Animal]:
         &#34;&#34;&#34;
         public get a copy of the friends array method
 
         should only be used in fight
         &#34;&#34;&#34;
-        temp = self.friends.copy()
+        temp = list([deepcopy(i) for i in self.friends])
         return temp
 
     def getRound(self) -&gt; int:
@@ -328,26 +330,25 @@ This class also has it's own instance of a shop</p></div>
     def sellFriend(self, friend_pos: int) -&gt; None:
         if self.friends[friend_pos]:
             self.add_money(self.friends[friend_pos].getLevel())
-            self.friends[friend_pos] = None
+            self.friends[friend_pos] = NoneAnimal()
             # onSell
             # onFriendSell
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
         animal = self.shop.checkAnimal(shop_pos)
-        friend = self.friends[friend_pos]
         if self.money &gt;= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)
-            if not friend:
+            if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
-                friend = animal
-                friend.onBuy()
+                self.friends[friend_pos] = animal
+                # friend.onBuy(self.friends, self)
                 # onFriendSummoned
-            elif friend.__class__ == animal.__class__:
+            elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
-                origin_level = friend.getLevel()
-                friend += animal
-                if friend.getLevel() &gt; origin_level:
-                    friend.onLevelUp()
+                origin_level = self.friends[friend_pos].getLevel()
+                self.friends[friend_pos] += animal
+                if self.friends[friend_pos].getLevel() &gt; origin_level:
+                    self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -&gt; None:
         food = self.shop.checkFood(shop_pos)
@@ -509,20 +510,19 @@ This class also has it's own instance of a shop</p></div>
 </summary>
 <pre><code class="python">def buyFriend(self, shop_pos: int, friend_pos: int) -&gt; None:
     animal = self.shop.checkAnimal(shop_pos)
-    friend = self.friends[friend_pos]
     if self.money &gt;= animal.getCost():
         animal = self.shop.buyAnimal(shop_pos)
-        if not friend:
+        if not self.friends[friend_pos]:
             self.money -= animal.getCost()
-            friend = animal
-            friend.onBuy()
+            self.friends[friend_pos] = animal
+            # friend.onBuy(self.friends, self)
             # onFriendSummoned
-        elif friend.__class__ == animal.__class__:
+        elif self.friends[friend_pos].__class__ == animal.__class__:
             # iadd is overridden for animal so this works
-            origin_level = friend.getLevel()
-            friend += animal
-            if friend.getLevel() &gt; origin_level:
-                friend.onLevelUp()</code></pre>
+            origin_level = self.friends[friend_pos].getLevel()
+            self.friends[friend_pos] += animal
+            if self.friends[friend_pos].getLevel() &gt; origin_level:
+                self.friends[friend_pos].onLevelUp()</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.endTurn"><code class="name flex">
@@ -566,7 +566,7 @@ This class also has it's own instance of a shop</p></div>
 </details>
 </dd>
 <dt id="src.Team.Team.getFriendCopy"><code class="name flex">
-<span>def <span class="ident">getFriendCopy</span></span>(<span>self) ‑> list</span>
+<span>def <span class="ident">getFriendCopy</span></span>(<span>self) ‑> List[<a title="src.Animal.Animal" href="../Animal/index.html#src.Animal.Animal">Animal</a>]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>public get a copy of the friends array method</p>
@@ -575,13 +575,13 @@ This class also has it's own instance of a shop</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def getFriendCopy(self) -&gt; list:
+<pre><code class="python">def getFriendCopy(self) -&gt; List[Animal]:
     &#34;&#34;&#34;
     public get a copy of the friends array method
 
     should only be used in fight
     &#34;&#34;&#34;
-    temp = self.friends.copy()
+    temp = list([deepcopy(i) for i in self.friends])
     return temp</code></pre>
 </details>
 </dd>
@@ -754,7 +754,7 @@ This class also has it's own instance of a shop</p></div>
 <pre><code class="python">def sellFriend(self, friend_pos: int) -&gt; None:
     if self.friends[friend_pos]:
         self.add_money(self.friends[friend_pos].getLevel())
-        self.friends[friend_pos] = None
+        self.friends[friend_pos] = NoneAnimal()
         # onSell
         # onFriendSell</code></pre>
 </details>

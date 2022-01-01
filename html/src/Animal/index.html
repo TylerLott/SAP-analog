@@ -41,7 +41,11 @@ class Animal(ABC):
     ### Init ###
 
     def __init__(
-        self, health: int, dmg: int, effect: Effect = NoneEffect, ability: str = &#34;None&#34;
+        self,
+        health: int,
+        dmg: int,
+        effect: Effect = NoneEffect(),
+        ability: str = &#34;None&#34;,
     ) -&gt; None:
         # Default
         self.temp_hp = 0
@@ -61,6 +65,10 @@ class Animal(ABC):
         self.dmg = self.temp_dmg + self.base_dmg
 
     #### Getters ####
+
+    def getAlive(self) -&gt; bool:
+        &#34;&#34;&#34;public get alive method&#34;&#34;&#34;
+        return self.alive
 
     def getHp(self) -&gt; int:
         &#34;&#34;&#34;public get hp method&#34;&#34;&#34;
@@ -118,6 +126,7 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+        return 0
 
     def getTier(self) -&gt; int:
         return self.tier
@@ -152,6 +161,8 @@ class Animal(ABC):
 
         removes hp from temp_hp then base_hp
         &#34;&#34;&#34;
+        if self.getHp() &lt; 0:
+            return
         if self.temp_hp &gt; 0:
             self.temp_hp -= amt
             if self.temp_hp &lt; 0:
@@ -159,8 +170,8 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt &gt; 0:
             self.base_hp -= amt
+        self.__recalcHp()
         self.onHurt(friends, enemies)
-        return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
         &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
@@ -175,6 +186,9 @@ class Animal(ABC):
         &#34;&#34;&#34;public set damage method&#34;&#34;&#34;
         self.base_dmg = amt
         self.__recalcDmg()
+
+    def setAlive(self, isAlive) -&gt; None:
+        self.alive = isAlive
 
     #### Private ####
 
@@ -200,6 +214,10 @@ class Animal(ABC):
     #### On Events ####
 
     # Normal On Events
+
+    def attack(self, friends, enemies):
+        enemies[0].subHp(self.getDmg(), friends, enemies)
+
     def onHit(self, dmgAmt):
         dmg_taken = (
             dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
@@ -246,7 +264,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):
@@ -283,7 +301,9 @@ class Animal(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
-        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += (
+            &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__class__.__name__:^30}&#39; + &#34;|\n&#34;
+        )
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
@@ -356,7 +376,7 @@ class Animal(ABC):
 <dl>
 <dt id="src.Animal.Animal"><code class="flex name class">
 <span>class <span class="ident">Animal</span></span>
-<span>(</span><span>health: int, dmg: int, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = src.Effect.Effects.NoneEffect, ability: str = 'None')</span>
+<span>(</span><span>health: int, dmg: int, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = &lt;src.Effect.Effects.NoneEffect object&gt;, ability: str = 'None')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Animal base class</p></div>
@@ -372,7 +392,11 @@ class Animal(ABC):
     ### Init ###
 
     def __init__(
-        self, health: int, dmg: int, effect: Effect = NoneEffect, ability: str = &#34;None&#34;
+        self,
+        health: int,
+        dmg: int,
+        effect: Effect = NoneEffect(),
+        ability: str = &#34;None&#34;,
     ) -&gt; None:
         # Default
         self.temp_hp = 0
@@ -392,6 +416,10 @@ class Animal(ABC):
         self.dmg = self.temp_dmg + self.base_dmg
 
     #### Getters ####
+
+    def getAlive(self) -&gt; bool:
+        &#34;&#34;&#34;public get alive method&#34;&#34;&#34;
+        return self.alive
 
     def getHp(self) -&gt; int:
         &#34;&#34;&#34;public get hp method&#34;&#34;&#34;
@@ -449,6 +477,7 @@ class Animal(ABC):
         for i in range(len(friends) - 1):
             if friends[i] == self:
                 return i
+        return 0
 
     def getTier(self) -&gt; int:
         return self.tier
@@ -483,6 +512,8 @@ class Animal(ABC):
 
         removes hp from temp_hp then base_hp
         &#34;&#34;&#34;
+        if self.getHp() &lt; 0:
+            return
         if self.temp_hp &gt; 0:
             self.temp_hp -= amt
             if self.temp_hp &lt; 0:
@@ -490,8 +521,8 @@ class Animal(ABC):
                 self.temp_hp = 0
         if amt &gt; 0:
             self.base_hp -= amt
+        self.__recalcHp()
         self.onHurt(friends, enemies)
-        return self.__recalcHp()
 
     def setEffect(self, effect: Effect) -&gt; None:
         &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
@@ -506,6 +537,9 @@ class Animal(ABC):
         &#34;&#34;&#34;public set damage method&#34;&#34;&#34;
         self.base_dmg = amt
         self.__recalcDmg()
+
+    def setAlive(self, isAlive) -&gt; None:
+        self.alive = isAlive
 
     #### Private ####
 
@@ -531,6 +565,10 @@ class Animal(ABC):
     #### On Events ####
 
     # Normal On Events
+
+    def attack(self, friends, enemies):
+        enemies[0].subHp(self.getDmg(), friends, enemies)
+
     def onHit(self, dmgAmt):
         dmg_taken = (
             dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
@@ -577,7 +615,7 @@ class Animal(ABC):
     def onStartOfTurn(self, team):
         pass
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         pass
 
     def onHurt(self, friends: list, enemies: list):
@@ -614,7 +652,9 @@ class Animal(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
-        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__name__:^30}&#39; + &#34;|\n&#34;
+        out_str += (
+            &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__class__.__name__:^30}&#39; + &#34;|\n&#34;
+        )
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
@@ -688,6 +728,7 @@ class Animal(ABC):
 <li><a title="src.Animal.Animals.Cow" href="Animals.html#src.Animal.Animals.Cow">Cow</a></li>
 <li><a title="src.Animal.Animals.Crab" href="Animals.html#src.Animal.Animals.Crab">Crab</a></li>
 <li><a title="src.Animal.Animals.Cricket" href="Animals.html#src.Animal.Animals.Cricket">Cricket</a></li>
+<li><a title="src.Animal.Animals.CricketSpawn" href="Animals.html#src.Animal.Animals.CricketSpawn">CricketSpawn</a></li>
 <li><a title="src.Animal.Animals.Crocodile" href="Animals.html#src.Animal.Animals.Crocodile">Crocodile</a></li>
 <li><a title="src.Animal.Animals.Deer" href="Animals.html#src.Animal.Animals.Deer">Deer</a></li>
 <li><a title="src.Animal.Animals.DirtyRat" href="Animals.html#src.Animal.Animals.DirtyRat">DirtyRat</a></li>
@@ -742,6 +783,19 @@ class Animal(ABC):
 </ul>
 <h3>Methods</h3>
 <dl>
+<dt id="src.Animal.Animal.attack"><code class="name flex">
+<span>def <span class="ident">attack</span></span>(<span>self, friends, enemies)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def attack(self, friends, enemies):
+    enemies[0].subHp(self.getDmg(), friends, enemies)</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.getAbility"><code class="name flex">
 <span>def <span class="ident">getAbility</span></span>(<span>self) ‑> str</span>
 </code></dt>
@@ -758,6 +812,20 @@ Ability should be string describing animal abilities, if any</p></div>
     Ability should be string describing animal abilities, if any
     &#34;&#34;&#34;
     return self.ability</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animal.getAlive"><code class="name flex">
+<span>def <span class="ident">getAlive</span></span>(<span>self) ‑> bool</span>
+</code></dt>
+<dd>
+<div class="desc"><p>public get alive method</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getAlive(self) -&gt; bool:
+    &#34;&#34;&#34;public get alive method&#34;&#34;&#34;
+    return self.alive</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.getBaseDmg"><code class="name flex">
@@ -887,7 +955,8 @@ Ability should be string describing animal abilities, if any</p></div>
     &#34;&#34;&#34;public method to get the animals position in a list&#34;&#34;&#34;
     for i in range(len(friends) - 1):
         if friends[i] == self:
-            return i</code></pre>
+            return i
+    return 0</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animal.getState"><code class="name flex">
@@ -944,7 +1013,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.onBeforeAttack"><code class="name flex">
-<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list)</span>
+<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -952,7 +1021,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onBeforeAttack(self, friends: list):
+<pre><code class="python">def onBeforeAttack(self, friends: list, enemies: list):
     pass</code></pre>
 </details>
 </dd>
@@ -1202,6 +1271,19 @@ Ability should be string describing animal abilities, if any</p></div>
     pass</code></pre>
 </details>
 </dd>
+<dt id="src.Animal.Animal.setAlive"><code class="name flex">
+<span>def <span class="ident">setAlive</span></span>(<span>self, isAlive) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setAlive(self, isAlive) -&gt; None:
+    self.alive = isAlive</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.setBaseDmg"><code class="name flex">
 <span>def <span class="ident">setBaseDmg</span></span>(<span>self, amt: int) ‑> None</span>
 </code></dt>
@@ -1325,6 +1407,8 @@ Ability should be string describing animal abilities, if any</p></div>
 
     removes hp from temp_hp then base_hp
     &#34;&#34;&#34;
+    if self.getHp() &lt; 0:
+        return
     if self.temp_hp &gt; 0:
         self.temp_hp -= amt
         if self.temp_hp &lt; 0:
@@ -1332,8 +1416,8 @@ Ability should be string describing animal abilities, if any</p></div>
             self.temp_hp = 0
     if amt &gt; 0:
         self.base_hp -= amt
-    self.onHurt(friends, enemies)
-    return self.__recalcHp()</code></pre>
+    self.__recalcHp()
+    self.onHurt(friends, enemies)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1362,7 +1446,9 @@ Ability should be string describing animal abilities, if any</p></div>
 <li>
 <h4><code><a title="src.Animal.Animal" href="#src.Animal.Animal">Animal</a></code></h4>
 <ul class="two-column">
+<li><code><a title="src.Animal.Animal.attack" href="#src.Animal.Animal.attack">attack</a></code></li>
 <li><code><a title="src.Animal.Animal.getAbility" href="#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getBaseDmg" href="#src.Animal.Animal.getBaseDmg">getBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getBaseHp" href="#src.Animal.Animal.getBaseHp">getBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="#src.Animal.Animal.getCost">getCost</a></code></li>
@@ -1395,6 +1481,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.onSell" href="#src.Animal.Animal.onSell">onSell</a></code></li>
 <li><code><a title="src.Animal.Animal.onStartOfBattle" href="#src.Animal.Animal.onStartOfBattle">onStartOfBattle</a></code></li>
 <li><code><a title="src.Animal.Animal.onStartOfTurn" href="#src.Animal.Animal.onStartOfTurn">onStartOfTurn</a></code></li>
+<li><code><a title="src.Animal.Animal.setAlive" href="#src.Animal.Animal.setAlive">setAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="#src.Animal.Animal.setDmg">setDmg</a></code></li>

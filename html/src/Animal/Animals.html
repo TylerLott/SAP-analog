@@ -29,6 +29,7 @@
 <pre><code class="python">from random import choice
 from typing import List
 from math import floor
+from copy import deepcopy
 
 from src.Animal import Animal
 from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
@@ -65,13 +66,14 @@ class Ant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -&gt; None:
-        pos = self.getPosition(friends)
-        possible = list(range(len(friends) - 1))
-        possible.remove(pos)
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+        pos, possible = getPosAndOthers(self, friends)
+
+        if len(possible) == 0:
+            return
         friend = choice(possible)
-        friends[friend].addBaseHp(1 * self.getLevel())
-        friends[friend].addBaseDmg(2 * self.getLevel())
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())
 
 
 class Badger(Animal):
@@ -98,11 +100,15 @@ class Badger(Animal):
         pos = self.getPosition(friends)
         amt = self.dmg * self.getLevel()
         if pos &gt; 0:
-            friends[pos - 1].subHp(amt, friends, enemies)
-            friends[pos + 1].subHp(amt, friends, enemies)
+            if pos - 1 &gt; -1:
+                friends[pos - 1].subHp(amt, friends, enemies)
+            if pos + 1 &lt; len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
         else:
-            friends[pos + 1].subHp(amt, friends, enemies)
-            enemies[0].subHp(amt, enemies, friends)
+            if pos + 1 &lt; len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
+            if len(enemies) &gt; 0:
+                enemies[0].subHp(amt, enemies, friends)
 
 
 class Bat(Animal):
@@ -139,15 +145,12 @@ class Beaver(Animal):
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
         possible.remove(pos)
-        if len(possible) &lt; 1:
-            return
-        elif len(possible) &lt; 2:
-            friend = possible
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-        else:
-            friend = choice(possible, k=2)
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-            friends[friend[1]].addBaseHp(1 * self.getLevel())
+
+        animals = getSubset(possible, k=2)
+
+        for i in animals:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())
 
 
 class Bison(Animal):
@@ -201,7 +204,12 @@ class Blowfish(Animal):
         self.tier = 3
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
-        animal = choice(enemies)
+        if len(enemies) &lt;= 0:
+            return
+        if len(enemies) == 1:
+            animal = enemies[0]
+        else:
+            animal = choice(enemies)
         # enemies and friends are flipped because it it hurting an enemy
         animal.subHp(2 * self.getLevel(), enemies, friends)
 
@@ -226,7 +234,7 @@ class Boar(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
@@ -253,8 +261,13 @@ class Camel(Animal):
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
-        friends[pos + 1].setBaseHp(friends[pos + 1].getBaseHp() + 2 * self.getLevel())
-        friends[pos + 1].setBaseDmg(friends[pos + 1].getBaseDmg() + 1 * self.getLevel())
+        if pos + 1 &lt; len(friends):
+            friends[pos + 1].setBaseHp(
+                friends[pos + 1].getBaseHp() + 2 * self.getLevel()
+            )
+            friends[pos + 1].setBaseDmg(
+                friends[pos + 1].getBaseDmg() + 1 * self.getLevel()
+            )
 
 
 class Cat(Animal):
@@ -336,11 +349,11 @@ class Cricket(Animal):
     &#34;&#34;&#34;
     Cricket Class
 
-    Level 1: faint -&gt; summon a 1/1 cricket
+    Level 1: faint -&gt; summon a 1/1 cricket that is non spawning
 
-    Level 2: faint -&gt; summon a 2/2 cricket
+    Level 2: faint -&gt; summon a 2/2 cricket that is non spawning
 
-    Level 3: faint -&gt; summon a 3/3 cricket
+    Level 3: faint -&gt; summon a 3/3 cricket that is non spawning
     &#34;&#34;&#34;
 
     def __init__(self, health: int = 0, dmg: int = 0):
@@ -352,18 +365,36 @@ class Cricket(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -&gt; None:
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
         pos = self.getPosition(friends)
 
         others = list(range(len(friends) - 1))
-        others.remove(pos)
+        if len(others) &lt;= 1:
+            others = []
+        else:
+            others.remove(pos)
 
-        friends[pos] = Cricket()
-        friends[pos].setHp(1 * self.getLevel())
-        friends[pos].setDmg(1 * self.getLevel())
+        friends[pos] = CricketSpawn(self.getLevel(), self.getLevel())
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
+
+
+class CricketSpawn(Animal):
+    &#34;&#34;&#34;
+    Cricket Spawn Class
+
+    Only created on Cricket death
+    &#34;&#34;&#34;
+
+    def __init__(self, health: int = 0, dmg: int = 0):
+
+        default_health = 0
+        default_dmg = 0
+        ability = &#34;Faint: Summon&#34;
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1
 
 
 class Crocodile(Animal):
@@ -487,8 +518,8 @@ class Dog(Animal):
         self.tier = 3
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal):
-        self.setBaseHp(self.getBaseHp + self.getLevel())
-        self.setBaseDmg(self.getBaseDmg + self.getLevel())
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 
 class Dolphin(Animal):
@@ -601,7 +632,8 @@ class Elephant(Animal):
     def onBeforeAttack(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
         pos = self.getPosition(friends)
         for i in range(1, self.getLevel() + 1):
-            friends[pos + i].subHp(1, friends, enemies)
+            if pos + i &lt; len(friends):
+                friends[pos + i].subHp(1, friends, enemies)
 
 
 class Fish(Animal):
@@ -661,8 +693,9 @@ class Flamingo(Animal):
         pos = self.getPosition(friends)
         amt = 1 * self.getLevel()
         for i in range(1, 3):
-            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
-            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
+            if pos + i &lt; len(friends):
+                friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+                friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
 
 
 class Fly(Animal):
@@ -847,9 +880,9 @@ class Leopard(Animal):
         self.tier = 6
 
     def onStartOfBattle(self, friends: list, enemies: List[Animal]):
-        animals = choice(enemies, k=self.getLevel())
+        animals = getSubset(enemies, k=self.getLevel())
         for i in animals:
-            i.subHp(round(self.getDmg() * 0.5), enemies, friends)
+            enemies[i].subHp(round(self.getDmg() * 0.5), enemies, friends)
 
 
 class Mammoth(Animal):
@@ -873,10 +906,7 @@ class Mammoth(Animal):
         self.tier = 6
 
     def onFaint(self, friends: List[Animal], enemies: list):
-        pos = self.getPosition(friends)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        pos, others = getPosAndOthers(self, friends)
 
         for i in others:
             friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
@@ -955,14 +985,15 @@ class Otter(Animal):
     def onBuy(self, friends: List[Animal]):
         pos = self.getPosition(friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        possible = list(range(len(friends) - 1))
+        possible.remove(pos)
 
-        friend = choice(others)
-        amt = 1 * self.getLevel()
+        friend = getSubset(possible, k=1)
+        amt = self.getLevel()
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + amt)
-        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + amt)
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + amt)
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)
 
 
 class Ox(Animal):
@@ -1121,7 +1152,7 @@ class Rat(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         if len(enemies) &lt; 5:
-            enemies.append(DirtyRat())
+            enemies.append(DirtyRat(0, 0))
 
 
 class DirtyRat(Animal):
@@ -1271,10 +1302,10 @@ class Seal(Animal):
         others = list(range(len(friends) - 1))
         others.remove(pos)
 
-        animals = choice(others, k=2)
+        animals = getSubset(others, k=2)
         for i in animals:
-            i.setBaseHp(i.getBaseHp() + self.getLevel())
-            i.setBaseDmg(i.getBaseDmg() + self.getLevel())
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())
 
 
 class Shark(Animal):
@@ -1379,9 +1410,10 @@ class Shrimp(Animal):
 
         others = list(range(len(friends) - 1))
         others.remove(pos)
-        friend = choice(others)
+        friend = getSubset(others, k=1)
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
 
 
 class Skunk(Animal):
@@ -1504,11 +1536,8 @@ class Spider(Animal):
         self.tier = 2
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
@@ -1633,7 +1662,9 @@ class Turtle(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
-            friends[i] += MelonEffect()
+            if i &lt; len(friends):
+                # friends[i] += MelonEffect()
+                pass
 
 
 class Whale(Animal):
@@ -1658,11 +1689,12 @@ class Whale(Animal):
         self.jonah = NoneAnimal()
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = friends[pos - 1]
+        self.jonah = deepcopy(friends[pos - 1])
         friends[pos - 1].onFaint(friends, enemies)
+        friends[pos - 1].setAlive(False)
         # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
@@ -1696,7 +1728,7 @@ class Worm(Animal):
         self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 
-### Functions ###
+### Constants ###
 
 animals = {
     1: [Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig],
@@ -1731,6 +1763,8 @@ animals = {
     6: [Boar, Cat, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger],
 }
 
+### Functions ###
+
 
 def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; Animal:
     possible = []
@@ -1741,11 +1775,30 @@ def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -&gt; A
 
 
 def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -&gt; Animal:
-    animal = choice(animals[tier])()
+    animal = choice(animals[tier])(0, 0)
     animal.setBaseHp(health)
     animal.setBaseDmg(dmg)
     # TODO apply level to new animal
     return animal
+
+
+def getSubset(possible: List[int], k: int) -&gt; List[int]:
+    if len(possible) &lt;= k:
+        return possible
+    return choice(possible, k=k)
+
+
+def getPosAndOthers(friend: Animal, friends: List[Animal]) -&gt; list:
+    # return [pos, [others]]
+    pos = friend.getPosition(friends)
+    possible = list(range(len(friends) - 1))
+
+    if len(possible) &lt;= 1:
+        possible = []
+    else:
+        possible.remove(pos)
+
+    return [pos, possible]
 
 
 if __name__ == &#34;__main__&#34;:
@@ -1760,6 +1813,28 @@ if __name__ == &#34;__main__&#34;:
 <section>
 <h2 class="section-title" id="header-functions">Functions</h2>
 <dl>
+<dt id="src.Animal.Animals.getPosAndOthers"><code class="name flex">
+<span>def <span class="ident">getPosAndOthers</span></span>(<span>friend: <a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> list</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getPosAndOthers(friend: Animal, friends: List[Animal]) -&gt; list:
+    # return [pos, [others]]
+    pos = friend.getPosition(friends)
+    possible = list(range(len(friends) - 1))
+
+    if len(possible) &lt;= 1:
+        possible = []
+    else:
+        possible.remove(pos)
+
+    return [pos, possible]</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animals.getRandomAnimal"><code class="name flex">
 <span>def <span class="ident">getRandomAnimal</span></span>(<span>maxTier: int, health_mod: int = 0, dmg_mod: int = 0) ‑> <a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></span>
 </code></dt>
@@ -1787,11 +1862,26 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -&gt; Animal:
-    animal = choice(animals[tier])()
+    animal = choice(animals[tier])(0, 0)
     animal.setBaseHp(health)
     animal.setBaseDmg(dmg)
     # TODO apply level to new animal
     return animal</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animals.getSubset"><code class="name flex">
+<span>def <span class="ident">getSubset</span></span>(<span>possible: List[int], k: int) ‑> List[int]</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def getSubset(possible: List[int], k: int) -&gt; List[int]:
+    if len(possible) &lt;= k:
+        return possible
+    return choice(possible, k=k)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1832,13 +1922,14 @@ if __name__ == &#34;__main__&#34;:
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -&gt; None:
-        pos = self.getPosition(friends)
-        possible = list(range(len(friends) - 1))
-        possible.remove(pos)
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+        pos, possible = getPosAndOthers(self, friends)
+
+        if len(possible) == 0:
+            return
         friend = choice(possible)
-        friends[friend].addBaseHp(1 * self.getLevel())
-        friends[friend].addBaseDmg(2 * self.getLevel())</code></pre>
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1848,7 +1939,7 @@ if __name__ == &#34;__main__&#34;:
 <h3>Methods</h3>
 <dl>
 <dt id="src.Animal.Animals.Ant.onFaint"><code class="name flex">
-<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -1856,13 +1947,14 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFaint(self, friends: List[Animal]) -&gt; None:
-    pos = self.getPosition(friends)
-    possible = list(range(len(friends) - 1))
-    possible.remove(pos)
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
+    pos, possible = getPosAndOthers(self, friends)
+
+    if len(possible) == 0:
+        return
     friend = choice(possible)
-    friends[friend].addBaseHp(1 * self.getLevel())
-    friends[friend].addBaseDmg(2 * self.getLevel())</code></pre>
+    friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+    friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -1871,6 +1963,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -1928,11 +2021,15 @@ if __name__ == &#34;__main__&#34;:
         pos = self.getPosition(friends)
         amt = self.dmg * self.getLevel()
         if pos &gt; 0:
-            friends[pos - 1].subHp(amt, friends, enemies)
-            friends[pos + 1].subHp(amt, friends, enemies)
+            if pos - 1 &gt; -1:
+                friends[pos - 1].subHp(amt, friends, enemies)
+            if pos + 1 &lt; len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
         else:
-            friends[pos + 1].subHp(amt, friends, enemies)
-            enemies[0].subHp(amt, enemies, friends)</code></pre>
+            if pos + 1 &lt; len(friends):
+                friends[pos + 1].subHp(amt, friends, enemies)
+            if len(enemies) &gt; 0:
+                enemies[0].subHp(amt, enemies, friends)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -1954,11 +2051,15 @@ if __name__ == &#34;__main__&#34;:
     pos = self.getPosition(friends)
     amt = self.dmg * self.getLevel()
     if pos &gt; 0:
-        friends[pos - 1].subHp(amt, friends, enemies)
-        friends[pos + 1].subHp(amt, friends, enemies)
+        if pos - 1 &gt; -1:
+            friends[pos - 1].subHp(amt, friends, enemies)
+        if pos + 1 &lt; len(friends):
+            friends[pos + 1].subHp(amt, friends, enemies)
     else:
-        friends[pos + 1].subHp(amt, friends, enemies)
-        enemies[0].subHp(amt, enemies, friends)</code></pre>
+        if pos + 1 &lt; len(friends):
+            friends[pos + 1].subHp(amt, friends, enemies)
+        if len(enemies) &gt; 0:
+            enemies[0].subHp(amt, enemies, friends)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1967,6 +2068,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2016,6 +2118,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2073,15 +2176,12 @@ if __name__ == &#34;__main__&#34;:
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
         possible.remove(pos)
-        if len(possible) &lt; 1:
-            return
-        elif len(possible) &lt; 2:
-            friend = possible
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-        else:
-            friend = choice(possible, k=2)
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-            friends[friend[1]].addBaseHp(1 * self.getLevel())</code></pre>
+
+        animals = getSubset(possible, k=2)
+
+        for i in animals:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2103,15 +2203,12 @@ if __name__ == &#34;__main__&#34;:
     pos = self.getPosition(friends)
     possible = list(range(len(friends) - 1))
     possible.remove(pos)
-    if len(possible) &lt; 1:
-        return
-    elif len(possible) &lt; 2:
-        friend = possible
-        friends[friend[0]].addBaseHp(1 * self.getLevel())
-    else:
-        friend = choice(possible, k=2)
-        friends[friend[0]].addBaseHp(1 * self.getLevel())
-        friends[friend[1]].addBaseHp(1 * self.getLevel())</code></pre>
+
+    animals = getSubset(possible, k=2)
+
+    for i in animals:
+        friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+        friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -2120,6 +2217,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2214,6 +2312,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2268,7 +2367,12 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 3
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
-        animal = choice(enemies)
+        if len(enemies) &lt;= 0:
+            return
+        if len(enemies) == 1:
+            animal = enemies[0]
+        else:
+            animal = choice(enemies)
         # enemies and friends are flipped because it it hurting an enemy
         animal.subHp(2 * self.getLevel(), enemies, friends)</code></pre>
 </details>
@@ -2289,7 +2393,12 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onHurt(self, friends: List[Animal], enemies: List[Animal]):
-    animal = choice(enemies)
+    if len(enemies) &lt;= 0:
+        return
+    if len(enemies) == 1:
+        animal = enemies[0]
+    else:
+        animal = choice(enemies)
     # enemies and friends are flipped because it it hurting an enemy
     animal.subHp(2 * self.getLevel(), enemies, friends)</code></pre>
 </details>
@@ -2300,6 +2409,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2353,7 +2463,7 @@ if __name__ == &#34;__main__&#34;:
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
 
-    def onBeforeAttack(self, friends: list):
+    def onBeforeAttack(self, friends: list, enemies: list):
         self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())</code></pre>
 </details>
@@ -2365,7 +2475,7 @@ if __name__ == &#34;__main__&#34;:
 <h3>Methods</h3>
 <dl>
 <dt id="src.Animal.Animals.Boar.onBeforeAttack"><code class="name flex">
-<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list)</span>
+<span>def <span class="ident">onBeforeAttack</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -2373,7 +2483,7 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onBeforeAttack(self, friends: list):
+<pre><code class="python">def onBeforeAttack(self, friends: list, enemies: list):
     self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
     self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())</code></pre>
 </details>
@@ -2384,6 +2494,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2446,6 +2557,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2501,8 +2613,13 @@ if __name__ == &#34;__main__&#34;:
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
-        friends[pos + 1].setBaseHp(friends[pos + 1].getBaseHp() + 2 * self.getLevel())
-        friends[pos + 1].setBaseDmg(friends[pos + 1].getBaseDmg() + 1 * self.getLevel())</code></pre>
+        if pos + 1 &lt; len(friends):
+            friends[pos + 1].setBaseHp(
+                friends[pos + 1].getBaseHp() + 2 * self.getLevel()
+            )
+            friends[pos + 1].setBaseDmg(
+                friends[pos + 1].getBaseDmg() + 1 * self.getLevel()
+            )</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -2522,8 +2639,13 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def onHurt(self, friends: List[Animal], enemies: List[Animal]):
     pos = self.getPosition(friends)
-    friends[pos + 1].setBaseHp(friends[pos + 1].getBaseHp() + 2 * self.getLevel())
-    friends[pos + 1].setBaseDmg(friends[pos + 1].getBaseDmg() + 1 * self.getLevel())</code></pre>
+    if pos + 1 &lt; len(friends):
+        friends[pos + 1].setBaseHp(
+            friends[pos + 1].getBaseHp() + 2 * self.getLevel()
+        )
+        friends[pos + 1].setBaseDmg(
+            friends[pos + 1].getBaseDmg() + 1 * self.getLevel()
+        )</code></pre>
 </details>
 </dd>
 </dl>
@@ -2532,6 +2654,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2597,6 +2720,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2653,6 +2777,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2737,6 +2862,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2825,6 +2951,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -2851,9 +2978,9 @@ if __name__ == &#34;__main__&#34;:
 </code></dt>
 <dd>
 <div class="desc"><p>Cricket Class</p>
-<p>Level 1: faint -&gt; summon a 1/1 cricket</p>
-<p>Level 2: faint -&gt; summon a 2/2 cricket</p>
-<p>Level 3: faint -&gt; summon a 3/3 cricket</p></div>
+<p>Level 1: faint -&gt; summon a 1/1 cricket that is non spawning</p>
+<p>Level 2: faint -&gt; summon a 2/2 cricket that is non spawning</p>
+<p>Level 3: faint -&gt; summon a 3/3 cricket that is non spawning</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
@@ -2862,11 +2989,11 @@ if __name__ == &#34;__main__&#34;:
     &#34;&#34;&#34;
     Cricket Class
 
-    Level 1: faint -&gt; summon a 1/1 cricket
+    Level 1: faint -&gt; summon a 1/1 cricket that is non spawning
 
-    Level 2: faint -&gt; summon a 2/2 cricket
+    Level 2: faint -&gt; summon a 2/2 cricket that is non spawning
 
-    Level 3: faint -&gt; summon a 3/3 cricket
+    Level 3: faint -&gt; summon a 3/3 cricket that is non spawning
     &#34;&#34;&#34;
 
     def __init__(self, health: int = 0, dmg: int = 0):
@@ -2878,15 +3005,16 @@ if __name__ == &#34;__main__&#34;:
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -&gt; None:
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
         pos = self.getPosition(friends)
 
         others = list(range(len(friends) - 1))
-        others.remove(pos)
+        if len(others) &lt;= 1:
+            others = []
+        else:
+            others.remove(pos)
 
-        friends[pos] = Cricket()
-        friends[pos].setHp(1 * self.getLevel())
-        friends[pos].setDmg(1 * self.getLevel())
+        friends[pos] = CricketSpawn(self.getLevel(), self.getLevel())
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
@@ -2899,7 +3027,7 @@ if __name__ == &#34;__main__&#34;:
 <h3>Methods</h3>
 <dl>
 <dt id="src.Animal.Animals.Cricket.onFaint"><code class="name flex">
-<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>]) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -2907,15 +3035,16 @@ if __name__ == &#34;__main__&#34;:
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def onFaint(self, friends: List[Animal]) -&gt; None:
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
     pos = self.getPosition(friends)
 
     others = list(range(len(friends) - 1))
-    others.remove(pos)
+    if len(others) &lt;= 1:
+        others = []
+    else:
+        others.remove(pos)
 
-    friends[pos] = Cricket()
-    friends[pos].setHp(1 * self.getLevel())
-    friends[pos].setDmg(1 * self.getLevel())
+    friends[pos] = CricketSpawn(self.getLevel(), self.getLevel())
 
     for i in others:
         friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
@@ -2927,6 +3056,65 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
+<li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
+<li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.getExp" href="index.html#src.Animal.Animal.getExp">getExp</a></code></li>
+<li><code><a title="src.Animal.Animal.getHp" href="index.html#src.Animal.Animal.getHp">getHp</a></code></li>
+<li><code><a title="src.Animal.Animal.getLevel" href="index.html#src.Animal.Animal.getLevel">getLevel</a></code></li>
+<li><code><a title="src.Animal.Animal.getPosition" href="index.html#src.Animal.Animal.getPosition">getPosition</a></code></li>
+<li><code><a title="src.Animal.Animal.getState" href="index.html#src.Animal.Animal.getState">getState</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
+<li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
+<li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
+<li><code><a title="src.Animal.Animal.subHp" href="index.html#src.Animal.Animal.subHp">subHp</a></code></li>
+</ul>
+</li>
+</ul>
+</dd>
+<dt id="src.Animal.Animals.CricketSpawn"><code class="flex name class">
+<span>class <span class="ident">CricketSpawn</span></span>
+<span>(</span><span>health: int = 0, dmg: int = 0)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Cricket Spawn Class</p>
+<p>Only created on Cricket death</p></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class CricketSpawn(Animal):
+    &#34;&#34;&#34;
+    Cricket Spawn Class
+
+    Only created on Cricket death
+    &#34;&#34;&#34;
+
+    def __init__(self, health: int = 0, dmg: int = 0):
+
+        default_health = 0
+        default_dmg = 0
+        ability = &#34;Faint: Summon&#34;
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1</code></pre>
+</details>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
+<li>abc.ABC</li>
+</ul>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
+<ul class="hlist">
+<li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3009,6 +3197,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3093,6 +3282,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3151,6 +3341,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3243,6 +3434,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3297,8 +3489,8 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 3
 
     def onFriendSummoned(self, friends: List[Animal], friend: Animal):
-        self.setBaseHp(self.getBaseHp + self.getLevel())
-        self.setBaseDmg(self.getBaseDmg + self.getLevel())</code></pre>
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3317,8 +3509,8 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onFriendSummoned(self, friends: List[Animal], friend: Animal):
-    self.setBaseHp(self.getBaseHp + self.getLevel())
-    self.setBaseDmg(self.getBaseDmg + self.getLevel())</code></pre>
+    self.setBaseHp(self.getBaseHp() + self.getLevel())
+    self.setBaseDmg(self.getBaseDmg() + self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -3327,6 +3519,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3419,6 +3612,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3519,6 +3713,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3603,6 +3798,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3659,7 +3855,8 @@ if __name__ == &#34;__main__&#34;:
     def onBeforeAttack(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
         pos = self.getPosition(friends)
         for i in range(1, self.getLevel() + 1):
-            friends[pos + i].subHp(1, friends, enemies)</code></pre>
+            if pos + i &lt; len(friends):
+                friends[pos + i].subHp(1, friends, enemies)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3680,7 +3877,8 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def onBeforeAttack(self, friends: List[Animal], enemies: List[Animal]) -&gt; None:
     pos = self.getPosition(friends)
     for i in range(1, self.getLevel() + 1):
-        friends[pos + i].subHp(1, friends, enemies)</code></pre>
+        if pos + i &lt; len(friends):
+            friends[pos + i].subHp(1, friends, enemies)</code></pre>
 </details>
 </dd>
 </dl>
@@ -3689,6 +3887,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3789,6 +3988,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3846,8 +4046,9 @@ if __name__ == &#34;__main__&#34;:
         pos = self.getPosition(friends)
         amt = 1 * self.getLevel()
         for i in range(1, 3):
-            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
-            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
+            if pos + i &lt; len(friends):
+                friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+                friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -3869,8 +4070,9 @@ if __name__ == &#34;__main__&#34;:
     pos = self.getPosition(friends)
     amt = 1 * self.getLevel()
     for i in range(1, 3):
-        friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
-        friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
+        if pos + i &lt; len(friends):
+            friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
+            friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)</code></pre>
 </details>
 </dd>
 </dl>
@@ -3879,6 +4081,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -3963,6 +4166,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4049,6 +4253,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4125,6 +4330,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4215,6 +4421,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4280,6 +4487,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4349,6 +4557,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4433,6 +4642,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4487,9 +4697,9 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 6
 
     def onStartOfBattle(self, friends: list, enemies: List[Animal]):
-        animals = choice(enemies, k=self.getLevel())
+        animals = getSubset(enemies, k=self.getLevel())
         for i in animals:
-            i.subHp(round(self.getDmg() * 0.5), enemies, friends)</code></pre>
+            enemies[i].subHp(round(self.getDmg() * 0.5), enemies, friends)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -4508,9 +4718,9 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onStartOfBattle(self, friends: list, enemies: List[Animal]):
-    animals = choice(enemies, k=self.getLevel())
+    animals = getSubset(enemies, k=self.getLevel())
     for i in animals:
-        i.subHp(round(self.getDmg() * 0.5), enemies, friends)</code></pre>
+        enemies[i].subHp(round(self.getDmg() * 0.5), enemies, friends)</code></pre>
 </details>
 </dd>
 </dl>
@@ -4519,6 +4729,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4573,10 +4784,7 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 6
 
     def onFaint(self, friends: List[Animal], enemies: list):
-        pos = self.getPosition(friends)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        pos, others = getPosAndOthers(self, friends)
 
         for i in others:
             friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
@@ -4599,10 +4807,7 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: list):
-    pos = self.getPosition(friends)
-
-    others = list(range(len(friends) - 1))
-    others.remove(pos)
+    pos, others = getPosAndOthers(self, friends)
 
     for i in others:
         friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
@@ -4615,6 +4820,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4699,6 +4905,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4783,6 +4990,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4831,6 +5039,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -4886,14 +5095,15 @@ if __name__ == &#34;__main__&#34;:
     def onBuy(self, friends: List[Animal]):
         pos = self.getPosition(friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        possible = list(range(len(friends) - 1))
+        possible.remove(pos)
 
-        friend = choice(others)
-        amt = 1 * self.getLevel()
+        friend = getSubset(possible, k=1)
+        amt = self.getLevel()
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + amt)
-        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + amt)</code></pre>
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + amt)
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -4914,14 +5124,15 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def onBuy(self, friends: List[Animal]):
     pos = self.getPosition(friends)
 
-    others = list(range(len(friends) - 1))
-    others.remove(pos)
+    possible = list(range(len(friends) - 1))
+    possible.remove(pos)
 
-    friend = choice(others)
-    amt = 1 * self.getLevel()
+    friend = getSubset(possible, k=1)
+    amt = self.getLevel()
 
-    friends[friend].setBaseHp(friends[friend].getBaseHp() + amt)
-    friends[friend].setBaseDmg(friends[friend].getBaseDmg() + amt)</code></pre>
+    for i in friend:
+        friends[i].setBaseHp(friends[i].getBaseHp() + amt)
+        friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)</code></pre>
 </details>
 </dd>
 </dl>
@@ -4930,6 +5141,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5014,6 +5226,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5064,6 +5277,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5146,6 +5360,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5234,6 +5449,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5316,6 +5532,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5398,6 +5615,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5455,6 +5673,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5509,7 +5728,7 @@ if __name__ == &#34;__main__&#34;:
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         if len(enemies) &lt; 5:
-            enemies.append(DirtyRat())</code></pre>
+            enemies.append(DirtyRat(0, 0))</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -5529,7 +5748,7 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
     if len(enemies) &lt; 5:
-        enemies.append(DirtyRat())</code></pre>
+        enemies.append(DirtyRat(0, 0))</code></pre>
 </details>
 </dd>
 </dl>
@@ -5538,6 +5757,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5603,6 +5823,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5729,6 +5950,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5787,6 +6009,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5846,10 +6069,10 @@ if __name__ == &#34;__main__&#34;:
         others = list(range(len(friends) - 1))
         others.remove(pos)
 
-        animals = choice(others, k=2)
+        animals = getSubset(others, k=2)
         for i in animals:
-            i.setBaseHp(i.getBaseHp() + self.getLevel())
-            i.setBaseDmg(i.getBaseDmg() + self.getLevel())</code></pre>
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -5873,10 +6096,10 @@ if __name__ == &#34;__main__&#34;:
     others = list(range(len(friends) - 1))
     others.remove(pos)
 
-    animals = choice(others, k=2)
+    animals = getSubset(others, k=2)
     for i in animals:
-        i.setBaseHp(i.getBaseHp() + self.getLevel())
-        i.setBaseDmg(i.getBaseDmg() + self.getLevel())</code></pre>
+        friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+        friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -5885,6 +6108,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -5969,6 +6193,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6073,6 +6298,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6131,9 +6357,10 @@ if __name__ == &#34;__main__&#34;:
 
         others = list(range(len(friends) - 1))
         others.remove(pos)
-        friend = choice(others)
+        friend = getSubset(others, k=1)
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())</code></pre>
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -6156,9 +6383,10 @@ if __name__ == &#34;__main__&#34;:
 
     others = list(range(len(friends) - 1))
     others.remove(pos)
-    friend = choice(others)
+    friend = getSubset(others, k=1)
 
-    friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())</code></pre>
+    for i in friend:
+        friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())</code></pre>
 </details>
 </dd>
 </dl>
@@ -6167,6 +6395,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6257,6 +6486,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6314,6 +6544,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6404,6 +6635,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6490,6 +6722,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6544,11 +6777,8 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 2
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
-
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
@@ -6570,11 +6800,8 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
-    pos = self.getPosition(friends)
+    pos, others = getPosAndOthers(self, friends)
     friends[pos] = getRandomTierAnimal(3, 1 * self.getLevel(), 2, 2)
-
-    others = list(range(len(friends) - 1))
-    others.remove(pos)
 
     for i in others:
         friends[i].onFriendSummoned(friends, friends[pos])</code></pre>
@@ -6586,6 +6813,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6672,6 +6900,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6753,6 +6982,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6818,6 +7048,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6902,6 +7133,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -6957,7 +7189,9 @@ if __name__ == &#34;__main__&#34;:
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
-            friends[i] += MelonEffect()</code></pre>
+            if i &lt; len(friends):
+                # friends[i] += MelonEffect()
+                pass</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -6977,7 +7211,9 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
     for i in range(1, self.getLevel() + 1):
-        friends[i] += MelonEffect()</code></pre>
+        if i &lt; len(friends):
+            # friends[i] += MelonEffect()
+            pass</code></pre>
 </details>
 </dd>
 </dl>
@@ -6986,6 +7222,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -7041,11 +7278,12 @@ if __name__ == &#34;__main__&#34;:
         self.jonah = NoneAnimal()
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = friends[pos - 1]
+        self.jonah = deepcopy(friends[pos - 1])
         friends[pos - 1].onFaint(friends, enemies)
+        friends[pos - 1].setAlive(False)
         # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
@@ -7085,11 +7323,12 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
-    pos = self.getPosition(friends)
+    pos, others = getPosAndOthers(self, friends)
     if pos == 0:
         return
-    self.jonah = friends[pos - 1]
+    self.jonah = deepcopy(friends[pos - 1])
     friends[pos - 1].onFaint(friends, enemies)
+    friends[pos - 1].setAlive(False)
     # TODO remove eaten friend</code></pre>
 </details>
 </dd>
@@ -7099,6 +7338,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -7183,6 +7423,7 @@ if __name__ == &#34;__main__&#34;:
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
 <ul class="hlist">
 <li><code><a title="src.Animal.Animal.getAbility" href="index.html#src.Animal.Animal.getAbility">getAbility</a></code></li>
+<li><code><a title="src.Animal.Animal.getAlive" href="index.html#src.Animal.Animal.getAlive">getAlive</a></code></li>
 <li><code><a title="src.Animal.Animal.getCost" href="index.html#src.Animal.Animal.getCost">getCost</a></code></li>
 <li><code><a title="src.Animal.Animal.getDmg" href="index.html#src.Animal.Animal.getDmg">getDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.getEffect" href="index.html#src.Animal.Animal.getEffect">getEffect</a></code></li>
@@ -7219,8 +7460,10 @@ if __name__ == &#34;__main__&#34;:
 </li>
 <li><h3><a href="#header-functions">Functions</a></h3>
 <ul class="">
+<li><code><a title="src.Animal.Animals.getPosAndOthers" href="#src.Animal.Animals.getPosAndOthers">getPosAndOthers</a></code></li>
 <li><code><a title="src.Animal.Animals.getRandomAnimal" href="#src.Animal.Animals.getRandomAnimal">getRandomAnimal</a></code></li>
 <li><code><a title="src.Animal.Animals.getRandomTierAnimal" href="#src.Animal.Animals.getRandomTierAnimal">getRandomTierAnimal</a></code></li>
+<li><code><a title="src.Animal.Animals.getSubset" href="#src.Animal.Animals.getSubset">getSubset</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>
@@ -7296,6 +7539,9 @@ if __name__ == &#34;__main__&#34;:
 <ul class="">
 <li><code><a title="src.Animal.Animals.Cricket.onFaint" href="#src.Animal.Animals.Cricket.onFaint">onFaint</a></code></li>
 </ul>
+</li>
+<li>
+<h4><code><a title="src.Animal.Animals.CricketSpawn" href="#src.Animal.Animals.CricketSpawn">CricketSpawn</a></code></h4>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Crocodile" href="#src.Animal.Animals.Crocodile">Crocodile</a></code></h4>
