@@ -72,6 +72,9 @@ class Food(ABC):
 
     ### Setters ###
 
+    def setCost(self, amt: int) -&gt; None:
+        self.cost = amt
+
     ### Overrides ###
 
     def __str__(self):
@@ -163,6 +166,9 @@ class Food(ABC):
         return self.perm_buff
 
     ### Setters ###
+
+    def setCost(self, amt: int) -&gt; None:
+        self.cost = amt
 
     ### Overrides ###
 
@@ -264,6 +270,19 @@ class Food(ABC):
     return self.temp_buff</code></pre>
 </details>
 </dd>
+<dt id="src.Food.Food.setCost"><code class="name flex">
+<span>def <span class="ident">setCost</span></span>(<span>self, amt: int) ‑> None</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def setCost(self, amt: int) -&gt; None:
+    self.cost = amt</code></pre>
+</details>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -295,6 +314,7 @@ class Food(ABC):
 <li><code><a title="src.Food.Food.getEffect" href="#src.Food.Food.getEffect">getEffect</a></code></li>
 <li><code><a title="src.Food.Food.getPermBuff" href="#src.Food.Food.getPermBuff">getPermBuff</a></code></li>
 <li><code><a title="src.Food.Food.getTempBuff" href="#src.Food.Food.getTempBuff">getTempBuff</a></code></li>
+<li><code><a title="src.Food.Food.setCost" href="#src.Food.Food.setCost">setCost</a></code></li>
 </ul>
 </li>
 </ul>

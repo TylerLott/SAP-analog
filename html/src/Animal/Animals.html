@@ -28,6 +28,7 @@
 </summary>
 <pre><code class="python">from random import choice
 from typing import List
+from math import floor
 
 from src.Animal import Animal
 from src.Effect.Effects import MelonEffect, SplashEffect
@@ -1106,13 +1107,29 @@ class Shrimp(Animal):
 
 
 class Skunk(Animal):
+    &#34;&#34;&#34;
+    Skunk Class
+
+    Level 1: Start of Battle -&gt; Reduce the highest health enemy by 33%
+    Level 2: Start of Battle -&gt; Reduce the highest health enemy by 66%
+    Level 3: Start of Battle -&gt; Reduce the highest health enemy by 99%
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 3
+        ability = &#34;Start of Battle: Debuff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        highest = enemies[0]
+        for i in enemies:
+            if i.getHp() &gt; highest.getHp():
+                highest = i
+        highest.subHp(floor(0.33 * highest.getHp()), enemies, friends)
 
 
 class Sloth(Animal):
@@ -1198,13 +1215,27 @@ class Spider(Animal):
 
 
 class Squirrel(Animal):
+    &#34;&#34;&#34;
+    Squirrel Class
+
+    Level 1: Start of Turn -&gt; Discount shop food by 1 gold
+    Level 2: Start of Turn -&gt; Discount shop food by 2 gold
+    Level 3: Start of Turn -&gt; Discount shop food by 3 gold
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 2
+        ability = &#34;Start of Turn: Discount&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onStartOfTurn(self, team):
+        for i in team.shop.items:
+            if not i.__class__.__name__ == &#34;Pill&#34;:
+                i.setCost(i.getCost() - self.getLevel())
 
 
 class Swan(Animal):
@@ -1272,24 +1303,58 @@ class Turtle(Animal):
 
 
 class Whale(Animal):
+    &#34;&#34;&#34;
+    Whale Class
+
+    Level 1: Start of Battle -&gt; Swallow friend ahead and release as level 1 after fainting
+    Level 2: Start of Battle -&gt; Swallow friend ahead and release as level 2 after fainting
+    Level 3: Start of Battle -&gt; Swallow friend ahead and release as level 3 after fainting
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 2
+        ability = &#34;Faint: Summon&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+        self.jonah = NoneAnimal()
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        if pos == 0:
+            return
+        self.jonah = friends[pos - 1]
+        friends[pos - 1].onFaint(friends, enemies)
+        # TODO remove eaten friend
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = self.jonah
+        # TODO make this set level and stats to default
 
 
 class Worm(Animal):
+    &#39;&#39;&#39;
+    Worm Class
+
+    Level 1: Eat -&gt; Gain +1/+1
+    Level 2: Eat -&gt; Gain +2/+2
+    Level 3: Eat -&gt; Gain +3/+3
+    &#39;&#39;&#39;
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = &#39;Eat: Buff&#39;
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
 
+    def onEat(self, friends: list):
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 ### Functions ###
 
@@ -5263,25 +5328,64 @@ Level 3: Friend Sold -&gt; Give random friend +3 Health</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Skunk Class</p>
+<p>Level 1: Start of Battle -&gt; Reduce the highest health enemy by 33%
+Level 2: Start of Battle -&gt; Reduce the highest health enemy by 66%
+Level 3: Start of Battle -&gt; Reduce the highest health enemy by 99%</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Skunk(Animal):
+    &#34;&#34;&#34;
+    Skunk Class
+
+    Level 1: Start of Battle -&gt; Reduce the highest health enemy by 33%
+    Level 2: Start of Battle -&gt; Reduce the highest health enemy by 66%
+    Level 3: Start of Battle -&gt; Reduce the highest health enemy by 99%
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 3
+        ability = &#34;Start of Battle: Debuff&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 4</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        highest = enemies[0]
+        for i in enemies:
+            if i.getHp() &gt; highest.getHp():
+                highest = i
+        highest.subHp(floor(0.33 * highest.getHp()), enemies, friends)</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Skunk.onStartOfBattle"><code class="name flex">
+<span>def <span class="ident">onStartOfBattle</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+    highest = enemies[0]
+    for i in enemies:
+        if i.getHp() &gt; highest.getHp():
+            highest = i
+    highest.subHp(floor(0.33 * highest.getHp()), enemies, friends)</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -5600,25 +5704,60 @@ Level 3: Faint -&gt; Summon a level 3 tier 3 pet as a 2/2</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Squirrel Class</p>
+<p>Level 1: Start of Turn -&gt; Discount shop food by 1 gold
+Level 2: Start of Turn -&gt; Discount shop food by 2 gold
+Level 3: Start of Turn -&gt; Discount shop food by 3 gold</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Squirrel(Animal):
+    &#34;&#34;&#34;
+    Squirrel Class
+
+    Level 1: Start of Turn -&gt; Discount shop food by 1 gold
+    Level 2: Start of Turn -&gt; Discount shop food by 2 gold
+    Level 3: Start of Turn -&gt; Discount shop food by 3 gold
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 5
         default_dmg = 2
+        ability = &#34;Start of Turn: Discount&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 4</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+
+    def onStartOfTurn(self, team):
+        for i in team.shop.items:
+            if not i.__class__.__name__ == &#34;Pill&#34;:
+                i.setCost(i.getCost() - self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Squirrel.onStartOfTurn"><code class="name flex">
+<span>def <span class="ident">onStartOfTurn</span></span>(<span>self, team)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStartOfTurn(self, team):
+    for i in team.shop.items:
+        if not i.__class__.__name__ == &#34;Pill&#34;:
+            i.setCost(i.getCost() - self.getLevel())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -5908,25 +6047,87 @@ Level 3: Faint -&gt; give 3 friend behind melon armor</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Whale Class</p>
+<p>Level 1: Start of Battle -&gt; Swallow friend ahead and release as level 1 after fainting
+Level 2: Start of Battle -&gt; Swallow friend ahead and release as level 2 after fainting
+Level 3: Start of Battle -&gt; Swallow friend ahead and release as level 3 after fainting</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Whale(Animal):
+    &#34;&#34;&#34;
+    Whale Class
+
+    Level 1: Start of Battle -&gt; Swallow friend ahead and release as level 1 after fainting
+    Level 2: Start of Battle -&gt; Swallow friend ahead and release as level 2 after fainting
+    Level 3: Start of Battle -&gt; Swallow friend ahead and release as level 3 after fainting
+    &#34;&#34;&#34;
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 2
+        ability = &#34;Faint: Summon&#34;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 4</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+        self.jonah = NoneAnimal()
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        if pos == 0:
+            return
+        self.jonah = friends[pos - 1]
+        friends[pos - 1].onFaint(friends, enemies)
+        # TODO remove eaten friend
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = self.jonah
+        # TODO make this set level and stats to default</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Whale.onFaint"><code class="name flex">
+<span>def <span class="ident">onFaint</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+    pos = self.getPosition(friends)
+    friends[pos] = self.jonah
+    # TODO make this set level and stats to default</code></pre>
+</details>
+</dd>
+<dt id="src.Animal.Animals.Whale.onStartOfBattle"><code class="name flex">
+<span>def <span class="ident">onStartOfBattle</span></span>(<span>self, friends: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>], enemies: List[<a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a>])</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+    pos = self.getPosition(friends)
+    if pos == 0:
+        return
+    self.jonah = friends[pos - 1]
+    friends[pos - 1].onFaint(friends, enemies)
+    # TODO remove eaten friend</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -5957,25 +6158,57 @@ Level 3: Faint -&gt; give 3 friend behind melon armor</p></div>
 <span>(</span><span>health, dmg)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Animal base class</p></div>
+<div class="desc"><p>Worm Class</p>
+<p>Level 1: Eat -&gt; Gain +1/+1
+Level 2: Eat -&gt; Gain +2/+2
+Level 3: Eat -&gt; Gain +3/+3</p></div>
 <details class="source">
 <summary>
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Worm(Animal):
+    &#39;&#39;&#39;
+    Worm Class
+
+    Level 1: Eat -&gt; Gain +1/+1
+    Level 2: Eat -&gt; Gain +2/+2
+    Level 3: Eat -&gt; Gain +3/+3
+    &#39;&#39;&#39;
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = &#39;Eat: Buff&#39;
 
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 4</code></pre>
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 4
+
+    def onEat(self, friends: list):
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></li>
 <li>abc.ABC</li>
 </ul>
+<h3>Methods</h3>
+<dl>
+<dt id="src.Animal.Animals.Worm.onEat"><code class="name flex">
+<span>def <span class="ident">onEat</span></span>(<span>self, friends: list)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onEat(self, friends: list):
+    self.setBaseHp(self.getBaseHp() + self.getLevel())
+    self.setBaseDmg(self.getBaseDmg() + self.getLevel())</code></pre>
+</details>
+</dd>
+</dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
 <li><code><b><a title="src.Animal.Animal" href="index.html#src.Animal.Animal">Animal</a></b></code>:
@@ -6277,6 +6510,9 @@ Level 3: Faint -&gt; give 3 friend behind melon armor</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Skunk" href="#src.Animal.Animals.Skunk">Skunk</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Skunk.onStartOfBattle" href="#src.Animal.Animals.Skunk.onStartOfBattle">onStartOfBattle</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Sloth" href="#src.Animal.Animals.Sloth">Sloth</a></code></h4>
@@ -6298,6 +6534,9 @@ Level 3: Faint -&gt; give 3 friend behind melon armor</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Squirrel" href="#src.Animal.Animals.Squirrel">Squirrel</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Squirrel.onStartOfTurn" href="#src.Animal.Animals.Squirrel.onStartOfTurn">onStartOfTurn</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Swan" href="#src.Animal.Animals.Swan">Swan</a></code></h4>
@@ -6319,9 +6558,16 @@ Level 3: Faint -&gt; give 3 friend behind melon armor</p></div>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Whale" href="#src.Animal.Animals.Whale">Whale</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Whale.onFaint" href="#src.Animal.Animals.Whale.onFaint">onFaint</a></code></li>
+<li><code><a title="src.Animal.Animals.Whale.onStartOfBattle" href="#src.Animal.Animals.Whale.onStartOfBattle">onStartOfBattle</a></code></li>
+</ul>
 </li>
 <li>
 <h4><code><a title="src.Animal.Animals.Worm" href="#src.Animal.Animals.Worm">Worm</a></code></h4>
+<ul class="">
+<li><code><a title="src.Animal.Animals.Worm.onEat" href="#src.Animal.Animals.Worm.onEat">onEat</a></code></li>
+</ul>
 </li>
 </ul>
 </li>
