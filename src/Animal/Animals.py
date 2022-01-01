@@ -37,13 +37,17 @@ class Ant(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -> None:
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
         possible.remove(pos)
+
+        if len(possible) == 0:
+            return
+
         friend = choice(possible)
-        friends[friend].addBaseHp(1 * self.getLevel())
-        friends[friend].addBaseDmg(2 * self.getLevel())
+        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+        friends[friend].addBaseDmg(friends[friend].getBaseHp() + 2 * self.getLevel())
 
 
 class Badger(Animal):
@@ -111,15 +115,12 @@ class Beaver(Animal):
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
         possible.remove(pos)
-        if len(possible) < 1:
-            return
-        elif len(possible) < 2:
-            friend = possible
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-        else:
-            friend = choice(possible, k=2)
-            friends[friend[0]].addBaseHp(1 * self.getLevel())
-            friends[friend[1]].addBaseHp(1 * self.getLevel())
+
+        animals = getSubset(possible, k=2)
+
+        for i in animals:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())
 
 
 class Bison(Animal):
@@ -308,11 +309,11 @@ class Cricket(Animal):
     """
     Cricket Class
 
-    Level 1: faint -> summon a 1/1 cricket
+    Level 1: faint -> summon a 1/1 cricket that is non spawning
 
-    Level 2: faint -> summon a 2/2 cricket
+    Level 2: faint -> summon a 2/2 cricket that is non spawning
 
-    Level 3: faint -> summon a 3/3 cricket
+    Level 3: faint -> summon a 3/3 cricket that is non spawning
     """
 
     def __init__(self, health: int = 0, dmg: int = 0):
@@ -324,18 +325,33 @@ class Cricket(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onFaint(self, friends: List[Animal]) -> None:
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos = self.getPosition(friends)
 
         others = list(range(len(friends) - 1))
         others.remove(pos)
 
-        friends[pos] = Cricket()
-        friends[pos].setHp(1 * self.getLevel())
-        friends[pos].setDmg(1 * self.getLevel())
+        friends[pos] = CricketSpawn(self.getLevel(), self.getLevel())
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
+
+
+class CricketSpawn(Animal):
+    """
+    Cricket Spawn Class
+
+    Only created on Cricket death
+    """
+
+    def __init__(self, health: int = 0, dmg: int = 0):
+
+        default_health = 0
+        default_dmg = 0
+        ability = "Faint: Summon"
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1
 
 
 class Crocodile(Animal):
@@ -819,9 +835,9 @@ class Leopard(Animal):
         self.tier = 6
 
     def onStartOfBattle(self, friends: list, enemies: List[Animal]):
-        animals = choice(enemies, k=self.getLevel())
+        animals = getSubset(enemies, k=self.getLevel())
         for i in animals:
-            i.subHp(round(self.getDmg() * 0.5), enemies, friends)
+            enemies[i].subHp(round(self.getDmg() * 0.5), enemies, friends)
 
 
 class Mammoth(Animal):
@@ -927,14 +943,15 @@ class Otter(Animal):
     def onBuy(self, friends: List[Animal]):
         pos = self.getPosition(friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        possible = list(range(len(friends) - 1))
+        possible.remove(pos)
 
-        friend = choice(others)
-        amt = 1 * self.getLevel()
+        friend = getSubset(possible, k=1)
+        amt = self.getLevel()
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + amt)
-        friends[friend].setBaseDmg(friends[friend].getBaseDmg() + amt)
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + amt)
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)
 
 
 class Ox(Animal):
@@ -1243,10 +1260,10 @@ class Seal(Animal):
         others = list(range(len(friends) - 1))
         others.remove(pos)
 
-        animals = choice(others, k=2)
+        animals = getSubset(others, k=2)
         for i in animals:
-            i.setBaseHp(i.getBaseHp() + self.getLevel())
-            i.setBaseDmg(i.getBaseDmg() + self.getLevel())
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
+            friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())
 
 
 class Shark(Animal):
@@ -1351,9 +1368,10 @@ class Shrimp(Animal):
 
         others = list(range(len(friends) - 1))
         others.remove(pos)
-        friend = choice(others)
+        friend = getSubset(others, k=1)
 
-        friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
+        for i in friend:
+            friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
 
 
 class Skunk(Animal):
@@ -1668,7 +1686,7 @@ class Worm(Animal):
         self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 
-### Functions ###
+### Constants ###
 
 animals = {
     1: [Ant, Beaver, Cricket, Duck, Fish, Horse, Mosquito, Otter, Pig],
@@ -1703,6 +1721,8 @@ animals = {
     6: [Boar, Cat, Dragon, Fly, Gorilla, Leopard, Mammoth, Snake, Tiger],
 }
 
+### Functions ###
+
 
 def getRandomAnimal(maxTier: int, health_mod: int = 0, dmg_mod: int = 0) -> Animal:
     possible = []
@@ -1718,6 +1738,12 @@ def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
     animal.setBaseDmg(dmg)
     # TODO apply level to new animal
     return animal
+
+
+def getSubset(possible: List[int], k: int) -> List[int]:
+    if len(possible) <= k:
+        return possible
+    return choice(possible, k=k)
 
 
 if __name__ == "__main__":

@@ -1,4 +1,5 @@
 from typing import List
+from copy import deepcopy
 
 from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
@@ -32,7 +33,7 @@ class Team:
 
         should only be used in fight
         """
-        temp = self.friends.copy()
+        temp = list([deepcopy(i) for i in self.friends])
         return temp
 
     def getRound(self) -> int:

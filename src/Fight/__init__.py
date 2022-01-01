@@ -45,8 +45,6 @@ class Fight:
         # I might need to make like a move buffer and just load into
         # that rather than recursively calling everything
 
-        [print(i) for i in self.team1Friends]
-
         # Remove all of the NoneAnimals()
         newTeam1 = []
         for i in self.team1Friends:
@@ -64,10 +62,8 @@ class Fight:
         sob1 = self.__getMoveOrder(self.team1Friends)
         sob2 = self.__getMoveOrder(self.team2Friends)
 
-        [print(i) for i in self.team1Friends]
-        print(sob1)
-
         for i in range(5):
+            # TODO refactor this shithole code
             try:
                 self.team1Friends[sob1[i]].onStartOfBattle(
                     self.team1Friends, self.team2Friends
@@ -82,7 +78,7 @@ class Fight:
                 pass
             self.__purgeDead()
 
-        while len(self.team1Friends) > 0 or len(self.team2Friends) > 0:
+        while len(self.team1Friends) > 0 and len(self.team2Friends) > 0:
             # trigger animal onBeforeAttack()
             self.team1Friends[0].onBeforeAttack(self.team1Friends)
             self.team2Friends[0].onBeforeAttack(self.team2Friends)
@@ -92,15 +88,31 @@ class Fight:
             self.team2Friends[0].attack(self.team2Friends, self.team1Friends)
 
             # trigger behind animal onFriendAheadAttack()
-            self.team1Friends[1].onFriendAheadAttack(
-                self.team1Friends, self.team2Friends
-            )
-            self.team2Friends[1].onFriendAheadAttack(
-                self.team2Friends, self.team1Friends
-            )
+            if len(self.team1Friends) > 1:
+                self.team1Friends[1].onFriendAheadAttack(
+                    self.team1Friends, self.team2Friends
+                )
+            if len(self.team2Friends) > 1:
+                self.team2Friends[1].onFriendAheadAttack(
+                    self.team2Friends, self.team1Friends
+                )
 
             # purge dead
             self.__purgeDead()
+
+        #     print("team 1: ", self.team1Friends)
+        #     print("team 2: ", self.team2Friends)
+
+        # [print(i) for i in self.team1Friends]
+        # [print(i) for i in self.team2Friends]
+
+        if len(self.team1Friends) > len(self.team2Friends):
+            self.team2.loseLife(1)
+        elif len(self.team2Friends) > len(self.team1Friends):
+            self.team1.loseLife(1)
+
+        print(self.team1)
+        print(self.team2)
 
     ### Private ###
 
@@ -125,15 +137,19 @@ class Fight:
             if not i.getAlive():
                 ind = self.team1Friends.index(i)
                 i.onFaint(self.team1Friends, self.team2Friends)
-                self.team1Friends[ind + 1].onFriendAheadFaint(
-                    self.team1Friends, self.team2Friends
-                )
-                self.team1Friends.remove(i)
+                if len(self.team1Friends) > 1:
+                    self.team1Friends[ind + 1].onFriendAheadFaint(
+                        self.team1Friends, self.team2Friends
+                    )
+                if i in self.team1Friends:
+                    self.team1Friends.remove(i)
         for i in self.team2Friends:
             if not i.getAlive():
                 ind = self.team2Friends.index(i)
                 i.onFaint(self.team2Friends, self.team1Friends)
-                self.team2Friends[ind + 1].onFriendAheadFaint(
-                    self.team2Friends, self.team1Friends
-                )
-                self.team2Friends.remove(i)
+                if len(self.team2Friends) > 1:
+                    self.team2Friends[ind + 1].onFriendAheadFaint(
+                        self.team2Friends, self.team1Friends
+                    )
+                if i in self.team2Friends:
+                    self.team2Friends.remove(i)
