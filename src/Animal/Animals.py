@@ -1275,24 +1275,58 @@ class Turtle(Animal):
 
 
 class Whale(Animal):
+    """
+    Whale Class
+
+    Level 1: Start of Battle -> Swallow friend ahead and release as level 1 after fainting
+    Level 2: Start of Battle -> Swallow friend ahead and release as level 2 after fainting
+    Level 3: Start of Battle -> Swallow friend ahead and release as level 3 after fainting
+    """
+
     def __init__(self, health, dmg):
 
         default_health = 6
         default_dmg = 2
+        ability = "Faint: Summon"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+        self.jonah = NoneAnimal()
+
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        if pos == 0:
+            return
+        self.jonah = friends[pos - 1]
+        friends[pos - 1].onFaint(friends, enemies)
+        # TODO remove eaten friend
+
+    def onFaint(self, friends: List[Animal], enemies: List[Animal]):
+        pos = self.getPosition(friends)
+        friends[pos] = self.jonah
+        # TODO make this set level and stats to default
 
 
 class Worm(Animal):
+    '''
+    Worm Class
+
+    Level 1: Eat -> Gain +1/+1
+    Level 2: Eat -> Gain +2/+2
+    Level 3: Eat -> Gain +3/+3
+    '''
     def __init__(self, health, dmg):
 
         default_health = 2
         default_dmg = 2
+        ability = 'Eat: Buff'
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
 
+    def onEat(self, friends: list):
+        self.setBaseHp(self.getBaseHp() + self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + self.getLevel())
 
 ### Functions ###
 
