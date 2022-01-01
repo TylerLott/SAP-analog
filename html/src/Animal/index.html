@@ -263,6 +263,9 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
+    def onFriendFaint(self):
+        pass
+
     ### Overrides ###
 
     def __str__(self):
@@ -582,6 +585,9 @@ class Animal(ABC):
         pass
 
     def onFriendEat(self, friend):
+        pass
+
+    def onFriendFaint(self):
         pass
 
     ### Overrides ###
@@ -1027,6 +1033,19 @@ Ability should be string describing animal abilities, if any</p></div>
     pass</code></pre>
 </details>
 </dd>
+<dt id="src.Animal.Animal.onFriendFaint"><code class="name flex">
+<span>def <span class="ident">onFriendFaint</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def onFriendFaint(self):
+    pass</code></pre>
+</details>
+</dd>
 <dt id="src.Animal.Animal.onFriendSold"><code class="name flex">
 <span>def <span class="ident">onFriendSold</span></span>(<span>self, friends: list)</span>
 </code></dt>
@@ -1325,6 +1344,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.onFriendAheadAttack" href="#src.Animal.Animal.onFriendAheadAttack">onFriendAheadAttack</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendAheadFaint" href="#src.Animal.Animal.onFriendAheadFaint">onFriendAheadFaint</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendEat" href="#src.Animal.Animal.onFriendEat">onFriendEat</a></code></li>
+<li><code><a title="src.Animal.Animal.onFriendFaint" href="#src.Animal.Animal.onFriendFaint">onFriendFaint</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSold" href="#src.Animal.Animal.onFriendSold">onFriendSold</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSummoned" href="#src.Animal.Animal.onFriendSummoned">onFriendSummoned</a></code></li>
 <li><code><a title="src.Animal.Animal.onHit" href="#src.Animal.Animal.onHit">onHit</a></code></li>

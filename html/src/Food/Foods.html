@@ -118,7 +118,9 @@ class Steak(Food):
 
 
 class Milk(Food):
-    def __init__(self):
+    def __init__(self, level: int):
+        self.hp = 2 * level
+        self.dmg = 1 * level
         super().__init__()</code></pre>
 </details>
 </section>
@@ -313,6 +315,7 @@ class Milk(Food):
 </dd>
 <dt id="src.Food.Foods.Milk"><code class="flex name class">
 <span>class <span class="ident">Milk</span></span>
+<span>(</span><span>level: int)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Food Base Class</p>
@@ -322,7 +325,9 @@ class Milk(Food):
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Milk(Food):
-    def __init__(self):
+    def __init__(self, level: int):
+        self.hp = 2 * level
+        self.dmg = 1 * level
         super().__init__()</code></pre>
 </details>
 <h3>Ancestors</h3>
