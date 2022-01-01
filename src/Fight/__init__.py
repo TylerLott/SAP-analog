@@ -33,13 +33,20 @@ class Fight:
             onFriendAheadAttack if not faint
         """
 
+        # I might need to make like a move buffer and just load into
+        # that rather than recursively calling everything
+
         # get start of fight move order for each team
         sob1 = self.team1.getMoveOrder()
         sob2 = self.team2.getMoveOrder()
 
         for i in range(5):
-            self.team1Friends[sob1[i]].onStartOfBattle()
-            self.team2Friends[sob2[i]].onStartOfBattle()
+            self.team1Friends[sob1[i]].onStartOfBattle(
+                self.team1Friends, self.team2Friends
+            )
+            self.team2Friends[sob2[i]].onStartOfBattle(
+                self.team2Friends, self.team1Friends
+            )
 
             # purge out dead animals
 
