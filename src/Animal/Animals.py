@@ -22,7 +22,9 @@ class Ant(Animal):
     Ant Class
 
     level 1: faint -> give random friend +2/+1
+
     level 2: faint -> give random friend +4/+2
+
     level 3: faint -> give random friend +6/+3
     """
 
@@ -49,7 +51,9 @@ class Badger(Animal):
     Badger Class
 
     Level 1: Faint -> Deal 1x attack damage to adjacent animals
+
     Level 2: Faint -> Deal 2x attack damage to adjacent animals
+
     Level 3: Faint -> Deal 3x attack damage to adjacent animals
     """
 
@@ -88,7 +92,9 @@ class Beaver(Animal):
     Beaver Class
 
     Level 1: sell -> give 2 random friends +1 health
+
     Level 2: sell -> give 2 random friends +2 health
+
     Level 3: sell -> give 2 random friends +3 health
     """
 
@@ -121,7 +127,9 @@ class Bison(Animal):
     Bison Class
 
     Level 1: End Turn -> Gain +2/+2 if there is a level 3 friend
+
     Level 2: End Turn -> Gain +4/+4 if there is a level 3 friend
+
     Level 3: End Turn -> Gain +6/+6 if there is a level 3 friend
     """
 
@@ -149,7 +157,9 @@ class Blowfish(Animal):
     Blowfish Class
 
     Level 1: Hurt -> Deal 2 damage to random enemy
+
     Level 2: Hurt -> Deal 4 damage to random enemy
+
     Level 3: Hurt -> Deal 6 damage to random enemy
     """
 
@@ -173,7 +183,9 @@ class Boar(Animal):
     Boar Class
 
     Level 1: Before Attack -> Gain +2/+2
+
     Level 2: Before Attack -> Gain +4/+4
+
     Level 3: Before Attack -> Gain +6/+6
     """
 
@@ -196,7 +208,9 @@ class Camel(Animal):
     Camel Class
 
     Level 1: Hurt -> give friend behind +1/+2
+
     Level 2: Hurt -> give friend behind +2/+4
+
     Level 3: Hurt -> give friend behind +3/+6
     """
 
@@ -220,7 +234,9 @@ class Cat(Animal):
     Cat Class
 
     Level 1: Food buffs are 2x
+
     Level 2: Food buffs are 3x
+
     Level 3: Food buffs are 4x
     """
 
@@ -241,7 +257,9 @@ class Cow(Animal):
     Cow Class
 
     Level 1: Buy -> replace shop food with milk that gives +1/+2
+
     Level 2: Buy -> replace shop food with milk that gives +2/+4
+
     Level 3: Buy -> replace shop food with milk that gives +3/+6
     """
 
@@ -264,7 +282,9 @@ class Crab(Animal):
     Crab Class
 
     Level 1: Buy -> Copy health from most healthy friend
+
     Level 2: Buy -> Copy health from most healthy friend
+
     Level 3: Buy -> Copy health from most healthy friend
     """
 
@@ -289,7 +309,9 @@ class Cricket(Animal):
     Cricket Class
 
     Level 1: faint -> summon a 1/1 cricket
+
     Level 2: faint -> summon a 2/2 cricket
+
     Level 3: faint -> summon a 3/3 cricket
     """
 
@@ -321,7 +343,9 @@ class Crocodile(Animal):
     Crocodile Class
 
     Level 1: Start of Battle -> Deal 8 Dmg to last enemy
+
     Level 2: Start of Battle -> Deal 16 Dmg to last enemy
+
     Level 3: Start of Battle -> Deal 24 Dmg to last enemy
     """
 
@@ -343,7 +367,9 @@ class Deer(Animal):
     Deer Class
 
     Level 1: Faint -> Summon a 5/5 Bus with Splash
+
     Level 2: Faint -> Summon a 10/10 Bus with Splash
+
     Level 3: Faint -> Summon a 15/15 Bus with Splash
     """
 
@@ -388,7 +414,9 @@ class Dodo(Animal):
     Dodo Class
 
     Level 1: Start of Battle -> give 50% of dodo dmg to friend ahead
+
     Level 2: Start of Battle -> give 100% of dodo dmg to friend ahead
+
     Level 3: Start of Battle -> give 150% of dodo dmg to friend ahead
     """
 
@@ -415,7 +443,9 @@ class Dog(Animal):
     Dog Class
 
     Level 1: Friend Summoned -> gain +1/+1
+
     Level 2: Friend Summoned -> gain +2/+2
+
     Level 3: Friend Summoned -> gain +3/+3
     """
 
@@ -438,7 +468,9 @@ class Dolphin(Animal):
     Dolphin Class
 
     Level 1: Start of Battle -> Deal 5 damage to lowest health enemy
+
     Level 2: Start of Battle -> Deal 10 damage to lowest health enemy
+
     Level 3: Start of Battle -> Deal 15 damage to lowest health enemy
     """
 
@@ -465,7 +497,9 @@ class Dragon(Animal):
     Dragon Class
 
     Level 1: Buy tier 1 friend -> Give all friends +1/+1
+
     Level 2: Buy tier 1 friend -> Give all friends +2/+2
+
     Level 3: Buy tier 1 friend -> Give all friends +3/+3
     """
 
@@ -496,7 +530,9 @@ class Duck(Animal):
     Duck Class
 
     Level 1: Sell -> Give shop pets +1 Health
+
     Level 2: Sell -> Give shop pets +2 Health
+
     Level 3: Sell -> Give shop pets +3 Health
     """
 
@@ -519,7 +555,9 @@ class Elephant(Animal):
     Elephant Class
 
     Level 1: Before Attack -> Deal 1 Dmg to 1 friend behind
+
     Level 2: Before Attack -> Deal 1 Dmg to 2 friends behind
+
     Level 3: Before Attack -> Deal 1 Dmg to 3 friends behind
     """
 
@@ -543,7 +581,9 @@ class Fish(Animal):
     Fish Class
 
     Level 1: Level-up -> give all friends +1/+1
+
     Level 2: Level-up -> give all friends +2/+2
+
     Level 3: None
     """
 
@@ -574,7 +614,9 @@ class Flamingo(Animal):
     Flamingo Class
 
     Level 1: Faint -> Give the two friends behind +1/+1
+
     Level 2: Faint -> Give the two friends behind +2/+2
+
     Level 3: Faint -> Give the two friends behind +3/+3
     """
 
@@ -600,7 +642,9 @@ class Fly(Animal):
     Fly Class
 
     Level 1: Friend Faints -> Summon a 5/5 fly in it's place
+
     Level 2: Friend Faints -> Summon a 10/10 fly in it's place
+
     Level 3: Friend Faints -> Summon a 15/15 fly in it's place
     """
 
@@ -623,7 +667,9 @@ class Giraffe(Animal):
     Giraffe Class
 
     Level 1: End Turn -> Give friend ahead +1/+1
+
     Level 2: End Turn -> Give friend ahead +2/+2
+
     Level 3: End Turn -> Give friend ahead +3/+3
     """
 
@@ -667,7 +713,9 @@ class Hedgehog(Animal):
     Hedgehog class
 
     Level 1: Faint -> Deal 2 Dmg to all
+
     Level 2: Faint -> Deal 4 Dmg to all
+
     Level 3: Faint -> Deal 6 Dmg to all
     """
 
@@ -693,7 +741,9 @@ class Hippo(Animal):
     Hippo Class
 
     Level 1: Knock Out -> Gain +2/+2
+
     Level 2: Knock Out -> Gain +4/+4
+
     Level 3: Knock Out -> Gain +6/+6
     """
 
@@ -728,7 +778,9 @@ class Kangaroo(Animal):
     Kangaroo Class
 
     Level 1: Friend Ahead Attack -> Gain +2/+2
+
     Level 2: Friend Ahead Attack -> Gain +4/+4
+
     Level 3: Friend Ahead Attack -> Gain +6/+6
     """
 
@@ -751,7 +803,9 @@ class Leopard(Animal):
     Leopard Class
 
     Level 1: Start of battle -> Deal 50% attack damage to 1 random enemy
+
     Level 2: Start of battle -> Deal 50% attack damage to 2 random enemies
+
     Level 3: Start of battle -> Deal 50% attack damage to 3 random enemies
     """
 
@@ -775,7 +829,9 @@ class Mammoth(Animal):
     Mammoth Class
 
     Level 1: Faint -> Give all friends +2/+2
+
     Level 2: Faint -> Give all friends +4/+4
+
     Level 3: Faint -> Give all friends +6/+6
     """
 
@@ -804,7 +860,9 @@ class Mosquito(Animal):
     Mosquito Class
 
     Level 1: Start of Battle -> Deal 1 Dmg to random enemy
+
     Level 2: Start of Battle -> Deal 2 Dmg to random enemy
+
     Level 3: Start of Battle -> Deal 3 Dmg to random enemy
     """
 
@@ -827,7 +885,9 @@ class Monkey(Animal):
     Monkey Class
 
     Level 1: End Turn -> Give right-most friend +3/+3
+
     Level 2: End Turn -> Give right-most friend +6/+6
+
     Level 3: End Turn -> Give right-most friend +9/+9
     """
 
@@ -850,7 +910,9 @@ class Otter(Animal):
     Otter Class
 
     Level 1: Buy -> give random friend +1/+1
+
     Level 2: Buy -> give random friend +2/+2
+
     Level 3: Buy -> give random friend +3/+3
     """
 
@@ -880,7 +942,9 @@ class Ox(Animal):
     Ox Class
 
     Level 1: Friend Ahead Faints -> Gain Melon, Gain +2 Dmg
+
     Level 2: Friend Ahead Faints -> Gain Melon, Gain +4 Dmg
+
     Level 3: Friend Ahead Faints -> Gain Melon, Gain +6 Dmg
     """
 
@@ -914,7 +978,9 @@ class Peacock(Animal):
     Peacock Class
 
     Level 1: Hurt -> gain +2 attack
+
     Level 2: Hurt -> gain +4 attack
+
     Level 3: Hurt -> gain +6 attack
     """
 
@@ -936,7 +1002,9 @@ class Penguin(Animal):
     Penguin Class
 
     Level 1: End Turn -> Give other level 2 and 3 friends +1/+1
+
     Level 2: End Turn -> Give other level 2 and 3 friends +2/+2
+
     Level 3: End Turn -> Give other level 2 and 3 friends +3/+3
     """
 
@@ -961,7 +1029,9 @@ class Pig(Animal):
     Pig Class
 
     Level 1: Sell -> Give 1 extra gold
+
     Level 2: Sell -> Give 2 extra gold
+
     Level 3: Sell -> Give 3 extra gold
     """
 
@@ -983,7 +1053,9 @@ class Rabbit(Animal):
     Rabbit Class
 
     Level 1: Friend Eats -> Give additional +1 Health
+
     Level 2: Friend Eats -> Give additional +2 Health
+
     Level 3: Friend Eats -> Give additional +3 Health
     """
 
@@ -1005,7 +1077,9 @@ class Rat(Animal):
     Rat Class
 
     Level 1: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
+
     Level 2: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
+
     Level 3: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
     """
 
@@ -1045,7 +1119,9 @@ class Rhino(Animal):
     Rhino Class
 
     Level 1: Knock Out: Deal 4 damage to first enemy
+
     Level 2: Knock Out: Deal 8 damage to first enemy
+
     Level 3: Knock Out: Deal 12 damage to first enemy
     """
 
@@ -1066,7 +1142,9 @@ class Rooster(Animal):
     Rooster Class
 
     Level 1: Faint -> Summon 1 Chick with 1 health and half of the rooster's attack
+
     Level 2: Faint -> Summon 2 Chicks with 1 health and half of the rooster's attack
+
     Level 3: Faint -> Summon 3 Chicks with 1 health and half of the rooster's attack
     """
 
@@ -1144,7 +1222,9 @@ class Seal(Animal):
     Seal Class
 
     Level 1: Eat -> Give 2 random friends +1/+1
+
     Level 2: Eat -> Give 2 random friends +2/+2
+
     Level 3: Eat -> Give 2 random friends +3/+3
     """
 
@@ -1174,7 +1254,9 @@ class Shark(Animal):
     Shark Class
 
     Level 1: Friend Faint -> Gain +2/+1
+
     Level 2: Friend Faint -> Gain +4/+2
+
     Level 3: Friend Faint -> Gain +6/+3
     """
 
@@ -1197,7 +1279,9 @@ class Sheep(Animal):
     Sheep Class
 
     Level 1: Faint -> Summon two 2/2 Rams
+
     Level 2: Faint -> Summon two 4/4 Rams
+
     Level 3: Faint -> Summon two 6/6 Rams
     """
 
@@ -1247,7 +1331,9 @@ class Shrimp(Animal):
     Shrimp Class
 
     Level 1: Friend Sold -> Give random friend +1 Health
+
     Level 2: Friend Sold -> Give random friend +2 Health
+
     Level 3: Friend Sold -> Give random friend +3 Health
     """
 
@@ -1275,7 +1361,9 @@ class Skunk(Animal):
     Skunk Class
 
     Level 1: Start of Battle -> Reduce the highest health enemy by 33%
+
     Level 2: Start of Battle -> Reduce the highest health enemy by 66%
+
     Level 3: Start of Battle -> Reduce the highest health enemy by 99%
     """
 
@@ -1318,7 +1406,9 @@ class Snail(Animal):
     Snail Class
 
     Level 1: Buy -> if lost last battle, give all +2/+1
+
     Level 2: Buy -> if lost last battle, give all +4/+2
+
     Level 3: Buy -> if lost last battle, give all +6/+3
     """
 
@@ -1344,7 +1434,9 @@ class Snake(Animal):
     Snake Class
 
     Level 1: Friend Ahead Attacks -> Deal 5 damage to random enemy
+
     Level 2: Friend Ahead Attacks -> Deal 10 damage to random enemy
+
     Level 3: Friend Ahead Attacks -> Deal 15 damage to random enemy
     """
 
@@ -1368,7 +1460,9 @@ class Spider(Animal):
     Spider Class
 
     Level 1: Faint -> Summon a level 1 tier 3 pet as a 2/2
+
     Level 2: Faint -> Summon a level 2 tier 3 pet as a 2/2
+
     Level 3: Faint -> Summon a level 3 tier 3 pet as a 2/2
     """
 
@@ -1397,7 +1491,9 @@ class Squirrel(Animal):
     Squirrel Class
 
     Level 1: Start of Turn -> Discount shop food by 1 gold
+
     Level 2: Start of Turn -> Discount shop food by 2 gold
+
     Level 3: Start of Turn -> Discount shop food by 3 gold
     """
 
@@ -1421,7 +1517,9 @@ class Swan(Animal):
     Swan Class
 
     Level 1: Start of Turn -> +1 gold
+
     Level 2: Start of Turn -> +2 gold
+
     Level 3: Start of Turn -> +3 gold
     """
 
@@ -1442,7 +1540,9 @@ class Tiger(Animal):
     Tiger Class
 
     Level 1: Friend ahead repeated their ability as if they were a level 1
+
     Level 2: Friend ahead repeated their ability as if they were a level 2
+
     Level 3: Friend ahead repeated their ability as if they were a level 3
     """
 
@@ -1463,7 +1563,9 @@ class Turkey(Animal):
     Turkey Class
 
     Level 1: Friend Summoned -> give it +3/+3
+
     Level 2: Friend Summoned -> give it +6/+6
+
     Level 3: Friend Summoned -> give it +9/+9
     """
 
@@ -1486,7 +1588,9 @@ class Turtle(Animal):
     Turtle Class
 
     Level 1: Faint -> give 1 friend behind melon armor
+
     Level 2: Faint -> give 2 friend behind melon armor
+
     Level 3: Faint -> give 3 friend behind melon armor
     """
 
@@ -1509,7 +1613,9 @@ class Whale(Animal):
     Whale Class
 
     Level 1: Start of Battle -> Swallow friend ahead and release as level 1 after fainting
+
     Level 2: Start of Battle -> Swallow friend ahead and release as level 2 after fainting
+
     Level 3: Start of Battle -> Swallow friend ahead and release as level 3 after fainting
     """
 
@@ -1542,7 +1648,9 @@ class Worm(Animal):
     Worm Class
 
     Level 1: Eat -> Gain +1/+1
+
     Level 2: Eat -> Gain +2/+2
+
     Level 3: Eat -> Gain +3/+3
     """
 
