@@ -80,6 +80,7 @@ class Badger(Animal):
                 friends[pos + 1].subHp(amt, friends, enemies)
             if len(enemies) > 0:
                 enemies[0].subHp(amt, enemies, friends)
+        super().onFaint(friends, enemies)
 
 
 class Bat(Animal):
@@ -349,6 +350,7 @@ class Cricket(Animal):
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
+        super().onFaint(friends, enemies)
 
 
 class CricketSpawn(Animal):
@@ -415,6 +417,7 @@ class Deer(Animal):
     def onFaint(self, friends: list, enemies: list):
         pos = self.getPosition(friends)
         friends[pos] = Bus(5 * self.getLevel(), 5 * self.getLevel())
+        super().onFaint(friends, enemies)
 
 
 class Bus(Animal):
@@ -667,6 +670,7 @@ class Flamingo(Animal):
             if pos + i < len(friends):
                 friends[pos + i].setBaseHp(friends[pos + i].getBaseHp() + amt)
                 friends[pos + i].setBaseDmg(friends[pos + i].getBaseDmg() + amt)
+        super().onFaint(friends, enemies)
 
 
 class Fly(Animal):
@@ -766,6 +770,7 @@ class Hedgehog(Animal):
             i.subHp(amt, friends, enemies)
         for i in enemies:
             i.subHp(amt, enemies, friends)
+        super().onFaint(friends, enemies)
 
 
 class Hippo(Animal):
@@ -882,6 +887,7 @@ class Mammoth(Animal):
         for i in others:
             friends[i].setBaseHp(friends[i].getBaseHp() + 2 * self.getLevel())
             friends[i].setBaseDmg(friends[i].getBaseDmg() + 2 * self.getLevel())
+        super().onFaint(friends, enemies)
 
 
 class Mosquito(Animal):
@@ -1124,6 +1130,7 @@ class Rat(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         if len(enemies) < 5:
             enemies.append(DirtyRat(0, 0))
+        super().onFaint(friends, enemies)
 
 
 class DirtyRat(Animal):
@@ -1211,6 +1218,7 @@ class Rooster(Animal):
             friends.insert(pos, Chick(0, attack))
             for i in friends:
                 i.onFriendSummoned(friends, friends[pos])
+        super().onFaint(friends, enemies)
 
 
 class Chick(Animal):
@@ -1335,6 +1343,7 @@ class Sheep(Animal):
             friends.insert(pos, Ram(2 * self.getLevel(), 2 * self.getLevel()))
             for i in friends:
                 i.onFriendSummoned(friends, friends[pos])
+        super().onFaint(friends, enemies)
 
 
 class Ram(Animal):
@@ -1510,6 +1519,7 @@ class Spider(Animal):
 
         for i in others:
             friends[i].onFriendSummoned(friends, friends[pos])
+        super().onFaint(friends, enemies)
 
 
 class Squirrel(Animal):
@@ -1633,6 +1643,7 @@ class Turtle(Animal):
         for i in range(1, self.getLevel() + 1):
             if i < len(friends):
                 friends[i] += Melon()
+        super().onFaint(friends, enemies)
 
 
 class Whale(Animal):
@@ -1669,6 +1680,7 @@ class Whale(Animal):
         friends[pos] = self.jonah
         while friends[pos].getLevel() < self.getLevel():
             friends[pos] += friends[pos].__class__()
+        super().onFaint(friends, enemies)
 
 
 class Worm(Animal):
