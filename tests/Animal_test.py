@@ -5,28 +5,65 @@ from src.Food.Foods import *
 
 class AnimalTests(unittest.TestCase):
     def test_create(self):
-        pass
+        an = Ant()
+        self.assertEqual(an.__str__(), Ant().__str__())
 
     def test_set_base_hp(self):
-        pass
+        an = Ant()
+        an.setBaseHp(10)
+
+        self.assertEqual(an.getBaseHp(), 10)
 
     def test_set_temp_hp(self):
-        pass
+        an = Ant()
+        an.setTempHp(10)
+
+        self.assertEqual(an.getTempHp(), 10)
 
     def test_set_base_dmg(self):
-        pass
+        an = Ant()
+        an.setBaseDmg(10)
+
+        self.assertEqual(an.getBaseDmg(), 10)
 
     def test_set_temp_dmg(self):
-        pass
+        an = Ant()
+        an.setTempDmg(10)
+
+        self.assertEqual(an.getTempDmg(), 10)
 
     def test_get_level(self):
-        pass
+        an = Ant()
+
+        self.assertEqual(an.getLevel(), 1)
+
+        food = Chocolate()
+
+        an += food
+        an += food
+        self.assertEqual(an.getLevel(), 2)
+
+        an += food
+        an += food
+        an += food
+        self.assertEqual(an.getLevel(), 3)
 
     def test_get_exp(self):
-        pass
+        an = Ant()
+
+        self.assertEqual(an.getExp(), 1)
+
+        food = Chocolate()
+
+        an += food
+        self.assertEqual(an.getExp(), 2)
+
+        an += food
+        self.assertEqual(an.getExp(), 3)
 
     def test_get_cost(self):
-        pass
+        an = Ant()
+        self.assertEqual(an.getCost(), 3)
 
     def test_get_effect(self):
         an = Scorpion()
