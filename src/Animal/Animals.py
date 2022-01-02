@@ -432,7 +432,7 @@ class Bus(Animal):
         super().__init__(
             default_health + health,
             default_dmg + dmg,
-            effect='splash',
+            effect="splash",
             ability=ability,
         )
         self.tier = 4
@@ -736,7 +736,7 @@ class Gorilla(Animal):
         self.tier = 6
 
     def onHurt(self, friends: list, enemies: list):
-        self.effect = 'coconut'
+        self.effect = "coconut"
 
 
 class Hedgehog(Animal):
@@ -1235,14 +1235,12 @@ class Scorpion(Animal):
     No Abilities
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 1
 
-        super().__init__(
-            default_health + health, default_dmg + dmg, effect='poison'
-        )
+        super().__init__(default_health + health, default_dmg + dmg, effect="poison")
         self.tier = 5
 
 

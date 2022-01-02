@@ -1,5 +1,4 @@
 from src.Team import Team
-from src.Shop import Shop
 
 
 class Game:

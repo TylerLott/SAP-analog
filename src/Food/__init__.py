@@ -55,7 +55,7 @@ class Food(ABC):
         out_str += "|" + f'{"Tmp Damage: "+ str(self.temp_buff[1]):^30}' + "|\n"
         out_str += "|" + f'{"Perm Health: " + str(self.perm_buff[0]):^30}' + "|\n"
         out_str += "|" + f'{"Perm Damage: "+ str(self.perm_buff[1]):^30}' + "|\n"
-        out_str += "|" + f'{"Effect: "+ self.getEffect().__name__:^30}' + "|\n"
+        out_str += "|" + f'{"Effect: "+ str(self.effect):^30}' + "|\n"
         out_str += "|" + f'{"Cost: "+ str(self.cost):^30}' + "|\n"
         out_str += "|==============================|\n"
 

@@ -1,3 +1,4 @@
+from math import perm
 from src.Food import Food
 
 
@@ -11,116 +12,87 @@ class NoneFood(Food):
 
 class Apple(Food):
     def __init__(self):
-        super().__init__()
-        self.perm_hp = 1
-        self.perm_dmg = 1
+        super().__init__(perm_hp=1, perm_dmg=1)
 
 
 class Honey(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "honey"
+        super().__init__(effect="honey")
 
 
 class Cupcake(Food):
     def __init__(self):
-        super().__init__()
-        self.temp_hp = 3
-        self.temp_dmg = 3
+        super().__init__(temp_hp=3, temp_dmg=3)
 
 
 class MeatBone(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "meat"
+        super().__init__(effect="meat")
 
 
 class Pill(Food):
     def __init__(self):
-        super().__init__(cost=1)
-        self.effect = "pill"
+        super().__init__(cost=1, effect="pill")
 
 
 class Garlic(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "garlic"
+        super().__init__(effect="garlic")
 
 
 class Salad(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "random"
+        super().__init__(effect="random", perm_hp=1, perm_dmg=1)
         self.num_animals = 2
-        self.perm_hp = 1
-        self.perm_dmg = 1
 
 
 class CannedFood(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "buffShop"
-        self.perm_hp = 1
-        self.perm_dmg = 2
+        super().__init__(effect="buffShop", perm_hp=1, perm_dmg=2)
 
 
 class Pear(Food):
     def __init__(self):
-        super().__init__()
-        self.perm_hp = 2
-        self.perm_dmg = 2
+        super().__init__(perm_hp=2, perm_dmg=2)
 
 
 class Chili(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "splash"
+        super().__init__(effect="splash")
 
 
 class Chocolate(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "exp"
+        super().__init__(effect="exp")
 
 
 class Sushi(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "random"
+        super().__init__(effect="random", perm_hp=1, perm_dmg=1)
         self.num_animals = 3
-        self.perm_hp = 1
-        self.perm_dmg = 1
 
 
 class Melon(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "melon"
+        super().__init__(effect="melon")
 
 
 class Mushroom(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "extraLife"
+        super().__init__(effect="extraLife")
 
 
 class Pizza(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "random"
+        super().__init__(effect="random", perm_hp=2, perm_dmg=2)
         self.num_animals = 2
-        self.perm_hp = 2
-        self.perm_dmg = 2
 
 
 class Steak(Food):
     def __init__(self):
-        super().__init__()
-        self.effect = "steak"
+        super().__init__(effect="steak")
 
 
 class Milk(Food):
     def __init__(self, level: int):
-        self.hp = 2 * level
-        self.dmg = 1 * level
-        super().__init__()
+        super().__init__(perm_hp=2 * level, perm_dmg=1 * level)

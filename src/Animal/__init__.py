@@ -87,10 +87,6 @@ class Animal(ABC):
         """public get animal cost method"""
         return self.cost
 
-    def getState(self) -> list:
-        """public get animal state method"""
-        pass
-
     def getPosition(self, friends: list) -> int:
         """public method to get the animals position in a list"""
         for i in range(len(friends) - 1):
@@ -100,6 +96,10 @@ class Animal(ABC):
 
     def getTier(self) -> int:
         return self.tier
+
+    def getState(self) -> list:
+        """public get animal state method"""
+        pass
 
     #### Setters ####
 
@@ -303,8 +303,8 @@ class Animal(ABC):
                 else other.getLevel()
             )
             self.__setExp(low_exp + high_exp)
-            self.__setHp(high_hp + low_exp)
-            self.__setDmg(high_dmg + low_exp)
+            self.setHp(high_hp + low_exp)
+            self.setDmg(high_dmg + low_exp)
 
         # add food to animal
         if issubclass(other.__class__, Food):
@@ -318,7 +318,7 @@ class Animal(ABC):
 
             # TODO implement chocolate
             elif effect == "exp":
-                pass
+                self.__setExp(self.getExp() + 1)
 
             elif effect != None:
                 self.effect = effect
