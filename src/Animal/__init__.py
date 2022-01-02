@@ -210,8 +210,19 @@ class Animal(ABC):
     # These should recurse down until there is nothing left
 
     def onFaint(self, friends: list, enemies: list):
-        # TODO use honey if have
-        pass
+        if self.effect == "honey":
+            pos = self.getPosition(friends)
+
+            others = list(range(len(friends) - 1))
+            if len(others) <= 1:
+                others = []
+            else:
+                others.remove(pos)
+
+            friends[pos] = Bee()
+
+            for i in others:
+                friends[i].onFriendSummoned(friends, friends[pos])
 
     def onSell(self, friends: list, team, shop):
         pass
@@ -396,3 +407,21 @@ class Animal(ABC):
     def __bool__(self):
         """override boolean value of animal"""
         return True
+
+
+class Bee(Animal):
+    """
+    Bee Class
+
+    Spawn from Honey
+    Had to put here so no circular imports happened
+    """
+
+    def __init__(self, health: int = 0, dmg: int = 0):
+
+        default_health = 1
+        default_dmg = 1
+        ability = "None"
+
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
+        self.tier = 1

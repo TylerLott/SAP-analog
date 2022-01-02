@@ -44,6 +44,7 @@ class Ant(Animal):
         friend = choice(possible)
         friends[friend].setBaseHp(friends[friend].getBaseHp() + 1 * self.getLevel())
         friends[friend].setBaseDmg(friends[friend].getBaseDmg() + 2 * self.getLevel())
+        super().onFaint(friends, enemies)
 
 
 class Badger(Animal):

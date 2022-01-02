@@ -1,6 +1,7 @@
 import unittest
 from src.Animal.Animals import Ant, Scorpion
 from src.Food.Foods import *
+from src.Team import Team
 
 
 class AnimalTests(unittest.TestCase):
@@ -90,7 +91,12 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(an.__str__(), an2.__str__())
 
     def test_honey(self):
-        pass
+        t = Team()
+        t.forceAddAnimal(0, Ant())
+        food = Honey()
+        t.friends[0] += food
+
+        t.friends[0].onFaint(t.friends, t.friends)
 
     def test_cupcake(self):
         an = Ant()
