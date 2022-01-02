@@ -31,7 +31,15 @@ class TeamTests(unittest.TestCase):
         self.assertEqual(t2.__str__(), t.__str__())
 
     def test_buy(self):
-        pass
+        t = Team()
+        t.buyFriend(0, 0)
+
+        self.assertTrue(t.friends[0])
 
     def test_sell(self):
-        pass
+        t = Team()
+
+        t.buyFriend(0, 0)
+        t.sellFriend(0)
+
+        self.assertFalse(t.friends[0])
