@@ -1,4 +1,4 @@
-from random import choice
+from random import choice, choices
 from typing import List
 from math import floor
 
@@ -308,7 +308,7 @@ class Crab(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 2
 
-    def onBuy(self, friends: List[Animal]) -> None:
+    def onBuy(self, friends: List[Animal], team) -> None:
         high_health = 0
         for i in friends:
             high_health = i.getHp() if i.getHp() > high_health else high_health
@@ -952,7 +952,7 @@ class Otter(Animal):
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 1
 
-    def onBuy(self, friends: List[Animal]):
+    def onBuy(self, friends: List[Animal], team):
         pos = self.getPosition(friends)
 
         possible = list(range(len(friends) - 1))
@@ -1752,7 +1752,7 @@ def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
 def getSubset(possible: List[int], k: int) -> List[int]:
     if len(possible) <= k:
         return possible
-    return choice(possible, k=k)
+    return choices(possible, k=k)
 
 
 def getPosAndOthers(friend: Animal, friends: List[Animal]) -> list:

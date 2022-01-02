@@ -123,7 +123,7 @@ class Animal(ABC):
         self.temp_dmg = amt
         self.__recalcDmg()
 
-    def subHp(self, amt: int, friends: list, enemies: list) -> None:
+    def subHp(self, amt: int, friends: list, enemies: list) -> bool:
         """
         public subtract from hp method
 
@@ -153,6 +153,7 @@ class Animal(ABC):
         self.__recalcHp()
         if amt > 0:
             self.onHurt(friends, enemies)
+        return True if self.getHp() <= 0 else False
 
     def setHp(self, amt: int) -> None:
         """public set hp method"""
@@ -200,7 +201,9 @@ class Animal(ABC):
         elif self.effect == "meat":
             dmg += 5
 
-        enemies[0].subHp(dmg, friends, enemies)
+        knockout = enemies[0].subHp(dmg, friends, enemies)
+        if knockout:
+            self.onKnockOut(friends, enemies)
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
@@ -261,6 +264,9 @@ class Animal(ABC):
     def onFriendBought(self, friends: list, friend):
         pass
 
+    def onKnockOut(self, friends: list, enemies: list):
+        pass
+
     ### Overrides ###
 
     def __str__(self):
@@ -280,6 +286,61 @@ class Animal(ABC):
     def __iadd__(self, other):
         """
         override +=
+
+        can be used to add two of the same animals
+
+        can be used to apply food to an animal
+
+        """
+        # add two animals
+        if other.__class__ == self.__class__:
+            high_hp = self.base_hp if self.base_hp > other.base_hp else other.base_hp
+            high_dmg = (
+                self.base_dmg if self.base_dmg > other.base_dmg else other.base_dmg
+            )
+            low_exp = (
+                self.getLevel()
+                if self.getLevel() < other.getLevel()
+                else other.getLevel()
+            )
+            high_exp = (
+                self.getLevel()
+                if self.getLevel() > other.getLevel()
+                else other.getLevel()
+            )
+            self.__setExp(low_exp + high_exp)
+            self.setHp(high_hp + low_exp)
+            self.setDmg(high_dmg + low_exp)
+
+        # add food to animal
+        if issubclass(other.__class__, Food):
+            temp_buff = other.getTempBuff()
+            perm_buff = other.getPermBuff()
+            effect = other.getEffect()
+
+            # TODO implement pill
+            if effect == "pill":
+                pass
+
+            # TODO implement chocolate
+            elif effect == "exp":
+                self.__setExp(self.getExp() + 1)
+
+            elif effect != None:
+                self.effect = effect
+
+            self.setTempHp(self.getTempHp() + temp_buff[0])
+            self.setTempDmg(self.getTempDmg() + temp_buff[1])
+            self.setBaseHp(self.getBaseHp() + perm_buff[0])
+            self.setBaseDmg(self.getBaseDmg() + perm_buff[1])
+
+            # TODO call self onEat
+
+        return self
+
+    def __add__(self, other):
+        """
+        override +
 
         can be used to add two of the same animals
 

@@ -87,7 +87,7 @@ class Team:
             if not self.friends[friend_pos]:
                 self.money -= animal.getCost()
                 self.friends[friend_pos] = animal
-                # friend.onBuy(self.friends, self)
+                self.friends[friend_pos].onBuy(self.friends, self)
                 # onFriendSummoned
             elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
@@ -97,7 +97,8 @@ class Team:
                     self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -> None:
-        # TODO check if food is applied to shop if individual
+        # TODO implement random effect
+        # TODO implement buffShop effect
         food = self.shop.checkFood(shop_pos)
         if self.money >= food.getCost():
             food = self.shop.buyFood(shop_pos)
@@ -105,7 +106,7 @@ class Team:
             # iadd override in animal makes this work
             self.friends[position] += food
             self.friends[position].onEat(self.friends)
-            # TODO call onfriendeat for all other animals
+            # TODO call onFriendEat for all other animals
 
     def loseLife(self) -> None:
         if self.round <= 3:

@@ -45,6 +45,5 @@ class FightTests(unittest.TestCase):
                 team1Wins += 1
             else:
                 team2Wins += 1
-        print("Team 1 Wins: ", team1Wins)
-        print("Team 2 Wins: ", team2Wins)
-        print("Error Games: ", err)
+
+        self.assertAlmostEqual((team1Wins / 1000), 0.5, 1)  # even within 10%
