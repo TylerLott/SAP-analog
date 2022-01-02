@@ -135,6 +135,14 @@ class Animal(ABC):
         """
         if self.getHp() < 0:
             return
+
+        if self.effect.__class__ == MelonEffect:
+            amt = amt - 20 if amt - 20 > 0 else 0
+            self.setEffect(NoneEffect())
+        elif self.effect.__class__ == CoconutEffect:
+            amt = 0
+            self.setEffect(NoneEffect())
+
         if self.temp_hp > 0:
             self.temp_hp -= amt
             if self.temp_hp < 0:
@@ -143,7 +151,8 @@ class Animal(ABC):
         if amt > 0:
             self.base_hp -= amt
         self.__recalcHp()
-        self.onHurt(friends, enemies)
+        if amt > 0:
+            self.onHurt(friends, enemies)
 
     def setEffect(self, effect: Effect) -> None:
         """public set effect method"""
@@ -189,21 +198,6 @@ class Animal(ABC):
 
     def attack(self, friends, enemies):
         enemies[0].subHp(self.getDmg(), friends, enemies)
-
-    def onHit(self, dmgAmt):
-        dmg_taken = (
-            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier > 1 else 1
-        )
-        if type(self.effect) == MelonEffect:
-            dmg_taken = dmg_taken - 20 if dmg_taken - 20 > 0 else 0
-            self.setEffect(NoneEffect())
-        if type(self.effect) == CoconutEffect:
-            dmg_taken = 0
-            self.setEffect(NoneEffect())
-
-        self.hp -= dmg_taken
-        if self.hp <= 0:
-            self.alive = False
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight

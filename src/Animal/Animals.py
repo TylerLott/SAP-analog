@@ -993,7 +993,7 @@ class Ox(Animal):
 
 
 class Parrot(Animal):
-    # TODO: implement this
+    # TODO: implement this maybe just replace this animal with the animal type in front and carry over the stats
     def __init__(self, health, dmg):
 
         default_health = 3
