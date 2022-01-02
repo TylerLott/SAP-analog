@@ -1,6 +1,4 @@
 from abc import ABC
-from src.Effect import Effect
-from src.Effect.Effects import NoneEffect
 
 
 class Food(ABC):
@@ -16,7 +14,7 @@ class Food(ABC):
         temp_dmg: int = 0,
         perm_hp: int = 0,
         perm_dmg: int = 0,
-        effect: Effect = NoneEffect,
+        effect: str = None,
         cost: int = 3,
     ):
         """Constructor method"""
@@ -31,7 +29,7 @@ class Food(ABC):
     def getCost(self) -> int:
         return self.cost
 
-    def getEffect(self) -> Effect:
+    def getEffect(self) -> str:
         return self.effect
 
     def getTempBuff(self) -> list:

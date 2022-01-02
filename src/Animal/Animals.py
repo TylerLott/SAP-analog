@@ -3,7 +3,6 @@ from typing import List
 from math import floor
 
 from src.Animal import Animal
-from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
 from src.Food.Foods import Melon, Milk
 
 
@@ -433,7 +432,7 @@ class Bus(Animal):
         super().__init__(
             default_health + health,
             default_dmg + dmg,
-            effect=SplashEffect(),
+            effect='splash',
             ability=ability,
         )
         self.tier = 4
@@ -737,7 +736,7 @@ class Gorilla(Animal):
         self.tier = 6
 
     def onHurt(self, friends: list, enemies: list):
-        self.effect = CoconutEffect()
+        self.effect = 'coconut'
 
 
 class Hedgehog(Animal):
@@ -1242,7 +1241,7 @@ class Scorpion(Animal):
         default_dmg = 1
 
         super().__init__(
-            default_health + health, default_dmg + dmg, effect=PoisonEffect()
+            default_health + health, default_dmg + dmg, effect='poison'
         )
         self.tier = 5
 

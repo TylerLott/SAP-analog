@@ -1,7 +1,5 @@
 from abc import ABC
 
-from src.Effect import Effect
-from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
 from src.Food import Food
 
 
@@ -16,7 +14,7 @@ class Animal(ABC):
         self,
         health: int,
         dmg: int,
-        effect: Effect = NoneEffect(),
+        effect: str = None,
         ability: str = "None",
     ) -> None:
         # Default
@@ -81,7 +79,7 @@ class Animal(ABC):
         """
         return self.ability
 
-    def getEffect(self) -> Effect:
+    def getEffect(self) -> str:
         """public get animal effect method"""
         return self.effect
 
@@ -136,12 +134,12 @@ class Animal(ABC):
         if self.getHp() < 0:
             return
 
-        if self.effect.__class__ == MelonEffect:
+        if self.effect == "melon":
             amt = amt - 20 if amt - 20 > 0 else 0
-            self.setEffect(NoneEffect())
-        elif self.effect.__class__ == CoconutEffect:
+            self.effect = None
+        elif self.effect == "coconut":
             amt = 0
-            self.setEffect(NoneEffect())
+            self.effect = None
 
         if self.temp_hp > 0:
             self.temp_hp -= amt
@@ -153,10 +151,6 @@ class Animal(ABC):
         self.__recalcHp()
         if amt > 0:
             self.onHurt(friends, enemies)
-
-    def setEffect(self, effect: Effect) -> None:
-        """public set effect method"""
-        self.effect = effect
 
     def setHp(self, amt: int) -> None:
         """public set hp method"""
@@ -267,9 +261,7 @@ class Animal(ABC):
         out_str += "|" + f'{"Damage: "+ str(self.dmg):^30}' + "|\n"
         out_str += "|" + f'{"Exp Level: "+ str(self.getLevel()):^30}' + "|\n"
         out_str += "|" + f'{"Ability: " + self.getAbility():^30}' + "|\n"
-        out_str += (
-            "|" + f'{"Effect: "+ self.getEffect().__class__.__name__:^30}' + "|\n"
-        )
+        out_str += "|" + f'{"Effect: "+ self.effect:^30}' + "|\n"
         out_str += "|" + f'{"Cost: "+ str(self.cost):^30}' + "|\n"
         out_str += "|==============================|\n"
 
@@ -310,7 +302,7 @@ class Animal(ABC):
             perm_buff = other.getPermBuff()
             effect = other.getEffect()
 
-            if effect.__class__ != NoneEffect:
+            if effect != None:
                 self.effect = effect
 
             self.setTempHp(self.getTempHp() + temp_buff[0])
