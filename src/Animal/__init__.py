@@ -191,13 +191,21 @@ class Animal(ABC):
     # Normal On Events
 
     def attack(self, friends, enemies):
-        enemies[0].subHp(self.getDmg(), friends, enemies)
+        dmg = self.getDmg()
+        if self.effect == "steak":
+            dmg += 20
+            self.effect = None
+        elif self.effect == "meat":
+            dmg += 5
+
+        enemies[0].subHp(dmg, friends, enemies)
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
     # These should recurse down until there is nothing left
 
     def onFaint(self, friends: list, enemies: list):
+        # TODO use honey if have
         pass
 
     def onSell(self, friends: list, team, shop):
@@ -302,13 +310,23 @@ class Animal(ABC):
             perm_buff = other.getPermBuff()
             effect = other.getEffect()
 
-            if effect != None:
+            # TODO implement pill
+            if effect == "pill":
+                pass
+
+            # TODO implement chocolate
+            elif effect == "exp":
+                pass
+
+            elif effect != None:
                 self.effect = effect
 
             self.setTempHp(self.getTempHp() + temp_buff[0])
             self.setTempDmg(self.getTempDmg() + temp_buff[1])
             self.setBaseHp(self.getBaseHp() + perm_buff[0])
             self.setBaseDmg(self.getBaseDmg() + perm_buff[1])
+
+            # TODO call self onEat
 
         return self
 

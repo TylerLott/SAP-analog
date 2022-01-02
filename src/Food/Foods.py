@@ -38,7 +38,7 @@ class MeatBone(Food):
 class Pill(Food):
     def __init__(self):
         super().__init__(cost=1)
-        self.effect = "kill"
+        self.effect = "pill"
 
 
 class Garlic(Food):
@@ -50,6 +50,10 @@ class Garlic(Food):
 class Salad(Food):
     def __init__(self):
         super().__init__()
+        self.effect = "random"
+        self.num_animals = 2
+        self.perm_hp = 1
+        self.perm_dmg = 1
 
 
 class CannedFood(Food):
