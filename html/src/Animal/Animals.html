@@ -29,11 +29,9 @@
 <pre><code class="python">from random import choice
 from typing import List
 from math import floor
-from copy import deepcopy
 
 from src.Animal import Animal
-from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
-from src.Food.Foods import Milk
+from src.Food.Foods import Melon, Milk
 
 
 class NoneAnimal(Animal):
@@ -462,7 +460,7 @@ class Bus(Animal):
         super().__init__(
             default_health + health,
             default_dmg + dmg,
-            effect=SplashEffect(),
+            effect=&#39;splash&#39;,
             ability=ability,
         )
         self.tier = 4
@@ -766,7 +764,7 @@ class Gorilla(Animal):
         self.tier = 6
 
     def onHurt(self, friends: list, enemies: list):
-        self.effect = CoconutEffect()
+        self.effect = &#39;coconut&#39;
 
 
 class Hedgehog(Animal):
@@ -1018,11 +1016,11 @@ class Ox(Animal):
 
     def onFriendAheadFaint(self, friends: List[Animal], enemies: List[Animal]):
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
-        # TODO: Apply melon armor
+        self += Melon()
 
 
 class Parrot(Animal):
-    # TODO: implement this
+    # TODO: implement this maybe just replace this animal with the animal type in front and carry over the stats
     def __init__(self, health, dmg):
 
         default_health = 3
@@ -1271,7 +1269,7 @@ class Scorpion(Animal):
         default_dmg = 1
 
         super().__init__(
-            default_health + health, default_dmg + dmg, effect=PoisonEffect()
+            default_health + health, default_dmg + dmg, effect=&#39;poison&#39;
         )
         self.tier = 5
 
@@ -1663,8 +1661,7 @@ class Turtle(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
             if i &lt; len(friends):
-                # friends[i] += MelonEffect()
-                pass
+                friends[i] += Melon()
 
 
 class Whale(Animal):
@@ -1692,15 +1689,15 @@ class Whale(Animal):
         pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = deepcopy(friends[pos - 1])
+        self.jonah = friends[pos - 1].__class__()
         friends[pos - 1].onFaint(friends, enemies)
         friends[pos - 1].setAlive(False)
-        # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
         friends[pos] = self.jonah
-        # TODO make this set level and stats to default
+        while friends[pos].getLevel() &lt; self.getLevel():
+            friends[pos] += friends[pos].__class__()
 
 
 class Worm(Animal):
@@ -1975,7 +1972,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2080,7 +2076,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2130,7 +2125,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2229,7 +2223,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2324,7 +2317,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2421,7 +2413,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2506,7 +2497,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2542,7 +2532,7 @@ if __name__ == &#34;__main__&#34;:
         super().__init__(
             default_health + health,
             default_dmg + dmg,
-            effect=SplashEffect(),
+            effect=&#39;splash&#39;,
             ability=ability,
         )
         self.tier = 4</code></pre>
@@ -2569,7 +2559,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2666,7 +2655,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2732,7 +2720,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2789,7 +2776,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2874,7 +2860,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -2963,7 +2948,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3068,7 +3052,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3126,7 +3109,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3209,7 +3191,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3294,7 +3275,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3353,7 +3333,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3446,7 +3425,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3531,7 +3509,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3624,7 +3601,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3725,7 +3701,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3810,7 +3785,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -3899,7 +3873,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4000,7 +3973,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4093,7 +4065,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4178,7 +4149,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4265,7 +4235,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4302,7 +4271,7 @@ if __name__ == &#34;__main__&#34;:
         self.tier = 6
 
     def onHurt(self, friends: list, enemies: list):
-        self.effect = CoconutEffect()</code></pre>
+        self.effect = &#39;coconut&#39;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -4321,7 +4290,7 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">def onHurt(self, friends: list, enemies: list):
-    self.effect = CoconutEffect()</code></pre>
+    self.effect = &#39;coconut&#39;</code></pre>
 </details>
 </dd>
 </dl>
@@ -4342,7 +4311,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4433,7 +4401,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4499,7 +4466,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4569,7 +4535,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4654,7 +4619,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4741,7 +4705,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4832,7 +4795,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -4917,7 +4879,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5002,7 +4963,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5051,7 +5011,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5153,7 +5112,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5197,7 +5155,7 @@ if __name__ == &#34;__main__&#34;:
 
     def onFriendAheadFaint(self, friends: List[Animal], enemies: List[Animal]):
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
-        # TODO: Apply melon armor</code></pre>
+        self += Melon()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -5217,7 +5175,7 @@ if __name__ == &#34;__main__&#34;:
 </summary>
 <pre><code class="python">def onFriendAheadFaint(self, friends: List[Animal], enemies: List[Animal]):
     self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
-    # TODO: Apply melon armor</code></pre>
+    self += Melon()</code></pre>
 </details>
 </dd>
 </dl>
@@ -5238,7 +5196,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5258,7 +5215,7 @@ if __name__ == &#34;__main__&#34;:
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">class Parrot(Animal):
-    # TODO: implement this
+    # TODO: implement this maybe just replace this animal with the animal type in front and carry over the stats
     def __init__(self, health, dmg):
 
         default_health = 3
@@ -5289,7 +5246,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5372,7 +5328,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5461,7 +5416,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5544,7 +5498,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5627,7 +5580,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5685,7 +5637,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5769,7 +5720,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5835,7 +5785,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5962,7 +5911,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -5995,7 +5943,7 @@ if __name__ == &#34;__main__&#34;:
         default_dmg = 1
 
         super().__init__(
-            default_health + health, default_dmg + dmg, effect=PoisonEffect()
+            default_health + health, default_dmg + dmg, effect=&#39;poison&#39;
         )
         self.tier = 5</code></pre>
 </details>
@@ -6021,7 +5969,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6120,7 +6067,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6205,7 +6151,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6310,7 +6255,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6407,7 +6351,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6498,7 +6441,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6556,7 +6498,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6647,7 +6588,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6734,7 +6674,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6825,7 +6764,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6912,7 +6850,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -6994,7 +6931,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -7060,7 +6996,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -7145,7 +7080,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -7190,8 +7124,7 @@ if __name__ == &#34;__main__&#34;:
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
             if i &lt; len(friends):
-                # friends[i] += MelonEffect()
-                pass</code></pre>
+                friends[i] += Melon()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -7212,8 +7145,7 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
     for i in range(1, self.getLevel() + 1):
         if i &lt; len(friends):
-            # friends[i] += MelonEffect()
-            pass</code></pre>
+            friends[i] += Melon()</code></pre>
 </details>
 </dd>
 </dl>
@@ -7234,7 +7166,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -7281,15 +7212,15 @@ if __name__ == &#34;__main__&#34;:
         pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = deepcopy(friends[pos - 1])
+        self.jonah = friends[pos - 1].__class__()
         friends[pos - 1].onFaint(friends, enemies)
         friends[pos - 1].setAlive(False)
-        # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
         friends[pos] = self.jonah
-        # TODO make this set level and stats to default</code></pre>
+        while friends[pos].getLevel() &lt; self.getLevel():
+            friends[pos] += friends[pos].__class__()</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -7310,7 +7241,8 @@ if __name__ == &#34;__main__&#34;:
 <pre><code class="python">def onFaint(self, friends: List[Animal], enemies: List[Animal]):
     pos = self.getPosition(friends)
     friends[pos] = self.jonah
-    # TODO make this set level and stats to default</code></pre>
+    while friends[pos].getLevel() &lt; self.getLevel():
+        friends[pos] += friends[pos].__class__()</code></pre>
 </details>
 </dd>
 <dt id="src.Animal.Animals.Whale.onStartOfBattle"><code class="name flex">
@@ -7326,10 +7258,9 @@ if __name__ == &#34;__main__&#34;:
     pos, others = getPosAndOthers(self, friends)
     if pos == 0:
         return
-    self.jonah = deepcopy(friends[pos - 1])
+    self.jonah = friends[pos - 1].__class__()
     friends[pos - 1].onFaint(friends, enemies)
-    friends[pos - 1].setAlive(False)
-    # TODO remove eaten friend</code></pre>
+    friends[pos - 1].setAlive(False)</code></pre>
 </details>
 </dd>
 </dl>
@@ -7350,7 +7281,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>
@@ -7435,7 +7365,6 @@ if __name__ == &#34;__main__&#34;:
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="index.html#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="index.html#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="index.html#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="index.html#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="index.html#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="index.html#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="index.html#src.Animal.Animal.setTempHp">setTempHp</a></code></li>

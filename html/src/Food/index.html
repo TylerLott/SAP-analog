@@ -27,8 +27,6 @@
 <span>Expand source code</span>
 </summary>
 <pre><code class="python">from abc import ABC
-from src.Effect import Effect
-from src.Effect.Effects import NoneEffect
 
 
 class Food(ABC):
@@ -44,7 +42,7 @@ class Food(ABC):
         temp_dmg: int = 0,
         perm_hp: int = 0,
         perm_dmg: int = 0,
-        effect: Effect = NoneEffect,
+        effect: str = None,
         cost: int = 3,
     ):
         &#34;&#34;&#34;Constructor method&#34;&#34;&#34;
@@ -59,7 +57,7 @@ class Food(ABC):
     def getCost(self) -&gt; int:
         return self.cost
 
-    def getEffect(self) -&gt; Effect:
+    def getEffect(self) -&gt; str:
         return self.effect
 
     def getTempBuff(self) -&gt; list:
@@ -117,7 +115,7 @@ class Food(ABC):
 <dl>
 <dt id="src.Food.Food"><code class="flex name class">
 <span>class <span class="ident">Food</span></span>
-<span>(</span><span>temp_hp: int = 0, temp_dmg: int = 0, perm_hp: int = 0, perm_dmg: int = 0, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = src.Effect.Effects.NoneEffect, cost: int = 3)</span>
+<span>(</span><span>temp_hp: int = 0, temp_dmg: int = 0, perm_hp: int = 0, perm_dmg: int = 0, effect: str = None, cost: int = 3)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Food Base Class</p>
@@ -139,7 +137,7 @@ class Food(ABC):
         temp_dmg: int = 0,
         perm_hp: int = 0,
         perm_dmg: int = 0,
-        effect: Effect = NoneEffect,
+        effect: str = None,
         cost: int = 3,
     ):
         &#34;&#34;&#34;Constructor method&#34;&#34;&#34;
@@ -154,7 +152,7 @@ class Food(ABC):
     def getCost(self) -&gt; int:
         return self.cost
 
-    def getEffect(self) -&gt; Effect:
+    def getEffect(self) -&gt; str:
         return self.effect
 
     def getTempBuff(self) -&gt; list:
@@ -230,7 +228,7 @@ class Food(ABC):
 </details>
 </dd>
 <dt id="src.Food.Food.getEffect"><code class="name flex">
-<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a></span>
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -238,7 +236,7 @@ class Food(ABC):
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def getEffect(self) -&gt; Effect:
+<pre><code class="python">def getEffect(self) -&gt; str:
     return self.effect</code></pre>
 </details>
 </dd>

@@ -40,31 +40,39 @@ class NoneFood(Food):
 class Apple(Food):
     def __init__(self):
         super().__init__()
+        self.perm_hp = 1
+        self.perm_dmg = 1
 
 
 class Honey(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;honey&#34;
 
 
 class Cupcake(Food):
     def __init__(self):
         super().__init__()
+        self.temp_hp = 3
+        self.temp_dmg = 3
 
 
 class MeatBone(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;meat&#34;
 
 
 class Pill(Food):
     def __init__(self):
         super().__init__(cost=1)
+        self.effect = &#34;kill&#34;
 
 
 class Garlic(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;garlic&#34;
 
 
 class Salad(Food):
@@ -75,46 +83,64 @@ class Salad(Food):
 class CannedFood(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;buffShop&#34;
+        self.perm_hp = 1
+        self.perm_dmg = 2
 
 
 class Pear(Food):
     def __init__(self):
         super().__init__()
+        self.perm_hp = 2
+        self.perm_dmg = 2
 
 
 class Chili(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;splash&#34;
 
 
 class Chocolate(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;exp&#34;
 
 
 class Sushi(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;random&#34;
+        self.num_animals = 3
+        self.perm_hp = 1
+        self.perm_dmg = 1
 
 
 class Melon(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;melon&#34;
 
 
 class Mushroom(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;extraLife&#34;
 
 
 class Pizza(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;random&#34;
+        self.num_animals = 2
+        self.perm_hp = 2
+        self.perm_dmg = 2
 
 
 class Steak(Food):
     def __init__(self):
         super().__init__()
+        self.effect = &#34;steak&#34;
 
 
 class Milk(Food):
@@ -145,7 +171,9 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Apple(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.perm_hp = 1
+        self.perm_dmg = 1</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -165,7 +193,10 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class CannedFood(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;buffShop&#34;
+        self.perm_hp = 1
+        self.perm_dmg = 2</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -185,7 +216,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Chili(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;splash&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -205,7 +237,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Chocolate(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;exp&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -225,7 +258,9 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Cupcake(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.temp_hp = 3
+        self.temp_dmg = 3</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -245,7 +280,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Garlic(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;garlic&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -265,7 +301,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Honey(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;honey&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -285,7 +322,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class MeatBone(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;meat&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -305,7 +343,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Melon(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;melon&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -348,7 +387,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Mushroom(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;extraLife&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -391,7 +431,9 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Pear(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.perm_hp = 2
+        self.perm_dmg = 2</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -411,7 +453,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Pill(Food):
     def __init__(self):
-        super().__init__(cost=1)</code></pre>
+        super().__init__(cost=1)
+        self.effect = &#34;kill&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -431,7 +474,11 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Pizza(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;random&#34;
+        self.num_animals = 2
+        self.perm_hp = 2
+        self.perm_dmg = 2</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -471,7 +518,8 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Steak(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;steak&#34;</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">
@@ -491,7 +539,11 @@ class Milk(Food):
 </summary>
 <pre><code class="python">class Sushi(Food):
     def __init__(self):
-        super().__init__()</code></pre>
+        super().__init__()
+        self.effect = &#34;random&#34;
+        self.num_animals = 3
+        self.perm_hp = 1
+        self.perm_dmg = 1</code></pre>
 </details>
 <h3>Ancestors</h3>
 <ul class="hlist">

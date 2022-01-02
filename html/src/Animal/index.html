@@ -28,8 +28,6 @@
 </summary>
 <pre><code class="python">from abc import ABC
 
-from src.Effect import Effect
-from src.Effect.Effects import CoconutEffect, MelonEffect, NoneEffect
 from src.Food import Food
 
 
@@ -44,7 +42,7 @@ class Animal(ABC):
         self,
         health: int,
         dmg: int,
-        effect: Effect = NoneEffect(),
+        effect: str = None,
         ability: str = &#34;None&#34;,
     ) -&gt; None:
         # Default
@@ -109,7 +107,7 @@ class Animal(ABC):
         &#34;&#34;&#34;
         return self.ability
 
-    def getEffect(self) -&gt; Effect:
+    def getEffect(self) -&gt; str:
         &#34;&#34;&#34;public get animal effect method&#34;&#34;&#34;
         return self.effect
 
@@ -163,6 +161,14 @@ class Animal(ABC):
         &#34;&#34;&#34;
         if self.getHp() &lt; 0:
             return
+
+        if self.effect == &#34;melon&#34;:
+            amt = amt - 20 if amt - 20 &gt; 0 else 0
+            self.effect = None
+        elif self.effect == &#34;coconut&#34;:
+            amt = 0
+            self.effect = None
+
         if self.temp_hp &gt; 0:
             self.temp_hp -= amt
             if self.temp_hp &lt; 0:
@@ -171,11 +177,8 @@ class Animal(ABC):
         if amt &gt; 0:
             self.base_hp -= amt
         self.__recalcHp()
-        self.onHurt(friends, enemies)
-
-    def setEffect(self, effect: Effect) -&gt; None:
-        &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
-        self.effect = effect
+        if amt &gt; 0:
+            self.onHurt(friends, enemies)
 
     def setHp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;public set hp method&#34;&#34;&#34;
@@ -217,21 +220,6 @@ class Animal(ABC):
 
     def attack(self, friends, enemies):
         enemies[0].subHp(self.getDmg(), friends, enemies)
-
-    def onHit(self, dmgAmt):
-        dmg_taken = (
-            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
-        )
-        if type(self.effect) == MelonEffect:
-            dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
-            self.setEffect(NoneEffect())
-        if type(self.effect) == CoconutEffect:
-            dmg_taken = 0
-            self.setEffect(NoneEffect())
-
-        self.hp -= dmg_taken
-        if self.hp &lt;= 0:
-            self.alive = False
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
@@ -301,9 +289,7 @@ class Animal(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
-        out_str += (
-            &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__class__.__name__:^30}&#39; + &#34;|\n&#34;
-        )
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.effect:^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
@@ -339,19 +325,20 @@ class Animal(ABC):
             self.__setDmg(high_dmg + low_exp)
 
         # add food to animal
-        if type(other) == Food:
+        if issubclass(other.__class__, Food):
             temp_buff = other.getTempBuff()
             perm_buff = other.getPermBuff()
             effect = other.getEffect()
 
-            if type(effect) != NoneEffect:
+            if effect != None:
                 self.effect = effect
 
-            self.addTempHp(temp_buff[0])
-            self.addTempDmg(temp_buff[1])
-            self.addBaseHp(perm_buff[0])
-            self.addBaseDmg(perm_buff[1])
-            self.onEat()
+            self.setTempHp(self.getTempHp() + temp_buff[0])
+            self.setTempDmg(self.getTempDmg() + temp_buff[1])
+            self.setBaseHp(self.getBaseHp() + perm_buff[0])
+            self.setBaseDmg(self.getBaseDmg() + perm_buff[1])
+
+        return self
 
     def __bool__(self):
         &#34;&#34;&#34;override boolean value of animal&#34;&#34;&#34;
@@ -376,7 +363,7 @@ class Animal(ABC):
 <dl>
 <dt id="src.Animal.Animal"><code class="flex name class">
 <span>class <span class="ident">Animal</span></span>
-<span>(</span><span>health: int, dmg: int, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a> = &lt;src.Effect.Effects.NoneEffect object&gt;, ability: str = 'None')</span>
+<span>(</span><span>health: int, dmg: int, effect: str = None, ability: str = 'None')</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Animal base class</p></div>
@@ -395,7 +382,7 @@ class Animal(ABC):
         self,
         health: int,
         dmg: int,
-        effect: Effect = NoneEffect(),
+        effect: str = None,
         ability: str = &#34;None&#34;,
     ) -&gt; None:
         # Default
@@ -460,7 +447,7 @@ class Animal(ABC):
         &#34;&#34;&#34;
         return self.ability
 
-    def getEffect(self) -&gt; Effect:
+    def getEffect(self) -&gt; str:
         &#34;&#34;&#34;public get animal effect method&#34;&#34;&#34;
         return self.effect
 
@@ -514,6 +501,14 @@ class Animal(ABC):
         &#34;&#34;&#34;
         if self.getHp() &lt; 0:
             return
+
+        if self.effect == &#34;melon&#34;:
+            amt = amt - 20 if amt - 20 &gt; 0 else 0
+            self.effect = None
+        elif self.effect == &#34;coconut&#34;:
+            amt = 0
+            self.effect = None
+
         if self.temp_hp &gt; 0:
             self.temp_hp -= amt
             if self.temp_hp &lt; 0:
@@ -522,11 +517,8 @@ class Animal(ABC):
         if amt &gt; 0:
             self.base_hp -= amt
         self.__recalcHp()
-        self.onHurt(friends, enemies)
-
-    def setEffect(self, effect: Effect) -&gt; None:
-        &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
-        self.effect = effect
+        if amt &gt; 0:
+            self.onHurt(friends, enemies)
 
     def setHp(self, amt: int) -&gt; None:
         &#34;&#34;&#34;public set hp method&#34;&#34;&#34;
@@ -568,21 +560,6 @@ class Animal(ABC):
 
     def attack(self, friends, enemies):
         enemies[0].subHp(self.getDmg(), friends, enemies)
-
-    def onHit(self, dmgAmt):
-        dmg_taken = (
-            dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
-        )
-        if type(self.effect) == MelonEffect:
-            dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
-            self.setEffect(NoneEffect())
-        if type(self.effect) == CoconutEffect:
-            dmg_taken = 0
-            self.setEffect(NoneEffect())
-
-        self.hp -= dmg_taken
-        if self.hp &lt;= 0:
-            self.alive = False
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight
@@ -652,9 +629,7 @@ class Animal(ABC):
         out_str += &#34;|&#34; + f&#39;{&#34;Damage: &#34;+ str(self.dmg):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Exp Level: &#34;+ str(self.getLevel()):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Ability: &#34; + self.getAbility():^30}&#39; + &#34;|\n&#34;
-        out_str += (
-            &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.getEffect().__class__.__name__:^30}&#39; + &#34;|\n&#34;
-        )
+        out_str += &#34;|&#34; + f&#39;{&#34;Effect: &#34;+ self.effect:^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|&#34; + f&#39;{&#34;Cost: &#34;+ str(self.cost):^30}&#39; + &#34;|\n&#34;
         out_str += &#34;|==============================|\n&#34;
 
@@ -690,19 +665,20 @@ class Animal(ABC):
             self.__setDmg(high_dmg + low_exp)
 
         # add food to animal
-        if type(other) == Food:
+        if issubclass(other.__class__, Food):
             temp_buff = other.getTempBuff()
             perm_buff = other.getPermBuff()
             effect = other.getEffect()
 
-            if type(effect) != NoneEffect:
+            if effect != None:
                 self.effect = effect
 
-            self.addTempHp(temp_buff[0])
-            self.addTempDmg(temp_buff[1])
-            self.addBaseHp(perm_buff[0])
-            self.addBaseDmg(perm_buff[1])
-            self.onEat()
+            self.setTempHp(self.getTempHp() + temp_buff[0])
+            self.setTempDmg(self.getTempDmg() + temp_buff[1])
+            self.setBaseHp(self.getBaseHp() + perm_buff[0])
+            self.setBaseDmg(self.getBaseDmg() + perm_buff[1])
+
+        return self
 
     def __bool__(self):
         &#34;&#34;&#34;override boolean value of animal&#34;&#34;&#34;
@@ -883,7 +859,7 @@ Ability should be string describing animal abilities, if any</p></div>
 </details>
 </dd>
 <dt id="src.Animal.Animal.getEffect"><code class="name flex">
-<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a></span>
+<span>def <span class="ident">getEffect</span></span>(<span>self) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>public get animal effect method</p></div>
@@ -891,7 +867,7 @@ Ability should be string describing animal abilities, if any</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def getEffect(self) -&gt; Effect:
+<pre><code class="python">def getEffect(self) -&gt; str:
     &#34;&#34;&#34;public get animal effect method&#34;&#34;&#34;
     return self.effect</code></pre>
 </details>
@@ -1181,31 +1157,6 @@ Ability should be string describing animal abilities, if any</p></div>
     pass</code></pre>
 </details>
 </dd>
-<dt id="src.Animal.Animal.onHit"><code class="name flex">
-<span>def <span class="ident">onHit</span></span>(<span>self, dmgAmt)</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def onHit(self, dmgAmt):
-    dmg_taken = (
-        dmgAmt - self.dmgTakenModifier if dmgAmt - self.dmgTakenModifier &gt; 1 else 1
-    )
-    if type(self.effect) == MelonEffect:
-        dmg_taken = dmg_taken - 20 if dmg_taken - 20 &gt; 0 else 0
-        self.setEffect(NoneEffect())
-    if type(self.effect) == CoconutEffect:
-        dmg_taken = 0
-        self.setEffect(NoneEffect())
-
-    self.hp -= dmg_taken
-    if self.hp &lt;= 0:
-        self.alive = False</code></pre>
-</details>
-</dd>
 <dt id="src.Animal.Animal.onHurt"><code class="name flex">
 <span>def <span class="ident">onHurt</span></span>(<span>self, friends: list, enemies: list)</span>
 </code></dt>
@@ -1329,20 +1280,6 @@ Ability should be string describing animal abilities, if any</p></div>
     self.__recalcDmg()</code></pre>
 </details>
 </dd>
-<dt id="src.Animal.Animal.setEffect"><code class="name flex">
-<span>def <span class="ident">setEffect</span></span>(<span>self, effect: <a title="src.Effect.Effect" href="../Effect/index.html#src.Effect.Effect">Effect</a>) ‑> None</span>
-</code></dt>
-<dd>
-<div class="desc"><p>public set effect method</p></div>
-<details class="source">
-<summary>
-<span>Expand source code</span>
-</summary>
-<pre><code class="python">def setEffect(self, effect: Effect) -&gt; None:
-    &#34;&#34;&#34;public set effect method&#34;&#34;&#34;
-    self.effect = effect</code></pre>
-</details>
-</dd>
 <dt id="src.Animal.Animal.setHp"><code class="name flex">
 <span>def <span class="ident">setHp</span></span>(<span>self, amt: int) ‑> None</span>
 </code></dt>
@@ -1409,6 +1346,14 @@ Ability should be string describing animal abilities, if any</p></div>
     &#34;&#34;&#34;
     if self.getHp() &lt; 0:
         return
+
+    if self.effect == &#34;melon&#34;:
+        amt = amt - 20 if amt - 20 &gt; 0 else 0
+        self.effect = None
+    elif self.effect == &#34;coconut&#34;:
+        amt = 0
+        self.effect = None
+
     if self.temp_hp &gt; 0:
         self.temp_hp -= amt
         if self.temp_hp &lt; 0:
@@ -1417,7 +1362,8 @@ Ability should be string describing animal abilities, if any</p></div>
     if amt &gt; 0:
         self.base_hp -= amt
     self.__recalcHp()
-    self.onHurt(friends, enemies)</code></pre>
+    if amt &gt; 0:
+        self.onHurt(friends, enemies)</code></pre>
 </details>
 </dd>
 </dl>
@@ -1475,7 +1421,6 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.onFriendFaint" href="#src.Animal.Animal.onFriendFaint">onFriendFaint</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSold" href="#src.Animal.Animal.onFriendSold">onFriendSold</a></code></li>
 <li><code><a title="src.Animal.Animal.onFriendSummoned" href="#src.Animal.Animal.onFriendSummoned">onFriendSummoned</a></code></li>
-<li><code><a title="src.Animal.Animal.onHit" href="#src.Animal.Animal.onHit">onHit</a></code></li>
 <li><code><a title="src.Animal.Animal.onHurt" href="#src.Animal.Animal.onHurt">onHurt</a></code></li>
 <li><code><a title="src.Animal.Animal.onLevelUp" href="#src.Animal.Animal.onLevelUp">onLevelUp</a></code></li>
 <li><code><a title="src.Animal.Animal.onSell" href="#src.Animal.Animal.onSell">onSell</a></code></li>
@@ -1485,7 +1430,6 @@ Ability should be string describing animal abilities, if any</p></div>
 <li><code><a title="src.Animal.Animal.setBaseDmg" href="#src.Animal.Animal.setBaseDmg">setBaseDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setBaseHp" href="#src.Animal.Animal.setBaseHp">setBaseHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setDmg" href="#src.Animal.Animal.setDmg">setDmg</a></code></li>
-<li><code><a title="src.Animal.Animal.setEffect" href="#src.Animal.Animal.setEffect">setEffect</a></code></li>
 <li><code><a title="src.Animal.Animal.setHp" href="#src.Animal.Animal.setHp">setHp</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempDmg" href="#src.Animal.Animal.setTempDmg">setTempDmg</a></code></li>
 <li><code><a title="src.Animal.Animal.setTempHp" href="#src.Animal.Animal.setTempHp">setTempHp</a></code></li>

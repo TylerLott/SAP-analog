@@ -131,9 +131,15 @@ class Team:
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onFoodBought
+            self.friends[position].onEat(self.friends)
 
-    def loseLife(self, amt: int) -&gt; None:
+    def loseLife(self) -&gt; None:
+        if self.round &lt;= 3:
+            amt = 1
+        elif self.round &lt;= 5:
+            amt = 2
+        else:
+            amt = 3
         self.life -= amt
         if self.life &lt;= 0:
             self.alive = False
@@ -357,9 +363,15 @@ This class also has it's own instance of a shop</p></div>
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onFoodBought
+            self.friends[position].onEat(self.friends)
 
-    def loseLife(self, amt: int) -&gt; None:
+    def loseLife(self) -&gt; None:
+        if self.round &lt;= 3:
+            amt = 1
+        elif self.round &lt;= 5:
+            amt = 2
+        else:
+            amt = 3
         self.life -= amt
         if self.life &lt;= 0:
             self.alive = False
@@ -496,7 +508,7 @@ This class also has it's own instance of a shop</p></div>
         self.money -= food.getCost()
         # iadd override in animal makes this work
         self.friends[position] += food
-        # onFoodBought</code></pre>
+        self.friends[position].onEat(self.friends)</code></pre>
 </details>
 </dd>
 <dt id="src.Team.Team.buyFriend"><code class="name flex">
@@ -681,7 +693,7 @@ This class also has it's own instance of a shop</p></div>
 </details>
 </dd>
 <dt id="src.Team.Team.loseLife"><code class="name flex">
-<span>def <span class="ident">loseLife</span></span>(<span>self, amt: int) ‑> None</span>
+<span>def <span class="ident">loseLife</span></span>(<span>self) ‑> None</span>
 </code></dt>
 <dd>
 <div class="desc"></div>
@@ -689,7 +701,13 @@ This class also has it's own instance of a shop</p></div>
 <summary>
 <span>Expand source code</span>
 </summary>
-<pre><code class="python">def loseLife(self, amt: int) -&gt; None:
+<pre><code class="python">def loseLife(self) -&gt; None:
+    if self.round &lt;= 3:
+        amt = 1
+    elif self.round &lt;= 5:
+        amt = 2
+    else:
+        amt = 3
     self.life -= amt
     if self.life &lt;= 0:
         self.alive = False</code></pre>
