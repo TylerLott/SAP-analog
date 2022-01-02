@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from src.Animal import Animal
 from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
-from src.Food.Foods import Milk
+from src.Food.Foods import Melon, Milk
 
 
 class NoneAnimal(Animal):
@@ -1635,7 +1635,7 @@ class Turtle(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         for i in range(1, self.getLevel() + 1):
             if i < len(friends):
-                # friends[i] += MelonEffect()
+                friends[i] += Melon()
                 pass
 
 

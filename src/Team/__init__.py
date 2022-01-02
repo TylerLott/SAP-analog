@@ -105,7 +105,13 @@ class Team:
             self.friends[position] += food
             # onFoodBought
 
-    def loseLife(self, amt: int) -> None:
+    def loseLife(self) -> None:
+        if self.round <= 3:
+            amt = 1
+        elif self.round <= 5:
+            amt = 2
+        else:
+            amt = 3
         self.life -= amt
         if self.life <= 0:
             self.alive = False

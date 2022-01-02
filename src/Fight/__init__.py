@@ -103,9 +103,9 @@ class Fight:
         # [print(i) for i in self.team2Friends]
 
         if len(self.team1Friends) > len(self.team2Friends):
-            self.team2.loseLife(1)
+            self.team2.loseLife()
         elif len(self.team2Friends) > len(self.team1Friends):
-            self.team1.loseLife(1)
+            self.team1.loseLife()
 
         # print(self.team1)
         # print(self.team2)

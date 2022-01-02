@@ -1,3 +1,4 @@
+from src.Effect.Effects import *
 from src.Food import Food
 
 
@@ -12,21 +13,27 @@ class NoneFood(Food):
 class Apple(Food):
     def __init__(self):
         super().__init__()
+        self.perm_hp = 1
+        self.perm_dmg = 1
 
 
 class Honey(Food):
     def __init__(self):
         super().__init__()
+        self.effect = HoneyEffect()
 
 
 class Cupcake(Food):
     def __init__(self):
         super().__init__()
+        self.temp_hp = 3
+        self.temp_dmg = 3
 
 
 class MeatBone(Food):
     def __init__(self):
         super().__init__()
+        self.effect = BoneEffect()
 
 
 class Pill(Food):
@@ -37,6 +44,7 @@ class Pill(Food):
 class Garlic(Food):
     def __init__(self):
         super().__init__()
+        self.effect = GarlicEffect()
 
 
 class Salad(Food):
@@ -57,6 +65,7 @@ class Pear(Food):
 class Chili(Food):
     def __init__(self):
         super().__init__()
+        self.effect = SplashEffect()
 
 
 class Chocolate(Food):
@@ -72,11 +81,13 @@ class Sushi(Food):
 class Melon(Food):
     def __init__(self):
         super().__init__()
+        self.effect = MelonEffect()
 
 
 class Mushroom(Food):
     def __init__(self):
         super().__init__()
+        self.effect = ExtraLifeEffect()
 
 
 class Pizza(Food):
@@ -87,6 +98,7 @@ class Pizza(Food):
 class Steak(Food):
     def __init__(self):
         super().__init__()
+        self.effect = SteakEffect()
 
 
 class Milk(Food):

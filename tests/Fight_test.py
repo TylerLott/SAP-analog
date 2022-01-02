@@ -24,7 +24,7 @@ def dummyTurn(team: Team):
 
 class FightTests(unittest.TestCase):
     def test_simulate(self):
-        # currently takes around 7.5 seconds to sim 1000 full games
+        # currently takes around 3.3 seconds to sim 1000 full games
         team1Wins = 0
         team2Wins = 0
         err = 0
@@ -47,6 +47,4 @@ class FightTests(unittest.TestCase):
                 team2Wins += 1
         print("Team 1 Wins: ", team1Wins)
         print("Team 2 Wins: ", team2Wins)
-        print(
-            "Error Games: ", err
-        )  # doesn't seem to be a single animal type causing this...
+        print("Error Games: ", err)
