@@ -103,7 +103,7 @@ class Team:
             self.money -= food.getCost()
             # iadd override in animal makes this work
             self.friends[position] += food
-            # onFoodBought
+            self.friends[position].onEat(self.friends)
 
     def loseLife(self) -> None:
         if self.round <= 3:

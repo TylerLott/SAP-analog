@@ -1,7 +1,6 @@
 from random import choice
 from typing import List
 from math import floor
-from copy import deepcopy
 
 from src.Animal import Animal
 from src.Effect.Effects import CoconutEffect, MelonEffect, PoisonEffect, SplashEffect
@@ -990,7 +989,7 @@ class Ox(Animal):
 
     def onFriendAheadFaint(self, friends: List[Animal], enemies: List[Animal]):
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
-        # TODO: Apply melon armor
+        self += Melon()
 
 
 class Parrot(Animal):
@@ -1636,7 +1635,6 @@ class Turtle(Animal):
         for i in range(1, self.getLevel() + 1):
             if i < len(friends):
                 friends[i] += Melon()
-                pass
 
 
 class Whale(Animal):
@@ -1664,15 +1662,15 @@ class Whale(Animal):
         pos, others = getPosAndOthers(self, friends)
         if pos == 0:
             return
-        self.jonah = deepcopy(friends[pos - 1])
+        self.jonah = friends[pos - 1].__class__()
         friends[pos - 1].onFaint(friends, enemies)
         friends[pos - 1].setAlive(False)
-        # TODO remove eaten friend
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
         friends[pos] = self.jonah
-        # TODO make this set level and stats to default
+        while friends[pos].getLevel() < self.getLevel():
+            friends[pos] += friends[pos].__class__()
 
 
 class Worm(Animal):
