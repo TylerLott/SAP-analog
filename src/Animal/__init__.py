@@ -140,6 +140,8 @@ class Animal(ABC):
         elif self.effect == "coconut":
             amt = 0
             self.effect = None
+        elif self.effect == "garlic":
+            amt = amt - 2 if amt - 2 > 1 else 1
 
         if self.temp_hp > 0:
             self.temp_hp -= amt
@@ -269,7 +271,7 @@ class Animal(ABC):
         out_str += "|" + f'{"Damage: "+ str(self.dmg):^30}' + "|\n"
         out_str += "|" + f'{"Exp Level: "+ str(self.getLevel()):^30}' + "|\n"
         out_str += "|" + f'{"Ability: " + self.getAbility():^30}' + "|\n"
-        out_str += "|" + f'{"Effect: "+ self.effect:^30}' + "|\n"
+        out_str += "|" + f'{"Effect: "+ str(self.effect):^30}' + "|\n"
         out_str += "|" + f'{"Cost: "+ str(self.cost):^30}' + "|\n"
         out_str += "|==============================|\n"
 

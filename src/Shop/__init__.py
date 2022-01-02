@@ -84,12 +84,21 @@ class Shop:
     ### Setters ###
 
     def buyAnimal(self, position: int) -> Animal:
+        """
+        public buy animal method
 
+        return Animal and remove from shop
+        """
         animal = self.animals[position]
         self.animals[position] = NoneAnimal()
         return animal
 
     def buyFood(self, position: int) -> Food:
+        """
+        public buy food
+
+        return Animal and remove from shop
+        """
         food = self.items[position]
         self.items[position] = NoneFood()
         return food

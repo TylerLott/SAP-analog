@@ -97,6 +97,7 @@ class Team:
                     self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -> None:
+        # TODO check if food is applied to shop if individual
         food = self.shop.checkFood(shop_pos)
         if self.money >= food.getCost():
             food = self.shop.buyFood(shop_pos)
@@ -104,6 +105,7 @@ class Team:
             # iadd override in animal makes this work
             self.friends[position] += food
             self.friends[position].onEat(self.friends)
+            # TODO call onfriendeat for all other animals
 
     def loseLife(self) -> None:
         if self.round <= 3:
@@ -119,22 +121,19 @@ class Team:
     def add_money(self, amt: int) -> None:
         self.money += amt
 
-    ### For Tests ###
-
-    def forceAddAnimal(self, position: int, animal: Animal):
-        self.friends[position] = animal
-
     ### Private ###
 
     def __onSell(self) -> None:
+        # TODO call onsell for sold friend
         pass
 
     def __onFriendSold(self) -> None:
+        # TODO call onfriendsold for all other animals
         pass
 
     def __onBuy(self) -> None:
         pass
-        # run on onFriendSummoned as well
+        # TODO run on onFriendSummoned as well
 
     def __onStartOfTurn(self) -> None:
         for i in self.friends:
@@ -153,7 +152,7 @@ class Team:
             self.money -= 1
 
     def endTurn(self) -> None:
-        # onEndOfTurn
+        # TODO call onEndOfTurn for all animals
         pass
 
     def nextTurn(self) -> None:
@@ -180,6 +179,7 @@ class Team:
         - roll
         - end turn
         """
+        # TODO implement this
         pass
 
     def getState(self):
@@ -191,6 +191,7 @@ class Team:
             - shop state
             - possible moves
         """
+        # TODO implement this
         pass
 
     ### Overrides ###
@@ -216,3 +217,8 @@ class Team:
 
     def __bool__(self):
         return self.alive
+
+    ### For Tests ###
+
+    def forceAddAnimal(self, position: int, animal: Animal):
+        self.friends[position] = animal
