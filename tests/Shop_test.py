@@ -9,6 +9,8 @@ class TeamTests(unittest.TestCase):
     def test_create(self):
         s = Shop()
 
+        self.assertEqual(s.__class__, Shop)
+
     def test_shop_can(self):
         t = Team()
         f = CannedFood()
@@ -17,4 +19,3 @@ class TeamTests(unittest.TestCase):
 
         self.assertEqual(t.shop.health_modifier, 1)
         self.assertEqual(t.shop.dmg_modifier, 1)
-        print(t.shop)

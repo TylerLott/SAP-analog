@@ -108,6 +108,10 @@ class Team:
             elif food.effect == "buffShop":
                 self.shop.health_modifier += 1
                 self.shop.dmg_modifier += 1
+                for i in self.shop.animals:
+                    if i:
+                        i.setBaseHp(i.getBaseHp() + 1)
+                        i.setBaseDmg(i.getBaseDmg() + 1)
             else:
 
                 self.money -= food.getCost()
