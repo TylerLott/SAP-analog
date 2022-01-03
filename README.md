@@ -4,9 +4,11 @@ I started this project because I wanted to create a SAP analog that I could use 
 
 ## Unit Tests
 
+One Set of Tests
 `python -m unittest tests/{nameOfTestSet}.py`
 
-or set up in vscode
+All Tests
+`python -m unittest discover -s ./tests -p '*_test.py'`
 
 ## Pdoc3
 

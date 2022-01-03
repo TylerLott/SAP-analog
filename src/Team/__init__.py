@@ -77,7 +77,7 @@ class Team:
     def sellFriend(self, friend_pos: int) -> None:
         if self.friends[friend_pos]:
             self.add_money(self.friends[friend_pos].getLevel())
-            self.friends[friend_pos].onSell(self.friends, self, self.shop)
+            self.friends[friend_pos].onSell(self.friends, self)
             self.friends[friend_pos] = NoneAnimal()
             # onFriendSell
 
@@ -113,6 +113,7 @@ class Team:
                 if len(friends) > food.num_animals:
                     friends = choices(friends, k=food.num_animals)
                 for i in friends:
+                    food.effect = i.effect
                     i += food
                     i.onEat(self.friends)
             elif food.effect == "buffShop":

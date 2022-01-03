@@ -113,7 +113,7 @@ class Beaver(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 1
 
-    def onSell(self, friends: List[Animal]) -> None:
+    def onSell(self, friends: List[Animal], team) -> None:
         pos = self.getPosition(friends)
         possible = list(range(len(friends) - 1))
         possible.remove(pos)

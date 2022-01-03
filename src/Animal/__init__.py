@@ -240,7 +240,7 @@ class Animal(ABC):
             for i in others:
                 friends[i].onFriendSummoned(friends, friends[pos])
 
-    def onSell(self, friends: list, team, shop):
+    def onSell(self, friends: list, team):
         pass
 
     def onEat(self, friends: list):
