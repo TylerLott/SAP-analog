@@ -24,7 +24,7 @@ def dummyTurn(team: Team):
 
 class FightTests(unittest.TestCase):
     def test_simulate(self):
-        # currently takes around 3.3 seconds to sim 1000 full games
+        # currently takes around 2.5 seconds to sim 1000 full games
         team1Wins = 0
         team2Wins = 0
         err = 0

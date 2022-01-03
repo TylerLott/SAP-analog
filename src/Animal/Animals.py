@@ -58,7 +58,7 @@ class Badger(Animal):
     Level 3: Faint -> Deal 3x attack damage to adjacent animals
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 5
@@ -84,7 +84,7 @@ class Badger(Animal):
 
 
 class Bat(Animal):
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -136,7 +136,7 @@ class Bison(Animal):
     Level 3: End Turn -> Gain +6/+6 if there is a level 3 friend
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 6
@@ -166,7 +166,7 @@ class Blowfish(Animal):
     Level 3: Hurt -> Deal 6 damage to random enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 3
@@ -197,7 +197,7 @@ class Boar(Animal):
     Level 3: Before Attack -> Gain +6/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 8
@@ -222,7 +222,7 @@ class Camel(Animal):
     Level 3: Hurt -> give friend behind +3/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 2
@@ -253,7 +253,7 @@ class Cat(Animal):
     Level 3: Food buffs are 4x
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 4
@@ -276,7 +276,7 @@ class Cow(Animal):
     Level 3: Buy -> replace shop food with milk that gives +3/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 4
@@ -301,7 +301,7 @@ class Crab(Animal):
     Level 3: Buy -> Copy health from most healthy friend
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 3
@@ -381,7 +381,7 @@ class Crocodile(Animal):
     Level 3: Start of Battle -> Deal 24 Dmg to last enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 8
@@ -405,7 +405,7 @@ class Deer(Animal):
     Level 3: Faint -> Summon a 15/15 Bus with Splash
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 1
@@ -427,7 +427,7 @@ class Bus(Animal):
     Only summoned by a deer
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 0
         default_dmg = 0
@@ -453,7 +453,7 @@ class Dodo(Animal):
     Level 3: Start of Battle -> give 150% of dodo dmg to friend ahead
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 2
@@ -482,7 +482,7 @@ class Dog(Animal):
     Level 3: Friend Summoned -> gain +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
@@ -507,7 +507,7 @@ class Dolphin(Animal):
     Level 3: Start of Battle -> Deal 15 damage to lowest health enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 4
@@ -536,7 +536,7 @@ class Dragon(Animal):
     Level 3: Buy tier 1 friend -> Give all friends +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 8
         default_dmg = 6
@@ -569,7 +569,7 @@ class Duck(Animal):
     Level 3: Sell -> Give shop pets +3 Health
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -594,7 +594,7 @@ class Elephant(Animal):
     Level 3: Before Attack -> Deal 1 Dmg to 3 friends behind
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 3
@@ -621,7 +621,7 @@ class Fish(Animal):
     Level 3: None
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 2
@@ -654,7 +654,7 @@ class Flamingo(Animal):
     Level 3: Faint -> Give the two friends behind +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 3
@@ -684,7 +684,7 @@ class Fly(Animal):
     Level 3: Friend Faints -> Summon a 15/15 fly in it's place
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 5
@@ -709,7 +709,7 @@ class Giraffe(Animal):
     Level 3: End Turn -> Give friend ahead +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 2
@@ -731,7 +731,7 @@ class Gorilla(Animal):
     All Levels: Hurt -> Gain coconut shield
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 9
         default_dmg = 6
@@ -755,7 +755,7 @@ class Hedgehog(Animal):
     Level 3: Faint -> Deal 6 Dmg to all
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 3
@@ -784,7 +784,7 @@ class Hippo(Animal):
     Level 3: Knock Out -> Gain +6/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 7
         default_dmg = 4
@@ -821,7 +821,7 @@ class Kangaroo(Animal):
     Level 3: Friend Ahead Attack -> Gain +6/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -846,7 +846,7 @@ class Leopard(Animal):
     Level 3: Start of battle -> Deal 50% attack damage to 3 random enemies
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 10
@@ -872,7 +872,7 @@ class Mammoth(Animal):
     Level 3: Faint -> Give all friends +6/+6
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 10
         default_dmg = 3
@@ -901,7 +901,7 @@ class Mosquito(Animal):
     Level 3: Start of Battle -> Deal 3 Dmg to random enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
@@ -926,7 +926,7 @@ class Monkey(Animal):
     Level 3: End Turn -> Give right-most friend +9/+9
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -951,7 +951,7 @@ class Otter(Animal):
     Level 3: Buy -> give random friend +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -984,7 +984,7 @@ class Ox(Animal):
     Level 3: Friend Ahead Faints -> Gain Melon, Gain +6 Dmg
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 1
@@ -1000,7 +1000,7 @@ class Ox(Animal):
 
 class Parrot(Animal):
     # TODO: implement this maybe just replace this animal with the animal type in front and carry over the stats
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 5
@@ -1020,7 +1020,7 @@ class Peacock(Animal):
     Level 3: Hurt -> gain +6 attack
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 1
@@ -1044,7 +1044,7 @@ class Penguin(Animal):
     Level 3: End Turn -> Give other level 2 and 3 friends +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -1071,7 +1071,7 @@ class Pig(Animal):
     Level 3: Sell -> Give 3 extra gold
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 3
@@ -1095,7 +1095,7 @@ class Rabbit(Animal):
     Level 3: Friend Eats -> Give additional +3 Health
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 3
@@ -1119,7 +1119,7 @@ class Rat(Animal):
     Level 3: Faint -> Summons 1/1 Dirty Rat at the back of the enemy team
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 4
@@ -1140,7 +1140,7 @@ class DirtyRat(Animal):
     Can only be summoned on death of rat, attacks enemy team from back
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 1
@@ -1162,7 +1162,7 @@ class Rhino(Animal):
     Level 3: Knock Out: Deal 12 damage to first enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 8
         default_dmg = 5
@@ -1185,7 +1185,7 @@ class Rooster(Animal):
     Level 3: Faint -> Summon 3 Chicks with 1 health and half of the rooster's attack
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 5
@@ -1228,7 +1228,7 @@ class Chick(Animal):
     Can only be summoned by Rooster
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 0
@@ -1264,7 +1264,7 @@ class Seal(Animal):
     Level 3: Eat -> Give 2 random friends +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 8
         default_dmg = 3
@@ -1296,7 +1296,7 @@ class Shark(Animal):
     Level 3: Friend Faint -> Gain +6/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 4
@@ -1321,7 +1321,7 @@ class Sheep(Animal):
     Level 3: Faint -> Summon two 6/6 Rams
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
@@ -1353,7 +1353,7 @@ class Ram(Animal):
     Can only be summoned by Sheep
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 0
         default_dmg = 0
@@ -1374,7 +1374,7 @@ class Shrimp(Animal):
     Level 3: Friend Sold -> Give random friend +3 Health
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 2
@@ -1405,7 +1405,7 @@ class Skunk(Animal):
     Level 3: Start of Battle -> Reduce the highest health enemy by 99%
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 3
@@ -1429,7 +1429,7 @@ class Sloth(Animal):
     No abilities
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 1
         default_dmg = 1
@@ -1450,7 +1450,7 @@ class Snail(Animal):
     Level 3: Buy -> if lost last battle, give all +6/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
@@ -1478,7 +1478,7 @@ class Snake(Animal):
     Level 3: Friend Ahead Attacks -> Deal 15 damage to random enemy
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 6
@@ -1504,7 +1504,7 @@ class Spider(Animal):
     Level 3: Faint -> Summon a level 3 tier 3 pet as a 2/2
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2
@@ -1533,7 +1533,7 @@ class Squirrel(Animal):
     Level 3: Start of Turn -> Discount shop food by 3 gold
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 5
         default_dmg = 2
@@ -1559,7 +1559,7 @@ class Swan(Animal):
     Level 3: Start of Turn -> +3 gold
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 3
@@ -1582,7 +1582,7 @@ class Tiger(Animal):
     Level 3: Friend ahead repeated their ability as if they were a level 3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 4
@@ -1605,7 +1605,7 @@ class Turkey(Animal):
     Level 3: Friend Summoned -> give it +9/+9
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 4
         default_dmg = 3
@@ -1630,7 +1630,7 @@ class Turtle(Animal):
     Level 3: Faint -> give 3 friend behind melon armor
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 1
@@ -1657,7 +1657,7 @@ class Whale(Animal):
     Level 3: Start of Battle -> Swallow friend ahead and release as level 3 after fainting
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 6
         default_dmg = 2
@@ -1694,7 +1694,7 @@ class Worm(Animal):
     Level 3: Eat -> Gain +3/+3
     """
 
-    def __init__(self, health, dmg):
+    def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 2
         default_dmg = 2

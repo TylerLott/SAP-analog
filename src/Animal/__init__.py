@@ -210,6 +210,22 @@ class Animal(ABC):
     # These should recurse down until there is nothing left
 
     def onFaint(self, friends: list, enemies: list):
+        if self.effect == "extraLife" and len(friends) < 5:
+            pos = self.getPosition(friends)
+
+            others = list(range(len(friends) - 1))
+            if len(others) <= 1:
+                others = []
+            else:
+                others.remove(pos)
+
+            friends[pos] = self.__class__()
+            friends[pos].setBaseHp(1)
+            friends[pos].setBaseDmg(1)
+
+            for i in others:
+                friends[i].onFriendSummoned(friends, friends[pos])
+
         if self.effect == "honey" and len(friends) < 5:
             pos = self.getPosition(friends)
 
