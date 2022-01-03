@@ -109,10 +109,8 @@ class Team:
             for i in self.friends:
                 if i.__class__.__name__ == "Cat":
                     haveCat += i.getLevel()
-            food.perm_hp *= haveCat
-            food.temp_hp *= haveCat
-            food.perm_dmg *= haveCat
-            food.temp_hp *= haveCat
+            food.perm_buff *= haveCat
+            food.temp_buff *= haveCat
 
             if food.effect == "pill":
                 self.friends[position].onFaint(self.friends, [])
@@ -121,8 +119,9 @@ class Team:
                         i.onFriendFaint(self.friends)
                 if len(self.friends) > position + 1:
                     self.friends[position + 1].onFriendAheadFaint(self.friends, [])
+                self.friends[position] = NoneAnimal()
 
-            if food.effect == "random":
+            elif food.effect == "random":
                 food.effect = None
                 friends = []
                 for i in self.friends:

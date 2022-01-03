@@ -115,8 +115,12 @@ class AnimalTests(unittest.TestCase):
         # TODO test hitting
 
     def test_pill(self):
-        # TODO write this
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.shop.items[0] = Pill()
+        t.buyFood(0, 0)
+
+        self.assertFalse(t.friends[0])
 
     def test_garlic(self):
         an = Ant()
