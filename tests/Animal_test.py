@@ -358,13 +358,31 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t2.friends[1].alive)
 
     def test_dodo(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Dodo()
+
+        t.friends[1].onStartOfBattle(t.friends, [])
+        self.assertEqual(t.friends[0].getDmg(), 3)
 
     def test_dog(self):
-        pass
+        t = Team()
+        t.friends[0] = Dog()
+        t.buyFriend(0, 1)
+
+        self.assertEqual(t.friends[0].getDmg(), 3)
+        self.assertEqual(t.friends[0].getHp(), 3)
 
     def test_dolphin(self):
-        pass
+        t = Team()
+        t.friends[0] = Dolphin()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+        t2.friends[2] = Bison()
+
+        t.friends[0].onStartOfBattle(t.friends, t2.friends)
+        self.assertFalse(t2.friends[0].alive)
 
     def test_dragon(self):
         pass

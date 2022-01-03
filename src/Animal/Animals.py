@@ -504,8 +504,8 @@ class Dolphin(Animal):
     def onStartOfBattle(self, friends: list, enemies: list):
         lowest = enemies[0]
         for i in enemies:
-            if enemies[i].getHp() < lowest.getHp():
-                lowest = enemies[i]
+            if i.getHp() < lowest.getHp() and i:
+                lowest = i
 
         lowest.subHp(5 * self.getLevel(), friends, enemies)
 

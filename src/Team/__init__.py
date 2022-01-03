@@ -91,7 +91,9 @@ class Team:
                 self.money -= animal.getCost()
                 self.friends[friend_pos] = animal
                 self.friends[friend_pos].onBuy(self.friends, self)
-                # onFriendSummoned
+                for i in self.friends:
+                    if i != self.friends[friend_pos]:
+                        i.onFriendSummoned(self.friends, self.friends[friend_pos])
             elif self.friends[friend_pos].__class__ == animal.__class__:
                 # iadd is overridden for animal so this works
                 origin_level = self.friends[friend_pos].getLevel()
