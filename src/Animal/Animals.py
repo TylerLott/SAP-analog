@@ -793,7 +793,9 @@ class Hippo(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
 
-    # TODO: Hippo knock out implement
+    def onKnockOut(self, friends: List[Animal], enemies: List[Animal]):
+        self.setBaseHp(self.getBaseHp() + 2 * self.getLevel())
+        self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
 
 class Horse(Animal):
@@ -1171,7 +1173,9 @@ class Rhino(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
 
-    # TODO knock out stuff
+    def onKnockOut(self, friends: list, enemies: List[Animal]):
+        if len(enemies) > 0:
+            enemies[0].subHp(4 * self.getLevel(), enemies, friends)
 
 
 class Rooster(Animal):
