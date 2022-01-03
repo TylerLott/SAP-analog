@@ -194,6 +194,7 @@ class Animal(ABC):
     # Normal On Events
 
     def attack(self, friends, enemies):
+        self.onBeforeAttack(friends, enemies)
         dmg = self.getDmg()
         if self.effect == "steak":
             dmg += 20

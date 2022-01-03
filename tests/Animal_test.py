@@ -272,19 +272,54 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t2.friends[0].alive)
 
     def test_boar(self):
-        pass
+        t = Team()
+        t.friends[0] = Boar()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].attack(t.friends, t2.friends)
+        self.assertEqual(t.friends[0].getHp(), 8)
+        self.assertEqual(t.friends[0].getDmg(), 10)
 
     def test_camel(self):
-        pass
+        t = Team()
+        t.friends[0] = Camel()
+        t.friends[1] = Ant()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t2.friends[0].attack(t2.friends, t.friends)
+        self.assertEqual(t.friends[1].getHp(), 3)
+        self.assertEqual(t.friends[1].getDmg(), 3)
 
     def test_cat(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Cat()
+        t.shop.items[0] = Apple()
+        t.buyFood(0, 0)
+        self.assertEqual(t.friends[0].getHp(), 3)
+        self.assertEqual(t.friends[0].getDmg(), 4)
 
     def test_cow(self):
-        pass
+        t = Team()
+        for i in range(10):
+            t.nextTurn()
+        t.shop.animals[0] = Cow()
+        t.buyFriend(0, 0)
+
+        self.assertEqual(t.shop.items[0].__class__, Milk)
+        self.assertEqual(t.shop.items[1].__class__, Milk)
 
     def test_crab(self):
-        pass
+        t = Team()
+        t.friends[0] = Bison()
+        t.shop.animals[0] = Crab()
+        t.buyFriend(0, 1)
+
+        self.assertEqual(t.friends[0].getHp(), t.friends[1].getHp())
 
     def test_cricket(self):
         pass

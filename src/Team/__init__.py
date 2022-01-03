@@ -109,8 +109,10 @@ class Team:
             for i in self.friends:
                 if i.__class__.__name__ == "Cat":
                     haveCat += i.getLevel()
-            food.perm_buff *= haveCat
-            food.temp_buff *= haveCat
+            food.perm_buff[0] *= haveCat
+            food.perm_buff[1] *= haveCat
+            food.temp_buff[0] *= haveCat
+            food.temp_buff[1] *= haveCat
 
             if food.effect == "pill":
                 self.friends[position].onFaint(self.friends, [])
@@ -145,7 +147,7 @@ class Team:
                 # iadd override in animal makes this work
                 self.friends[position] += food
                 self.friends[position].onEat(self.friends)
-                for i in len(self.friends):
+                for i in range(len(self.friends)):
                     if self.friends[i] and i != position:
                         self.friends[i].onFriendEat(self.friends[position])
 
