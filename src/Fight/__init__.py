@@ -96,19 +96,15 @@ class Fight:
             # Remove all of the NoneAnimals()
             self.team1Friends = self.__purgeNoneAnimals(self.team1Friends)
             self.team2Friends = self.__purgeNoneAnimals(self.team2Friends)
-        #     print("team 1: ", self.team1Friends)
-        #     print("team 2: ", self.team2Friends)
-
-        # [print(i) for i in self.team1Friends]
-        # [print(i) for i in self.team2Friends]
 
         if len(self.team1Friends) > len(self.team2Friends):
             self.team2.loseLife()
+            self.team2.wonLast = False
+            self.team1.wonLast = True
         elif len(self.team2Friends) > len(self.team1Friends):
             self.team1.loseLife()
-
-        # print(self.team1)
-        # print(self.team2)
+            self.team1.wonLast = False
+            self.team2.wonLast = True
 
     ### Private ###
 

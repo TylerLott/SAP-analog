@@ -79,7 +79,9 @@ class Team:
             self.add_money(self.friends[friend_pos].getLevel())
             self.friends[friend_pos].onSell(self.friends, self)
             self.friends[friend_pos] = NoneAnimal()
-            # onFriendSell
+            for i in range(len(self.friends)):
+                if i != friend_pos and self.friends[i]:
+                    self.friends[i].onFriendSold(self.friends)
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
         animal = self.shop.checkAnimal(shop_pos)
