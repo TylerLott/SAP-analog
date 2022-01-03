@@ -38,7 +38,7 @@ class Ant(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos, possible = getPosAndOthers(self, friends)
-
+        possible.remove(pos)
         if len(possible) == 0:
             return
         friend = choice(possible)

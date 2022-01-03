@@ -214,6 +214,9 @@ class Animal(ABC):
             knockout = enemies[0].subHp(dmg, enemies, friends)
             if knockout:
                 self.onKnockOut(friends, enemies)
+        pos = self.getPosition(friends)
+        if pos + 1 < len(friends):
+            friends[pos + 1].onFriendAheadAttack(friends, enemies)
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight

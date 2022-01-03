@@ -404,7 +404,6 @@ class AnimalTests(unittest.TestCase):
         t.friends[1] = Ant()
 
         t.friends[0].onBeforeAttack(t.friends, [])
-        print(t.friends[1])
         self.assertFalse(t.friends[1].alive)
 
     def test_fish(self):
@@ -460,16 +459,50 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[0].effect, None)
 
     def test_hedgehog(self):
-        pass
+        t = Team()
+        t.friends[0] = Hedgehog()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+        t2.friends[1] = Ant()
+
+        t.friends[0].onFaint(t.friends, t2.friends)
+        self.assertFalse(t.friends[1].alive)
+        self.assertFalse(t.friends[2].alive)
+        self.assertFalse(t2.friends[0].alive)
+        self.assertFalse(t2.friends[1].alive)
 
     def test_hippo(self):
-        pass
+        t = Team()
+        t.friends[0] = Hippo()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].attack(t.friends, t2.friends)
+        self.assertEqual(t.friends[0].getHp(), 9)
 
     def test_horse(self):
-        pass
+        t = Team()
+        t.friends[4] = Horse()
+        t.shop.animals[0] = Ant()
+        t.buyFriend(0, 0)
+
+        self.assertEqual(t.friends[0].getTempDmg(), 1)
 
     def test_kangaroo(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant(10, 0)
+        t.friends[1] = Kangaroo()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].attack(t.friends, t2.friends)
+
+        self.assertEqual(t.friends[1].getHp(), 4)
 
     def test_leopard(self):
         pass
