@@ -329,6 +329,7 @@ class Animal(ABC):
         can be used to apply food to an animal
 
         """
+        # TODO this need to not be an override because it need access to full team
         # add two animals
         if other.__class__ == self.__class__:
             high_hp = self.base_hp if self.base_hp > other.base_hp else other.base_hp

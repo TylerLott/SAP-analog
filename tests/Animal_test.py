@@ -408,19 +408,56 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t.friends[1].alive)
 
     def test_fish(self):
+        # t = Team()
+        # t.friends[0] = Fish()
+        # t.friends[1] = Ant()
+        # t.friends[2] = Ant()
+
+        # for i in range(2):
+        #     t.friends[0] += Fish()
+        # print(t.friends[0])
+
+        # self.assertEqual(t.friends[1].getHp(), 2)
+        # self.assertEqual(t.friends[2].getHp(), 2)
         pass
 
     def test_flamingo(self):
-        pass
+        t = Team()
+        t.friends[0] = Flamingo()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
+
+        t.friends[0].onFaint(t.friends, [])
+
+        self.assertEqual(t.friends[1].getHp(), 2)
+        self.assertEqual(t.friends[2].getHp(), 2)
 
     def test_fly(self):
+        # TODO implemnet
         pass
 
     def test_giraffe(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Giraffe()
+
+        t.friends[1].onEndOfTurn(t.friends)
+        self.assertEqual(t.friends[0].getHp(), 2)
 
     def test_gorilla(self):
-        pass
+        t = Team()
+        t.friends[0] = Gorilla()
+
+        t2 = Team()
+        t2.friends[0] = Ant(100, 0)
+
+        t2.friends[0].attack(t2.friends, t.friends)
+        self.assertEqual(t.friends[0].getHp(), 7)
+        self.assertEqual(t.friends[0].effect, "coconut")
+
+        t2.friends[0].attack(t2.friends, t.friends)
+        self.assertEqual(t.friends[0].getHp(), 7)
+        self.assertEqual(t.friends[0].effect, None)
 
     def test_hedgehog(self):
         pass
