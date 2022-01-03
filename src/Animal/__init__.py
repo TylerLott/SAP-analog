@@ -181,7 +181,7 @@ class Animal(ABC):
         returns whether the animal is still alive
         """
         self.hp = self.temp_hp + self.base_hp
-        if self.hp < 0:
+        if self.hp <= 0:
             self.alive = False
         return self.alive
 

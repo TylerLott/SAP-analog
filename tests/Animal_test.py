@@ -385,13 +385,27 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t2.friends[0].alive)
 
     def test_dragon(self):
-        pass
+        t = Team()
+        t.friends[0] = Dragon()
+        t.buyFriend(0, 1)
+        self.assertEqual(t.friends[0].getHp(), 9)
 
     def test_duck(self):
-        pass
+        t = Team()
+        t.friends[0] = Duck()
+
+        t.shop.animals[0] = Ant()
+        t.sellFriend(0)
+        self.assertEqual(t.shop.animals[0].getHp(), 2)
 
     def test_elephant(self):
-        pass
+        t = Team()
+        t.friends[0] = Elephant()
+        t.friends[1] = Ant()
+
+        t.friends[0].onBeforeAttack(t.friends, [])
+        print(t.friends[1])
+        self.assertFalse(t.friends[1].alive)
 
     def test_fish(self):
         pass

@@ -533,12 +533,8 @@ class Dragon(Animal):
     def onFriendBought(self, friends: List[Animal], friend: Animal):
         if not friend.getTier() == 1:
             return
-        pos = self.getPosition(friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
-
-        for i in others:
+        for i in friends:
             i.setBaseHp(i.getBaseHp() + self.getLevel())
             i.setBaseDmg(i.getBaseDmg() + self.getLevel())
 
