@@ -400,12 +400,8 @@ class Animal(ABC):
             perm_buff = other.getPermBuff()
             effect = other.getEffect()
 
-            # TODO implement pill
-            if effect == "pill":
-                pass
-
             # TODO implement chocolate
-            elif effect == "exp":
+            if effect == "exp":
                 self.__setExp(self.getExp() + 1)
 
             elif effect != None:

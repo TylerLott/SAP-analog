@@ -114,6 +114,14 @@ class Team:
             food.perm_dmg *= haveCat
             food.temp_hp *= haveCat
 
+            if food.effect == "pill":
+                self.friends[position].onFaint(self.friends, [])
+                for i in self.friends:
+                    if i != self.friends[position]:
+                        i.onFriendFaint(self.friends)
+                if len(self.friends) > position + 1:
+                    self.friends[position + 1].onFriendAheadFaint(self.friends, [])
+
             if food.effect == "random":
                 food.effect = None
                 friends = []
