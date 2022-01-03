@@ -190,8 +190,8 @@ class Team:
             self.money -= 1
 
     def endTurn(self) -> None:
-        # TODO call onEndOfTurn for all animals
-        pass
+        for i in self.friends:
+            i.onEndOfTurn(self.friends)
 
     def nextTurn(self) -> None:
 

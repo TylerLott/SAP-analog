@@ -83,16 +83,6 @@ class Badger(Animal):
         super().onFaint(friends, enemies)
 
 
-class Bat(Animal):
-    def __init__(self, health: int = 0, dmg: int = 0):
-
-        default_health = 2
-        default_dmg = 1
-
-        super().__init__(default_health + health, default_dmg + dmg)
-        self.tier = 2
-
-
 class Beaver(Animal):
     """
     Beaver Class
@@ -114,9 +104,7 @@ class Beaver(Animal):
         self.tier = 1
 
     def onSell(self, friends: List[Animal], team) -> None:
-        pos = self.getPosition(friends)
-        possible = list(range(len(friends) - 1))
-        possible.remove(pos)
+        pos, possible = getPosAndOthers(self, friends)
 
         animals = getSubset(possible, k=2)
 
@@ -176,14 +164,11 @@ class Blowfish(Animal):
         self.tier = 3
 
     def onHurt(self, friends: List[Animal], enemies: List[Animal]):
-        if len(enemies) <= 0:
-            return
-        if len(enemies) == 1:
-            animal = enemies[0]
-        else:
-            animal = choice(enemies)
+        pos, possible = getPosAndOthers(self, enemies)
+        animal = getSubset(possible, k=1)
         # enemies and friends are flipped because it it hurting an enemy
-        animal.subHp(2 * self.getLevel(), enemies, friends)
+        if len(animal) > 0:
+            enemies[animal[0]].subHp(2 * self.getLevel(), enemies, friends)
 
 
 class Boar(Animal):
@@ -1775,11 +1760,12 @@ def getSubset(possible: List[int], k: int) -> List[int]:
 def getPosAndOthers(friend: Animal, friends: List[Animal]) -> list:
     # return [pos, [others]]
     pos = friend.getPosition(friends)
-    possible = list(range(len(friends) - 1))
+    possible = []
+    for i in range(len(friends)):
+        if friends[i]:
+            possible.append(i)
 
-    if len(possible) <= 1:
-        possible = []
-    else:
+    if len(possible) > pos and possible[pos] == friend:
         possible.remove(pos)
 
     return [pos, possible]

@@ -1,10 +1,13 @@
 import unittest
-from src.Animal.Animals import Ant, Scorpion
+from src.Animal.Animals import *
 from src.Food.Foods import *
 from src.Team import Team
 
 
 class AnimalTests(unittest.TestCase):
+
+    ### All Animal methods Tests ###
+
     def test_create(self):
         an = Ant()
         self.assertEqual(an.__str__(), Ant().__str__())
@@ -198,3 +201,234 @@ class AnimalTests(unittest.TestCase):
 
         an2 = Ant(6, 3)
         self.assertEqual(an.__str__(), an2.__str__())
+
+    ### Specific Animal Tests ###
+
+    def test_ant(self):
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Ant()
+        t.shop.items[0] = Pill()
+        t.buyFood(0, 0)
+
+        self.assertEqual(t.friends[1].getHp(), 2)
+        self.assertEqual(t.friends[1].getDmg(), 4)
+
+    def test_badger(self):
+        t = Team()
+        t.friends[0] = Badger()
+        t.friends[1] = Ant()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].onFaint(t.friends, t2.friends)
+        self.assertFalse(t.friends[1].alive)
+        self.assertFalse(t2.friends[0].alive)
+
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Badger()
+        t.friends[2] = Ant()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[1].onFaint(t.friends, t2.friends)
+        self.assertFalse(t.friends[0].alive)
+        self.assertFalse(t.friends[2].alive)
+        self.assertTrue(t2.friends[0].alive)
+
+    def test_beaver(self):
+        t = Team()
+        t.friends[0] = Beaver()
+        t.friends[1] = Ant()
+
+        t.sellFriend(0)
+
+        self.assertEqual(t.friends[1].getHp(), 2)
+
+    def test_bison(self):
+        t = Team()
+        t.friends[0] = Bison()
+        t.friends[1] = Ant()
+        for i in range(6):
+            t.friends[1] += Ant()
+
+        self.assertEqual(t.friends[1].getLevel(), 3)
+        t.endTurn()
+        self.assertEqual(t.friends[0].getHp(), 8)
+        self.assertEqual(t.friends[0].getDmg(), 8)
+
+    def test_blowfish(self):
+        t = Team()
+        t.friends[0] = Blowfish()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t2.friends[0].attack(t2.friends, t.friends)
+
+        self.assertFalse(t2.friends[0].alive)
+
+    def test_boar(self):
+        pass
+
+    def test_camel(self):
+        pass
+
+    def test_cat(self):
+        pass
+
+    def test_cow(self):
+        pass
+
+    def test_crab(self):
+        pass
+
+    def test_cricket(self):
+        pass
+
+    def test_crocodile(self):
+        pass
+
+    def test_deer(self):
+        pass
+
+    def test_dodo(self):
+        pass
+
+    def test_dog(self):
+        pass
+
+    def test_dolphin(self):
+        pass
+
+    def test_dragon(self):
+        pass
+
+    def test_duck(self):
+        pass
+
+    def test_elephant(self):
+        pass
+
+    def test_fish(self):
+        pass
+
+    def test_flamingo(self):
+        pass
+
+    def test_fly(self):
+        pass
+
+    def test_giraffe(self):
+        pass
+
+    def test_gorilla(self):
+        pass
+
+    def test_hedgehog(self):
+        pass
+
+    def test_hippo(self):
+        pass
+
+    def test_horse(self):
+        pass
+
+    def test_kangaroo(self):
+        pass
+
+    def test_leopard(self):
+        pass
+
+    def test_mammoth(self):
+        pass
+
+    def test_mosquito(self):
+        pass
+
+    def test_monkey(self):
+        pass
+
+    def test_otter(self):
+        pass
+
+    def test_ox(self):
+        pass
+
+    def test_parrot(self):
+        pass
+
+    def test_peacock(self):
+        pass
+
+    def test_penguin(self):
+        pass
+
+    def test_pig(self):
+        pass
+
+    def test_rabbit(self):
+        pass
+
+    def test_rat(self):
+        pass
+
+    def test_rhino(self):
+        pass
+
+    def test_rooster(self):
+        pass
+
+    def test_scorpion(self):
+        pass
+
+    def test_seal(self):
+        pass
+
+    def test_shark(self):
+        pass
+
+    def test_sheep(self):
+        pass
+
+    def test_shrimp(self):
+        pass
+
+    def test_skunk(self):
+        pass
+
+    def test_sloth(self):
+        pass
+
+    def test_snail(self):
+        pass
+
+    def test_snake(self):
+        pass
+
+    def test_spider(self):
+        pass
+
+    def test_squirrel(self):
+        pass
+
+    def test_swan(self):
+        pass
+
+    def test_tiger(self):
+        pass
+
+    def test_turkey(self):
+        pass
+
+    def test_turtle(self):
+        pass
+
+    def test_whale(self):
+        pass
+
+    def test_worm(self):
+        pass

@@ -201,7 +201,7 @@ class Animal(ABC):
         elif self.effect == "meat":
             dmg += 5
 
-        knockout = enemies[0].subHp(dmg, friends, enemies)
+        knockout = enemies[0].subHp(dmg, enemies, friends)
         if knockout:
             self.onKnockOut(friends, enemies)
 
@@ -326,14 +326,10 @@ class Animal(ABC):
                 self.base_dmg if self.base_dmg > other.base_dmg else other.base_dmg
             )
             low_exp = (
-                self.getLevel()
-                if self.getLevel() < other.getLevel()
-                else other.getLevel()
+                self.getExp() if self.getExp() < other.getLevel() else other.getLevel()
             )
             high_exp = (
-                self.getLevel()
-                if self.getLevel() > other.getLevel()
-                else other.getLevel()
+                self.getExp() if self.getExp() > other.getLevel() else other.getLevel()
             )
             self.__setExp(low_exp + high_exp)
             self.setHp(high_hp + low_exp)
