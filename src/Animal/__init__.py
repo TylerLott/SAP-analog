@@ -202,9 +202,18 @@ class Animal(ABC):
         elif self.effect == "meat":
             dmg += 5
 
-        knockout = enemies[0].subHp(dmg, enemies, friends)
-        if knockout:
-            self.onKnockOut(friends, enemies)
+        if self.effect == "splash":
+            knockout1 = enemies[0].subHp(dmg, enemies, friends)
+            knockout2 = False
+            if len(enemies) > 1:
+                knockout2 = enemies[1].subHp(dmg, enemies, friends)
+            if knockout1 or knockout2:
+                self.onKnockOut(friends, enemies)
+
+        else:
+            knockout = enemies[0].subHp(dmg, enemies, friends)
+            if knockout:
+                self.onKnockOut(friends, enemies)
 
     ### Special On Events ###
     # These are passed friends or enemy lists of animals so they can be used in shop or fight

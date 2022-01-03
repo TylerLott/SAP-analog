@@ -322,13 +322,40 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[0].getHp(), t.friends[1].getHp())
 
     def test_cricket(self):
-        pass
+        t = Team()
+        t.friends[0] = Cricket()
+        t.friends[0].onFaint(t.friends, [])
+        self.assertEqual(t.friends[0].__class__, CricketSpawn)
 
     def test_crocodile(self):
-        pass
+        t = Team()
+        t.friends[0] = Crocodile()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+        t2.friends[1] = Ant()
+        t2.friends[2] = Ant()
+        t2.friends[3] = Ant()
+        t2.friends[4] = Ant()
+
+        t.friends[0].onStartOfBattle(t.friends, t2.friends)
+        self.assertFalse(t2.friends[4].alive)
 
     def test_deer(self):
-        pass
+        t = Team()
+        t.friends[0] = Deer()
+        t.friends[0].onFaint(t.friends, [])
+
+        self.assertEqual(t.friends[0].__class__, Bus)
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+        t2.friends[1] = Ant()
+
+        t.friends[0].attack(t.friends, t2.friends)
+
+        self.assertFalse(t2.friends[0].alive)
+        self.assertFalse(t2.friends[1].alive)
 
     def test_dodo(self):
         pass
