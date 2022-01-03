@@ -97,16 +97,26 @@ class Team:
                     self.friends[friend_pos].onLevelUp()
 
     def buyFood(self, shop_pos: int, position: int) -> None:
-        # TODO implement random effect
-        # TODO implement buffShop effect
         food = self.shop.checkFood(shop_pos)
+
         if self.money >= food.getCost():
+
             food = self.shop.buyFood(shop_pos)
-            self.money -= food.getCost()
-            # iadd override in animal makes this work
-            self.friends[position] += food
-            self.friends[position].onEat(self.friends)
-            # TODO call onFriendEat for all other animals
+            # TODO implement random effect
+            if food.effect == "random":
+                pass
+            elif food.effect == "buffShop":
+                self.shop.health_modifier += 1
+                self.shop.dmg_modifier += 1
+            else:
+
+                self.money -= food.getCost()
+                # iadd override in animal makes this work
+                self.friends[position] += food
+                self.friends[position].onEat(self.friends)
+                for i in len(self.friends):
+                    if self.friends[i] and i != position:
+                        self.friends[i].onFriendEat(self.friends[position])
 
     def loseLife(self) -> None:
         if self.round <= 3:
