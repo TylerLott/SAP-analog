@@ -105,6 +105,14 @@ class Team:
         if self.money >= food.getCost():
 
             food = self.shop.buyFood(shop_pos)
+            haveCat = 1
+            for i in self.friends:
+                if i.__class__.__name__ == "Cat":
+                    haveCat += i.getLevel()
+            food.perm_hp *= haveCat
+            food.temp_hp *= haveCat
+            food.perm_dmg *= haveCat
+            food.temp_hp *= haveCat
 
             if food.effect == "random":
                 food.effect = None

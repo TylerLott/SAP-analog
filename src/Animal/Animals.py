@@ -262,7 +262,7 @@ class Cat(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
 
-    # TODO figure out how to implement this
+    # implemented in team buy food method
 
 
 class Cow(Animal):
