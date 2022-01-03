@@ -1,3 +1,4 @@
+from random import choices
 from typing import List
 from copy import deepcopy
 
@@ -76,8 +77,8 @@ class Team:
     def sellFriend(self, friend_pos: int) -> None:
         if self.friends[friend_pos]:
             self.add_money(self.friends[friend_pos].getLevel())
+            self.friends[friend_pos].onSell(self.friends, self, self.shop)
             self.friends[friend_pos] = NoneAnimal()
-            # onSell
             # onFriendSell
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
@@ -102,9 +103,18 @@ class Team:
         if self.money >= food.getCost():
 
             food = self.shop.buyFood(shop_pos)
-            # TODO implement random effect
+
             if food.effect == "random":
-                pass
+                food.effect = None
+                friends = []
+                for i in self.friends:
+                    if i:
+                        friends.append(i)
+                if len(friends) > food.num_animals:
+                    friends = choices(friends, k=food.num_animals)
+                for i in friends:
+                    i += food
+                    i.onEat(self.friends)
             elif food.effect == "buffShop":
                 self.shop.health_modifier += 1
                 self.shop.dmg_modifier += 1
@@ -113,7 +123,6 @@ class Team:
                         i.setBaseHp(i.getBaseHp() + 1)
                         i.setBaseDmg(i.getBaseDmg() + 1)
             else:
-
                 self.money -= food.getCost()
                 # iadd override in animal makes this work
                 self.friends[position] += food
@@ -137,10 +146,6 @@ class Team:
         self.money += amt
 
     ### Private ###
-
-    def __onSell(self) -> None:
-        # TODO call onsell for sold friend
-        pass
 
     def __onFriendSold(self) -> None:
         # TODO call onfriendsold for all other animals

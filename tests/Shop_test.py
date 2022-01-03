@@ -1,5 +1,6 @@
 import unittest
-from src.Food.Foods import CannedFood
+from src.Animal.Animals import Ant
+from src.Food.Foods import CannedFood, Salad
 
 from src.Shop import Shop
 from src.Team import Team
@@ -19,3 +20,24 @@ class TeamTests(unittest.TestCase):
 
         self.assertEqual(t.shop.health_modifier, 1)
         self.assertEqual(t.shop.dmg_modifier, 1)
+
+    def test_shop_randomfood(self):
+        t = Team()
+        f = Salad()
+        t.shop.items[0] = f
+        t.friends[0] = Ant()
+        t.friends[1] = Ant()
+
+        t.buyFood(0, 0)
+
+        self.assertEqual(t.friends[0].getHp(), 2)
+        self.assertEqual(t.friends[1].getHp(), 2)
+
+        t = Team()
+        f = Salad()
+        t.shop.items[0] = f
+        t.friends[0] = Ant()
+
+        t.buyFood(0, 0)
+
+        self.assertEqual(t.friends[0].getHp(), 2)
