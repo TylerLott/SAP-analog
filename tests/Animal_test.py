@@ -505,16 +505,42 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[1].getHp(), 4)
 
     def test_leopard(self):
-        pass
+        t = Team()
+        t.friends[0] = Leopard()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].onStartOfBattle(t.friends, t2.friends)
+        self.assertFalse(t2.friends[0].alive)
 
     def test_mammoth(self):
-        pass
+        t = Team()
+        t.friends[0] = Mammoth()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
+
+        t.friends[0].onFaint(t.friends, [])
+        self.assertEqual(t.friends[1].getHp(), 3)
+        self.assertEqual(t.friends[2].getHp(), 3)
 
     def test_mosquito(self):
-        pass
+        t = Team()
+        t.friends[0] = Mosquito()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].onStartOfBattle(t.friends, t2.friends)
+        self.assertFalse(t2.friends[0].alive)
 
     def test_monkey(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Monkey()
+
+        t.friends[1].onEndOfTurn(t.friends)
+        self.assertEqual(t.friends[0].getHp(), 4)
 
     def test_otter(self):
         pass

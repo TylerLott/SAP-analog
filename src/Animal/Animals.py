@@ -839,9 +839,13 @@ class Leopard(Animal):
         self.tier = 6
 
     def onStartOfBattle(self, friends: list, enemies: List[Animal]):
-        animals = getSubset(enemies, k=self.getLevel())
+        enemy = []
+        for i in enemies:
+            if i:
+                enemy.append(i)
+        animals = getSubset(enemy, k=self.getLevel())
         for i in animals:
-            enemies[i].subHp(round(self.getDmg() * 0.5), enemies, friends)
+            i.subHp(round(self.getDmg() * 0.5), enemies, friends)
 
 
 class Mammoth(Animal):
@@ -894,8 +898,13 @@ class Mosquito(Animal):
         self.tier = 1
 
     def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]) -> None:
-        animal = choice(enemies)
-        animal.subHp(1 * self.getLevel(), enemies, friends)
+        enemy = []
+        for i in enemies:
+            if i:
+                enemy.append(i)
+        animal = getSubset(enemy, k=1)
+        for i in animal:
+            i.subHp(1 * self.getLevel(), enemies, friends)
 
 
 class Monkey(Animal):
