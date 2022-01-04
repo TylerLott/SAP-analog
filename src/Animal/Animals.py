@@ -38,7 +38,8 @@ class Ant(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]) -> None:
         pos, possible = getPosAndOthers(self, friends)
-        possible.remove(pos)
+        if pos in possible:
+            possible.remove(pos)
         if len(possible) == 0:
             return
         friend = choice(possible)
@@ -953,16 +954,17 @@ class Otter(Animal):
 
     def onBuy(self, friends: List[Animal], team):
         pos = self.getPosition(friends)
-
-        possible = list(range(len(friends) - 1))
-        possible.remove(pos)
+        possible = []
+        for i in friends:
+            if i and i != self:
+                possible.append(i)
 
         friend = getSubset(possible, k=1)
         amt = self.getLevel()
 
         for i in friend:
-            friends[i].setBaseHp(friends[i].getBaseHp() + amt)
-            friends[i].setBaseDmg(friends[i].getBaseDmg() + amt)
+            i.setBaseHp(i.getBaseHp() + amt)
+            i.setBaseDmg(i.getBaseDmg() + amt)
 
 
 class Ox(Animal):
@@ -1164,8 +1166,10 @@ class Rhino(Animal):
         self.tier = 5
 
     def onKnockOut(self, friends: list, enemies: List[Animal]):
-        if len(enemies) > 0:
-            enemies[0].subHp(4 * self.getLevel(), enemies, friends)
+        for i in range(len(enemies)):
+            if enemies[i].alive:
+                enemies[i].subHp(4 * self.getLevel(), enemies, friends)
+                return
 
 
 class Rooster(Animal):

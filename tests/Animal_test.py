@@ -543,34 +543,90 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[0].getHp(), 4)
 
     def test_otter(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+
+        t.shop.animals[0] = Otter()
+        t.buyFriend(0, 1)
+
+        self.assertEqual(t.friends[0].getHp(), 2)
+
+        t.shop.animals[0] = Otter()
+        t.buyFriend(0, 1)
+        t.shop.animals[0] = Otter()
+        t.buyFriend(0, 1)
+
+        self.assertEqual(t.friends[0].getHp(), 5)
 
     def test_ox(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Ox()
+
+        self.assertEqual(t.friends[1].effect, None)
+
+        t.friends[1].onFriendAheadFaint(t.friends, [])
+
+        self.assertEqual(t.friends[1].effect, "melon")
+        self.assertEqual(t.friends[1].getDmg(), 3)
 
     def test_parrot(self):
+        # TODO this
         pass
 
     def test_peacock(self):
-        pass
+        t = Team()
+        t.friends[0] = Peacock()
+        t.friends[0].subHp(1, t.friends, [])
+
+        self.assertEqual(t.friends[0].getDmg(), 3)
 
     def test_penguin(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        for i in range(2):
+            t.friends[0] += Ant()
+        t.friends[1] = Penguin()
+        t.friends[1].onEndOfTurn(t.friends)
+
+        self.assertEqual(t.friends[0].getHp(), 2)
 
     def test_pig(self):
-        pass
+        t = Team()
+        t.friends[0] = Pig()
+        t.sellFriend(0)
+        self.assertEqual(t.getMoney(), 12)
 
     def test_rabbit(self):
-        pass
+        t = Team()
+        t.friends[0] = Rabbit()
+        t.friends[1] = Ant()
+        t.shop.items[0] = Apple()
+        t.buyFood(0, 1)
+
+        self.assertEqual(t.friends[1].getHp(), 3)
 
     def test_rat(self):
+        # TODO fix rat
         pass
 
     def test_rhino(self):
-        pass
+        t = Team()
+        t.friends[0] = Rhino()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+        t2.friends[1] = Ant()
+
+        t.friends[0].attack(t.friends, t2.friends)
+        self.assertFalse(t2.friends[0].alive)
+        self.assertFalse(t2.friends[1].alive)
 
     def test_rooster(self):
-        pass
+        t = Team()
+        t.friends[0] = Rooster()
+        t.friends[0].onFaint(t.friends, [])
+        self.assertEqual(t.friends[0].__class__, Chick)
 
     def test_scorpion(self):
         pass
@@ -609,6 +665,7 @@ class AnimalTests(unittest.TestCase):
         pass
 
     def test_tiger(self):
+        # TODO implement tiger
         pass
 
     def test_turkey(self):
