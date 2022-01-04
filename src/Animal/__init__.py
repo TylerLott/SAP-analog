@@ -135,13 +135,23 @@ class Animal(ABC):
             return
 
         if self.effect == "melon":
+            if amt < 0:
+                amt = abs(amt)
             amt = amt - 20 if amt - 20 > 0 else 0
             self.effect = None
         elif self.effect == "coconut":
             amt = 0
             self.effect = None
         elif self.effect == "garlic":
-            amt = amt - 2 if amt - 2 > 1 else 1
+            if not amt < 0:
+                amt = amt - 2 if amt - 2 > 1 else 1
+
+        # for poison hit
+        if amt < 0:
+            self.temp_hp = 0
+            self.base_hp = 0
+            self.__recalcHp()
+            return True
 
         if self.temp_hp > 0:
             self.temp_hp -= amt
@@ -209,6 +219,8 @@ class Animal(ABC):
                 knockout2 = enemies[1].subHp(dmg, enemies, friends)
             if knockout1 or knockout2:
                 self.onKnockOut(friends, enemies)
+        elif self.effect == "poison":
+            knockout = enemies[0].subHp(-dmg, enemies, friends)
 
         else:
             knockout = enemies[0].subHp(dmg, enemies, friends)

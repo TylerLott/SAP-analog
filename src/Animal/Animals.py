@@ -1272,12 +1272,12 @@ class Seal(Animal):
         self.tier = 5
 
     def onEat(self, friends: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, possible = getPosAndOthers(self, friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
+        if pos in possible:
+            possible.remove(pos)
 
-        animals = getSubset(others, k=2)
+        animals = getSubset(possible, k=2)
         for i in animals:
             friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
             friends[i].setBaseDmg(friends[i].getBaseDmg() + self.getLevel())

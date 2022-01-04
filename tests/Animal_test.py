@@ -368,6 +368,7 @@ class AnimalTests(unittest.TestCase):
     def test_dog(self):
         t = Team()
         t.friends[0] = Dog()
+        t.shop.animals[0] = Ant()
         t.buyFriend(0, 1)
 
         self.assertEqual(t.friends[0].getDmg(), 3)
@@ -589,7 +590,7 @@ class AnimalTests(unittest.TestCase):
         t.friends[1] = Penguin()
         t.friends[1].onEndOfTurn(t.friends)
 
-        self.assertEqual(t.friends[0].getHp(), 2)
+        self.assertEqual(t.friends[0].getHp(), 4)
 
     def test_pig(self):
         t = Team()
@@ -629,13 +630,34 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[0].__class__, Chick)
 
     def test_scorpion(self):
-        pass
+        t = Team()
+        t.friends[0] = Scorpion()
+
+        t2 = Team()
+        t2.friends[0] = Ant(100, 0)
+
+        t.friends[0].attack(t.friends, t2.friends)
+        self.assertFalse(t2.friends[0].alive)
 
     def test_seal(self):
-        pass
+        t = Team()
+        t.friends[0] = Seal()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
+        t.shop.items[0] = Apple()
+
+        t.buyFood(0, 0)
+
+        self.assertEqual(t.friends[1].getHp(), 2)
+        self.assertEqual(t.friends[2].getHp(), 2)
 
     def test_shark(self):
-        pass
+        t = Team()
+        t.friends[0] = Shark()
+
+        t.friends[0].onFriendFaint()
+
+        self.assertEqual(t.friends[0].getHp(), 5)
 
     def test_sheep(self):
         pass

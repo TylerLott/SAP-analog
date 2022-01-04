@@ -133,6 +133,8 @@ class Fight:
                     self.team1Friends[ind + 1].onFriendAheadFaint(
                         self.team1Friends, self.team2Friends
                     )
+                for i in self.team1Friends:
+                    i.onFriendFaint()
                 if i in self.team1Friends:
                     self.team1Friends.remove(i)
         for i in self.team2Friends:
@@ -143,6 +145,8 @@ class Fight:
                     self.team2Friends[ind + 1].onFriendAheadFaint(
                         self.team2Friends, self.team1Friends
                     )
+                for i in self.team2Friends:
+                    i.onFriendFaint()
                 if i in self.team2Friends:
                     self.team2Friends.remove(i)
 
