@@ -655,49 +655,122 @@ class AnimalTests(unittest.TestCase):
         t = Team()
         t.friends[0] = Shark()
 
-        t.friends[0].onFriendFaint()
+        t.friends[0].onFriendFaint(t.friends)
 
         self.assertEqual(t.friends[0].getHp(), 5)
 
     def test_sheep(self):
-        pass
+        # did this because noneanimals, kinda jank
+        t = [Sheep()]
+
+        t[0].onFaint(t, [])
+
+        self.assertEqual(t[0].__class__, Ram)
+        self.assertEqual(t[1].__class__, Ram)
 
     def test_shrimp(self):
-        pass
+        t = Team()
+        t.friends[0] = Shrimp()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
+        t.sellFriend(2)
+
+        self.assertEqual(t.friends[1].getHp(), 2)
 
     def test_skunk(self):
-        pass
+        t = Team()
+        t.friends[0] = Skunk()
+
+        t2 = Team()
+        t2.friends[0] = Ant(2)
+
+        t.friends[0].onStartOfBattle(t.friends, t2.friends)
+
+        self.assertEqual(t2.friends[0].getHp(), 1)
 
     def test_sloth(self):
+        # nothing
         pass
 
     def test_snail(self):
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Ant()
+        t.wonLast = False
+
+        t.shop.animals[0] = Snail()
+
+        t.buyFriend(0, 2)
+        self.assertEqual(t.friends[0].getHp(), 2)
+        self.assertEqual(t.friends[1].getHp(), 2)
 
     def test_snake(self):
-        pass
+        t = Team()
+        t.friends[0] = Snake()
+
+        t2 = Team()
+        t2.friends[0] = Ant()
+
+        t.friends[0].onFriendAheadAttack(t.friends, t2.friends)
+
+        self.assertFalse(t2.friends[0].alive)
 
     def test_spider(self):
-        pass
+        t = Team()
+        t.friends[0] = Spider()
+        t.friends[0].onFaint(t.friends, [])
+
+        self.assertEqual(t.friends[0].tier, 3)
 
     def test_squirrel(self):
-        pass
+        t = Team()
+        t.friends[0] = Squirrel()
+        t.friends[0].onStartOfTurn(t)
+
+        self.assertEqual(t.shop.items[0].cost, 2)
 
     def test_swan(self):
-        pass
+        t = Team()
+        t.friends[0] = Swan()
+        t.friends[0].onStartOfTurn(t)
+
+        self.assertEqual(t.getMoney(), 11)
 
     def test_tiger(self):
         # TODO implement tiger
         pass
 
     def test_turkey(self):
-        pass
+        t = Team()
+        t.friends[0] = Spider()
+        t.friends[1] = Turkey()
+
+        t.friends[0].onFaint(t.friends, [])
+        self.assertEqual(t.friends[0].getHp(), 5)
 
     def test_turtle(self):
-        pass
+        t = Team()
+        t.friends[0] = Turtle()
+        t.friends[1] = Ant()
+
+        t.friends[0].onFaint(t.friends, [])
+        self.assertEqual(t.friends[1].effect, "melon")
 
     def test_whale(self):
-        pass
+        t = Team()
+        t.friends[0] = Sloth()
+        t.friends[1] = Whale()
+
+        t.friends[1].onStartOfBattle(t.friends, [])
+        self.assertEqual(t.friends[1].jonah.__class__, Sloth)
+
+        t.friends[1].onFaint(t.friends, [])
+        self.assertEqual(t.friends[1].__class__, Sloth)
 
     def test_worm(self):
-        pass
+        t = Team()
+        t.friends[0] = Worm()
+        t.shop.items[0] = Apple()
+        t.buyFood(0, 0)
+        self.assertEqual(t.friends[0].getHp(), 4)
+        self.assertEqual(t.friends[0].getDmg(), 4)

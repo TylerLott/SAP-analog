@@ -1,6 +1,6 @@
 from random import choice, choices
 from typing import List
-from math import floor
+from math import ceil, floor
 
 from src.Animal import Animal
 from src.Food.Foods import Melon, Milk
@@ -677,7 +677,8 @@ class Fly(Animal):
 
     def onFriendFaint(self, friends: List[Animal]):
         # TODO figure out how to find location to insert fly
-        return super().onFriendFaint()
+        # return super().onFriendFaint(friends)
+        pass
 
 
 class Giraffe(Animal):
@@ -1123,6 +1124,7 @@ class Rat(Animal):
 
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         if len(enemies) < 5:
+            # pass
             enemies.append(DirtyRat(0, 0))
         super().onFaint(friends, enemies)
 
@@ -1303,7 +1305,7 @@ class Shark(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
 
-    def onFriendFaint(self):
+    def onFriendFaint(self, friends):
         self.setBaseHp(self.getBaseHp() + self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 
@@ -1382,11 +1384,12 @@ class Shrimp(Animal):
         self.tier = 2
 
     def onFriendSold(self, friends: List[Animal]):
-        pos = self.getPosition(friends)
+        pos, possible = getPosAndOthers(self, friends)
 
-        others = list(range(len(friends) - 1))
-        others.remove(pos)
-        friend = getSubset(others, k=1)
+        if pos in possible:
+            possible.remove(pos)
+
+        friend = getSubset(possible, k=1)
 
         for i in friend:
             friends[i].setBaseHp(friends[i].getBaseHp() + self.getLevel())
@@ -1417,7 +1420,8 @@ class Skunk(Animal):
         for i in enemies:
             if i.getHp() > highest.getHp():
                 highest = i
-        highest.subHp(floor(0.33 * highest.getHp()), enemies, friends)
+        highest.setBaseHp(ceil(0.33 * highest.getHp()))
+        highest.setTempHp(0)
 
 
 class Sloth(Animal):
@@ -1486,9 +1490,14 @@ class Snake(Animal):
         self.tier = 6
 
     def onFriendAheadAttack(self, friends: list, enemies: List[Animal]):
-        animal = choice(enemies)
+        enemy = []
+        for i in enemies:
+            if i:
+                enemy.append(i)
 
-        animal.subHp(5 * self.getLevel(), enemies, friends)
+        animal = getSubset(enemy, k=1)
+        for i in animal:
+            i.subHp(5 * self.getLevel(), enemies, friends)
 
 
 class Spider(Animal):
@@ -1613,8 +1622,8 @@ class Turkey(Animal):
         self.tier = 5
 
     def onFriendSummoned(self, friends: list, friend: Animal):
-        friend.setBaseHp(self.getBaseHp() + 3 * self.getLevel())
-        friend.setBaseDmg(self.getBaseDmg() + 3 * self.getLevel())
+        friend.setBaseHp(friend.getBaseHp() + 3 * self.getLevel())
+        friend.setBaseDmg(friend.getBaseDmg() + 3 * self.getLevel())
 
 
 class Turtle(Animal):
@@ -1756,6 +1765,8 @@ def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
     animal = choice(animals[tier])(0, 0)
     animal.setBaseHp(health)
     animal.setBaseDmg(dmg)
+    animal.setTempHp(0)
+    animal.setTempDmg(0)
     # TODO apply level to new animal
     return animal
 
