@@ -197,11 +197,15 @@ class Animal(ABC):
         self.hp = self.temp_hp + self.base_hp
         if self.hp <= 0:
             self.alive = False
+        if self.hp > 50:
+            self.hp = 50
         return self.alive
 
     def __recalcDmg(self):
         """private recalcuate total damage method"""
         self.dmg = self.temp_dmg + self.base_dmg
+        if self.dmg > 50:
+            self.dmg = 50
 
     #### On Events ####
 
