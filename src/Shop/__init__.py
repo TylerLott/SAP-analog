@@ -1,3 +1,5 @@
+import numpy as np
+
 from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Food import Food
@@ -79,7 +81,18 @@ class Shop:
 
         returns shop state array
         """
-        pass
+
+        anim_state = [i.getState() for i in self.animals]
+        anim_state = np.stack(anim_state, axis=0)
+        while anim_state.shape[0] < 5:
+            anim_state = np.append(anim_state, [NoneAnimal().getState()], axis=0)
+
+        food_state = [i.getState() for i in self.items]
+        food_state = np.stack(food_state, axis=0)
+        while food_state.shape[0] < 2:
+            food_state = np.append(food_state, [NoneFood().getState()], axis=0)
+
+        return anim_state, food_state
 
     ### Setters ###
 

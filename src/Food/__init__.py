@@ -1,5 +1,7 @@
 from abc import ABC
 
+from src.State import getFoodState
+
 
 class Food(ABC):
     """
@@ -39,6 +41,9 @@ class Food(ABC):
     def getPermBuff(self) -> list:
         # [perm_hp, perm_dmg]
         return self.perm_buff
+
+    def getState(self):
+        return getFoodState(self)
 
     ### Setters ###
 

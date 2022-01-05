@@ -2,6 +2,7 @@ import unittest
 
 from src.Animal.Animals import *
 from src.State import getAnimalState
+from src.Team import Team
 
 
 class StateTests(unittest.TestCase):
@@ -29,3 +30,10 @@ class StateTests(unittest.TestCase):
         self.assertEqual(state[0], 1)
         for i in state[1:]:
             self.assertEqual(i, 0)
+
+    def test_team_state(self):
+        t = Team()
+        state = t.getState()
+        self.assertEqual(state[0].shape, (5, 83))
+        self.assertEqual(state[1].shape, (5, 83))
+        self.assertEqual(state[2].shape, (2, 18))

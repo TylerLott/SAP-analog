@@ -88,7 +88,31 @@ ANIMAL_EFFECT_DICT = {
     None: 76,
 }
 
-# State Array
+
+# Food State Dict
+FOOD_STATE_DICT = {
+    "NoneFood": 0,
+    "Apple": 1,
+    "Honey": 2,
+    "Cupcake": 3,
+    "MeatBone": 4,
+    "Pill": 5,
+    "Garlic": 6,
+    "Salad": 7,
+    "CannedFood": 8,
+    "Pear": 9,
+    "Chili": 10,
+    "Chocolate": 11,
+    "Sushi": 12,
+    "Melon": 13,
+    "Mushroom": 14,
+    "Pizza": 15,
+    "Steak": 16,
+    "Milk": 17,
+}
+
+
+# Animal State Array
 # [Animal, Animal effect, temp_dmg, temp_hp, perm_dmg, perm_hp, exp, level]
 #   [66]        [11]         [1]      [1]       [1]       [1]   [1]    [1]
 
@@ -113,5 +137,14 @@ def getAnimalState(animal) -> np.array:
     arr[79] = animal.getBaseDmg()
     arr[78] = animal.getTempHp()
     arr[77] = animal.getTempDmg()
+
+    return arr
+
+
+def getFoodState(food) -> np.array:
+    arr = np.zeros(18)
+
+    food_ind = FOOD_STATE_DICT[food.__class__.__name__]
+    arr[food_ind] = 1
 
     return arr

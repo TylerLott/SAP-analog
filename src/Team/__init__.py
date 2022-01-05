@@ -1,6 +1,7 @@
 from random import choices
 from typing import List
 from copy import deepcopy
+import numpy as np
 
 from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
@@ -241,8 +242,18 @@ class Team:
             - shop state
             - possible moves
         """
-        # TODO implement this
-        pass
+        # Friend State
+        friend_state = [i.getState() for i in self.friends]
+        friend_state = np.stack(friend_state, axis=0)
+
+        # Shop State
+        shop_an, shop_food = self.shop.getState()
+
+        # Possible moves state
+        # TODO implement possible moves state
+        possible_moves = np.array([0])
+
+        return friend_state, shop_an, shop_food, possible_moves
 
     ### Overrides ###
 
