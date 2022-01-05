@@ -6,6 +6,7 @@ import numpy as np
 from src.Animal import Animal
 from src.Animal.Animals import NoneAnimal
 from src.Shop import Shop
+from src.State import getPossibleMovesState
 
 
 class Team:
@@ -258,19 +259,24 @@ class Team:
         # Shop State
         shop_an, shop_food = self.shop.getState()
 
-        # Possible moves state
-        # TODO implement possible moves state
-        # possible moves:
-        #    - roll          [1]
-        #    - end turn      [1]
-        #    - move animals  [15]
-        #    - sell animals  [5 * 5 = 25]
-        #    - buy animals   [5 * 5 = 25]
-        #    - buy food      [2 * 5 = 10]
-        #    Total           [77]
-        possible_moves = np.array([0])
+        # Team State
+        won_last = 1 if self.wonLast else 0
+        # Normalize money by 20
+        money = self.getMoney() if self.getMoney() <= 20 else 20
 
-        return friend_state, shop_an, shop_food, possible_moves
+        team_state = np.array(
+            [
+                money / 20,
+                self.getLife() / 10,
+                self.getRound() / 100,
+                won_last,
+                self.moves / 50,
+            ]
+        )
+
+        possible_moves = np.concatenate(getPossibleMovesState(self))
+
+        return friend_state, shop_an, shop_food, team_state, possible_moves
 
     ### Overrides ###
 

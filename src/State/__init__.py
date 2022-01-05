@@ -131,12 +131,12 @@ def getAnimalState(animal) -> np.array:
     eff_ind = ANIMAL_EFFECT_DICT[animal.getEffect()]
     arr[eff_ind] = 1
 
-    arr[82] = animal.getLevel()
-    arr[81] = animal.getExp()
-    arr[80] = animal.getBaseHp()
-    arr[79] = animal.getBaseDmg()
-    arr[78] = animal.getTempHp()
-    arr[77] = animal.getTempDmg()
+    arr[82] = animal.getLevel() / 3
+    arr[81] = animal.getExp() / 6
+    arr[80] = animal.getBaseHp() / 50
+    arr[79] = animal.getBaseDmg() / 50
+    arr[78] = animal.getTempHp() / 50
+    arr[77] = animal.getTempDmg() / 50
 
     return arr
 
@@ -148,3 +148,90 @@ def getFoodState(food) -> np.array:
     arr[food_ind] = 1
 
     return arr
+
+
+def getPossibleMovesState(team):
+    # Possible moves state
+    # possible moves:
+    #    - roll            [1]
+    #    - end turn        [1]
+    #    - swap animals    [15]
+    #    - move animals    [20]
+    #    - sell animals    [5]
+    #    - buy animals     [5 * 5 = 25]
+    #    - buy food        [2 * 5 = 10]
+    #    Total             [77]
+
+    # able to do if money
+    roll = np.array([0])
+    if team.getMoney() > 0:
+        roll[0] = 1
+
+    # always able to do
+    end_turn = np.array([1])
+
+    # swap animals, always able to
+    # [[0 <-> 1], [0 <-> 2], [0 <-> 3], [0 <-> 4],
+    #  [1 <-> 2], [1 <-> 3], [1 <-> 4],
+    #  [2 <-> 3], [2 <-> 4],
+    #  [3 <-> 4]]
+    swap_animals = np.ones(10)
+
+    # able to do if empty, or the same animal
+    # i x j (4 x 5)
+    # [[0 -> 1], [0 -> 2], [0 -> 3], [0 -> 4],
+    #  [1 -> 0], [1 -> 2], [1 -> 3], [1 -> 4],
+    #  [2 -> 0], [2 -> 1], [2 -> 3], [2 -> 4],
+    #  [3 -> 0], [3 -> 1], [3 -> 2], [3 -> 4],
+    #  [4 -> 0], [4 -> 1], [4 -> 2], [4 -> 3]]
+    move_animals = np.zeros(shape=(5, 4))
+    for i in range(len(team.friends)):
+        for j in range(len(team.friends)):
+            if i == j:
+                continue
+            if team.friends[j].__class__ == team.friends[i].__class__:
+                col = j if j < i else j - 1
+                move_animals[i][col] = 1
+    move_animals = move_animals.flatten()
+
+    # able to do if have animal
+    # [0, 1, 2, 3, 4]
+    sell_animals = np.zeros(5)
+    for i in range(len(team.friends)):
+        if team.friends[i]:
+            sell_animals[i] = 1
+
+    # able to do if same animal or empty
+    # i x j (5x5)
+    # [s0 -> 0], [s0 -> 1], [s0 -> 2], [s0 -> 3], [s0 -> 4]
+    # [s1 -> 0], [s1 -> 1], [s1 -> 2], [s1 -> 3], [s1 -> 4]
+    # [s2 -> 0], [s2 -> 1], [s2 -> 2], [s2 -> 3], [s2 -> 4]
+    # [s3 -> 0], [s3 -> 1], [s3 -> 2], [s3 -> 3], [s3 -> 4]
+    # [s4 -> 0], [s4 -> 1], [s4 -> 2], [s4 -> 3], [s4 -> 4]
+    buyAnimals = np.zeros(shape=(5, 5))
+    for i in range(len(team.shop.animals)):
+        if team.shop.animals[i]:
+            for j in range(len(team.friends)):
+                if (
+                    team.friends[j].__class__ == team.shop.animals[i].__class__
+                    or not team.friends[j]
+                ):
+                    buyAnimals[i][j] = 1
+    buyAnimals = buyAnimals.flatten()
+
+    # should always be able to do any of these
+    # [s0 -> 0], [s0 -> 1], [s0 -> 2], [s0 -> 3], [s0 -> 4]
+    # [s1 -> 0], [s1 -> 1], [s1 -> 2], [s1 -> 3], [s1 -> 4]
+    buyFood = np.zeros(shape=(2, 5))
+    for i in range(len(team.shop.items)):
+        for j in range(len(team.friends)):
+            if team.friends[j] or team.shop.items[i].__class__.__name__ in [
+                "CannedFood",
+                "Salad",
+                "Sushi",
+                "Pizza",
+            ]:
+                buyFood[i][j] = 1
+    buyFood = buyFood.flatten()
+
+    return roll, end_turn, swap_animals, move_animals, sell_animals, buyAnimals, buyFood

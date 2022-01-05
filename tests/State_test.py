@@ -10,19 +10,9 @@ class StateTests(unittest.TestCase):
         a = Ant()
         state = getAnimalState(a)
         self.assertEqual(len(state), 83)
-        self.assertEqual(state[1], 1)
-        self.assertEqual(state[-1], 1)
-        self.assertEqual(state[-2], 1)
-        self.assertEqual(state[-3], 1)
-        self.assertEqual(state[-4], 2)
 
         state = a.getState()
         self.assertEqual(len(state), 83)
-        self.assertEqual(state[1], 1)
-        self.assertEqual(state[-1], 1)
-        self.assertEqual(state[-2], 1)
-        self.assertEqual(state[-3], 1)
-        self.assertEqual(state[-4], 2)
 
     def test_noneanimal(self):
         a = NoneAnimal()
