@@ -178,6 +178,9 @@ class Animal(ABC):
     def setAlive(self, isAlive) -> None:
         self.alive = isAlive
 
+    def setExp(self, amt: int) -> None:
+        self.exp = amt
+
     #### Private ####
 
     def __setExp(self, amt: int) -> None:

@@ -994,14 +994,36 @@ class Ox(Animal):
 
 
 class Parrot(Animal):
-    # TODO: implement this maybe just replace this animal with the animal type in front and carry over the stats
+    """
+    Parrot Class
+
+    Level 1: End Turn -> Copy ability from pet ahead as lvl 1 until end of battle
+    Level 2: End Turn -> Copy ability from pet ahead as lvl 2 until end of battle
+    Level 3: End Turn -> Copy ability from pet ahead as lvl 3 until end of battle
+    """
+
     def __init__(self, health: int = 0, dmg: int = 0):
 
         default_health = 3
         default_dmg = 5
+        ability = "End Turn: Copy"
 
-        super().__init__(default_health + health, default_dmg + dmg)
+        super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
+
+    def onEndOfTurn(self, friends: list):
+        pos, possible = getPosAndOthers(self, friends)
+        if pos - 1 in possible:
+            hp, dmg = self.getHp(), self.getDmg()
+            exp = 1
+            if self.getLevel() == 2:
+                exp = 3
+            elif self.getLevel() == 3:
+                exp = 6
+            friends[pos] = friends[pos - 1].__class__()
+            friends[pos].setExp(exp)
+            friends[pos].setHp(hp)
+            friends[pos].setDmg(dmg)
 
 
 class Peacock(Animal):

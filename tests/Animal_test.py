@@ -572,8 +572,14 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[1].getDmg(), 3)
 
     def test_parrot(self):
-        # TODO implement parrot
-        pass
+        t = Team()
+        t.friends[0] = Ant()
+        t.friends[1] = Parrot()
+
+        t.friends[1].onEndOfTurn(t.friends)
+        self.assertEqual(t.friends[1].__class__, Ant)
+        self.assertEqual(t.friends[1].getHp(), 3)
+        self.assertEqual(t.friends[1].getDmg(), 5)
 
     def test_peacock(self):
         t = Team()
