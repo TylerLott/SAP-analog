@@ -84,6 +84,9 @@ class Team:
                     self.friends[i].onFriendSold(self.friends)
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
+        # to protect against combining animals more than level 3
+        if self.friends[friend_pos].getExp() == 6:
+            return
         animal = self.shop.checkAnimal(shop_pos)
         if self.money >= animal.getCost():
             animal = self.shop.buyAnimal(shop_pos)

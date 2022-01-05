@@ -1705,8 +1705,13 @@ class Whale(Animal):
     def onFaint(self, friends: List[Animal], enemies: List[Animal]):
         pos = self.getPosition(friends)
         friends[pos] = self.jonah
-        while friends[pos].getLevel() < self.getLevel():
-            friends[pos] += friends[pos].__class__()
+        exp = 1
+        if self.getLevel() == 2:
+            exp = 3
+        elif self.getLevel() == 3:
+            exp = 6
+        friends[pos].setExp(exp)
+
         super().onFaint(friends, enemies)
 
 
