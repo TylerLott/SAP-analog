@@ -126,12 +126,13 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t.friends[0])
 
     def test_garlic(self):
-        an = Ant()
+        an = Ant(10)
         food = Garlic()
         an += food
 
         self.assertEqual(an.effect, "garlic")
-        # TODO test getting hit
+        an.subHp(3, [], [])
+        self.assertEqual(an.getHp(), 10)
 
     def test_pear(self):
         an = Ant()
@@ -162,7 +163,8 @@ class AnimalTests(unittest.TestCase):
         an += food
 
         self.assertEqual(an.effect, "melon")
-        # TODO test getting hit
+        an.subHp(20)
+        self.assertEqual(an.getHp(), 1)
 
     def test_mush(self):
         an = Ant()
@@ -408,6 +410,7 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t.friends[1].alive)
 
     def test_fish(self):
+        # TODO fix fish
         # t = Team()
         # t.friends[0] = Fish()
         # t.friends[1] = Ant()
@@ -433,7 +436,7 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[2].getHp(), 2)
 
     def test_fly(self):
-        # TODO implemnet
+        # TODO implement fly
         pass
 
     def test_giraffe(self):
@@ -572,7 +575,7 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[1].getDmg(), 3)
 
     def test_parrot(self):
-        # TODO this
+        # TODO implement parrot
         pass
 
     def test_peacock(self):
@@ -608,8 +611,12 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[1].getHp(), 3)
 
     def test_rat(self):
-        # TODO fix rat
-        pass
+        t = Team()
+        t.friends[0] = Rat()
+        t2 = [Ant()]
+        t.friends[0].onFaint(t.friends, t2)
+
+        self.assertEqual(t2[1].__class__, DirtyRat)
 
     def test_rhino(self):
         t = Team()

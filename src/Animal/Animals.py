@@ -1133,7 +1133,7 @@ class DirtyRat(Animal):
     """
     Dirty Rat Class
 
-    Can only be summoned on death of rat, attacks enemy team from back
+    Does Nothing
     """
 
     def __init__(self, health: int = 0, dmg: int = 0):
@@ -1143,8 +1143,6 @@ class DirtyRat(Animal):
 
         super().__init__(default_health + health, default_dmg + dmg)
         self.tier = 2
-
-    # TODO: make dirty rat attack enemies
 
 
 class Rhino(Animal):
