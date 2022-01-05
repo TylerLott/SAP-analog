@@ -26,6 +26,7 @@ class Team:
         self.money = 10
         self.friends = [NoneAnimal()] * 5
         self.wonLast = True
+        self.moves = 0
 
     ### Getters ###
 
@@ -70,6 +71,9 @@ class Team:
                         team_sob.append(i)
         return team_sob
 
+    def getMovesNum(self):
+        return self.moves
+
     ### Setters ###
 
     def moveFriend(self, pos1, pos2) -> None:
@@ -83,6 +87,7 @@ class Team:
             for i in range(len(self.friends)):
                 if i != friend_pos and self.friends[i]:
                     self.friends[i].onFriendSold(self.friends)
+            self.moves += 1
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
         # to protect against combining animals more than level 3
@@ -106,6 +111,7 @@ class Team:
                 self.friends[friend_pos].onBuy(self.friends, self)
                 if self.friends[friend_pos].getLevel() > origin_level:
                     self.friends[friend_pos].onLevelUp(self.friends)
+            self.moves += 1
 
     def buyFood(self, shop_pos: int, position: int) -> None:
         food = self.shop.checkFood(shop_pos)
@@ -121,6 +127,7 @@ class Team:
             food.perm_buff[1] *= haveCat
             food.temp_buff[0] *= haveCat
             food.temp_buff[1] *= haveCat
+            self.moves += 1
 
             if food.effect == "pill":
                 self.friends[position].onFaint(self.friends, [])
@@ -198,16 +205,18 @@ class Team:
     ### Actions ###
 
     def rollShop(self) -> None:
-        if self.money > 1:
+        if self.money > 0:
             self.shop.roll()
             self.money -= 1
+            self.moves += 1
 
     def endTurn(self) -> None:
         for i in self.friends:
             i.onEndOfTurn(self.friends)
+        self.moves += 1
 
     def nextTurn(self) -> None:
-
+        self.moves = 0
         self.round += 1
         self.shop.setRound(self.round)
         self.money = 10
@@ -251,6 +260,14 @@ class Team:
 
         # Possible moves state
         # TODO implement possible moves state
+        # possible moves:
+        #    - roll          [1]
+        #    - end turn      [1]
+        #    - move animals  [15]
+        #    - sell animals  [5 * 5 = 25]
+        #    - buy animals   [5 * 5 = 25]
+        #    - buy food      [2 * 5 = 10]
+        #    Total           [77]
         possible_moves = np.array([0])
 
         return friend_state, shop_an, shop_food, possible_moves

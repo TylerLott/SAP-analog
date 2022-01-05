@@ -1,5 +1,7 @@
 import unittest
 
+from numpy.lib.function_base import average
+
 from src.Fight import Fight
 from src.Team import Team
 
@@ -20,14 +22,17 @@ def dummyTurn(team: Team):
     team.buyFriend(0, 0)
     team.buyFriend(1, 1)
     team.buyFriend(2, 2)
+    while team.getMoney() > 0:
+        team.rollShop()
 
 
 class FightTests(unittest.TestCase):
     def test_simulate(self):
-        # currently takes around 2.5 seconds to sim 1000 full games
+        # currently takes around 4 seconds to sim 1000 full games
         team1Wins = 0
         team2Wins = 0
         err = 0
+        avgMoves = []
         for i in range(1000):
             t1 = createDummy()
             t2 = createDummy()
@@ -39,6 +44,9 @@ class FightTests(unittest.TestCase):
                 dummyTurn(t2)
                 f = Fight(t1, t2)
                 f.simulate()
+
+                avgMoves.append(t1.getMovesNum())
+                avgMoves.append(t2.getMovesNum())
 
                 turns += 1
             if t1.getLife() > t2.getLife():
