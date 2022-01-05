@@ -1031,7 +1031,7 @@ class Parrot(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 4
 
-    def onEndOfTurn(self, friends: list):
+    def onStartOfBattle(self, friends: List[Animal], enemies: List[Animal]):
         pos, possible = getPosAndOthers(self, friends)
         if pos - 1 in possible:
             hp, dmg = self.getHp(), self.getDmg()
@@ -1812,7 +1812,6 @@ def getRandomTierAnimal(tier, level: int, health: int, dmg: int) -> Animal:
     animal.setBaseDmg(dmg)
     animal.setTempHp(0)
     animal.setTempDmg(0)
-    # TODO apply level to new animal
     return animal
 
 

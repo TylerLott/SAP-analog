@@ -11,3 +11,4 @@
 | Melon, given by Turtle    | Reduce incoming damage by 20 once.                   |
 | Honey                     | When animal faints, summon a 1/1 Honey Bee.          |
 | Mushroom                  | When animal faints, revive again as a 1/1.           |
+| Coconut                   | Reduces all incoming damage once                     |

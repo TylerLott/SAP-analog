@@ -390,6 +390,7 @@ class AnimalTests(unittest.TestCase):
     def test_dragon(self):
         t = Team()
         t.friends[0] = Dragon()
+        t.shop.animals[0] = Ant()
         t.buyFriend(0, 1)
         self.assertEqual(t.friends[0].getHp(), 9)
 
@@ -578,7 +579,7 @@ class AnimalTests(unittest.TestCase):
         t.friends[0] = Ant()
         t.friends[1] = Parrot()
 
-        t.friends[1].onEndOfTurn(t.friends)
+        t.friends[1].onStartOfBattle(t.friends, [])
         self.assertEqual(t.friends[1].__class__, Ant)
         self.assertEqual(t.friends[1].getHp(), 3)
         self.assertEqual(t.friends[1].getDmg(), 5)
@@ -667,7 +668,7 @@ class AnimalTests(unittest.TestCase):
         t = Team()
         t.friends[0] = Shark()
 
-        t.friends[0].onFriendFaint(t.friends)
+        t.friends[0].onFriendFaint(Ant(), t.friends)
 
         self.assertEqual(t.friends[0].getHp(), 5)
 
@@ -758,7 +759,7 @@ class AnimalTests(unittest.TestCase):
         t.friends[1] = Turkey()
 
         t.friends[0].onFaint(t.friends, [])
-        self.assertEqual(t.friends[0].getHp(), 5)
+        self.assertNotEqual(t.friends[0].__class__, Spider)
 
     def test_turtle(self):
         t = Team()

@@ -1,6 +1,7 @@
 from abc import ABC
 
 from src.Food import Food
+from src.State import getAnimalState
 
 
 class Animal(ABC):
@@ -97,9 +98,9 @@ class Animal(ABC):
     def getTier(self) -> int:
         return self.tier
 
-    def getState(self) -> list:
+    def getState(self):
         """public get animal state method"""
-        pass
+        return getAnimalState(self)
 
     #### Setters ####
 

@@ -125,7 +125,7 @@ class Team:
                 self.friends[position].onFaint(self.friends, [])
                 for i in self.friends:
                     if i != self.friends[position]:
-                        i.onFriendFaint(self.friends)
+                        i.onFriendFaint(self.friends[position], self.friends)
                 if len(self.friends) > position + 1:
                     self.friends[position + 1].onFriendAheadFaint(self.friends, [])
                 self.friends[position] = NoneAnimal()
