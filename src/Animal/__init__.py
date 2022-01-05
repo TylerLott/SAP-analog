@@ -313,7 +313,7 @@ class Animal(ABC):
     def onFriendEat(self, friend):
         pass
 
-    def onFriendFaint(self, friends: list):
+    def onFriendFaint(self, friend, friends: list):
         pass
 
     def onFriendBought(self, friends: list, friend):

@@ -675,10 +675,30 @@ class Fly(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 6
 
-    def onFriendFaint(self, friends: List[Animal]):
-        # TODO figure out how to find location to insert fly
-        # return super().onFriendFaint(friends)
-        pass
+    def onFriendFaint(self, friend: Animal, friends: List[Animal]):
+        if len(friends) < 5:
+            if friend in friends:
+                friends.insert(
+                    friends.index(friend),
+                    FlySpawn(5 * self.getLevel(), 5 * self.getLevel()),
+                )
+            else:
+                friends.insert(0, FlySpawn(5 * self.getLevel(), 5 * self.getLevel()))
+
+
+class FlySpawn(Animal):
+    """
+    FlySpawn Class
+
+    None
+    """
+
+    def __init__(self, health: int = 0, dmg: int = 0):
+        default_health = 0
+        default_dmg = 0
+
+        super().__init__(default_health + health, default_dmg + dmg)
+        self.tier = 6
 
 
 class Giraffe(Animal):
@@ -1325,7 +1345,7 @@ class Shark(Animal):
         super().__init__(default_health + health, default_dmg + dmg, ability=ability)
         self.tier = 5
 
-    def onFriendFaint(self, friends):
+    def onFriendFaint(self, friend, friends):
         self.setBaseHp(self.getBaseHp() + self.getLevel())
         self.setBaseDmg(self.getBaseDmg() + 2 * self.getLevel())
 

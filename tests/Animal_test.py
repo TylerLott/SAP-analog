@@ -433,8 +433,10 @@ class AnimalTests(unittest.TestCase):
         self.assertEqual(t.friends[2].getHp(), 2)
 
     def test_fly(self):
-        # TODO implement fly
-        pass
+        t = [Ant(), Fly()]
+        t[1].onFriendFaint(t[0], t)
+
+        self.assertEqual(t[0].__class__, FlySpawn)
 
     def test_giraffe(self):
         t = Team()

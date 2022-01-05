@@ -128,13 +128,14 @@ class Fight:
         for i in self.team1Friends:
             if not i.getAlive():
                 ind = self.team1Friends.index(i)
+
                 i.onFaint(self.team1Friends, self.team2Friends)
                 if len(self.team1Friends) > 1 + ind and self.team1Friends[ind + 1]:
                     self.team1Friends[ind + 1].onFriendAheadFaint(
                         self.team1Friends, self.team2Friends
                     )
                 for j in self.team1Friends:
-                    j.onFriendFaint(self.team2Friends)
+                    j.onFriendFaint(i, self.team2Friends)
                 if i in self.team1Friends:
                     self.team1Friends.remove(i)
         for i in self.team2Friends:
@@ -146,7 +147,7 @@ class Fight:
                         self.team2Friends, self.team1Friends
                     )
                 for j in self.team2Friends:
-                    j.onFriendFaint(self.team2Friends)
+                    j.onFriendFaint(i, self.team2Friends)
                 if i in self.team2Friends:
                     self.team2Friends.remove(i)
 
