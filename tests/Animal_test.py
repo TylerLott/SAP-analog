@@ -163,7 +163,7 @@ class AnimalTests(unittest.TestCase):
         an += food
 
         self.assertEqual(an.effect, "melon")
-        an.subHp(20)
+        an.subHp(20, [], [])
         self.assertEqual(an.getHp(), 1)
 
     def test_mush(self):
@@ -410,18 +410,15 @@ class AnimalTests(unittest.TestCase):
         self.assertFalse(t.friends[1].alive)
 
     def test_fish(self):
-        # TODO fix fish
-        # t = Team()
-        # t.friends[0] = Fish()
-        # t.friends[1] = Ant()
-        # t.friends[2] = Ant()
+        t = Team()
+        t.friends[0] = Fish()
+        t.friends[1] = Ant()
+        t.friends[2] = Ant()
 
-        # for i in range(2):
-        #     t.friends[0] += Fish()
-        # print(t.friends[0])
+        t.friends[0].onLevelUp(t.friends)
 
-        # self.assertEqual(t.friends[1].getHp(), 2)
-        # self.assertEqual(t.friends[2].getHp(), 2)
+        self.assertEqual(t.friends[1].getHp(), 2)
+        self.assertEqual(t.friends[2].getHp(), 2)
         pass
 
     def test_flamingo(self):

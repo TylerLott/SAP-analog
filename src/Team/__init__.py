@@ -101,9 +101,7 @@ class Team:
                 self.friends[friend_pos] += animal
                 self.friends[friend_pos].onBuy(self.friends, self)
                 if self.friends[friend_pos].getLevel() > origin_level:
-                    # self.friends[friend_pos].onLevelUp()
-                    # TODO this
-                    pass
+                    self.friends[friend_pos].onLevelUp(self.friends)
 
     def buyFood(self, shop_pos: int, position: int) -> None:
         food = self.shop.checkFood(shop_pos)
@@ -150,9 +148,12 @@ class Team:
                         i.setBaseDmg(i.getBaseDmg() + 1)
             else:
                 self.money -= food.getCost()
+                origin_level = self.friends[position].getLevel()
                 # iadd override in animal makes this work
                 self.friends[position] += food
                 self.friends[position].onEat(self.friends)
+                if self.friends[position].getLevel() > origin_level:
+                    self.friends[position].onLevelUp(self.friends)
                 for i in range(len(self.friends)):
                     if self.friends[i] and i != position:
                         self.friends[i].onFriendEat(self.friends[position])
