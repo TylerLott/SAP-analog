@@ -116,6 +116,8 @@ class Shop:
         self.items[position] = NoneFood()
         return food
 
+    # TODO implement freeze
+
     ### Actions ###
 
     def roll(self):

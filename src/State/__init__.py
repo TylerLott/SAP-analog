@@ -259,4 +259,6 @@ def getPossibleMovesState(team):
                 buyFood[i][j] = 1
     buyFood = buyFood.flatten()
 
+    # TODO Add freeze moves
+
     return roll, end_turn, swap_animals, move_animals, sell_animals, buyAnimals, buyFood
