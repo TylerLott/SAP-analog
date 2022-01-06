@@ -17,18 +17,24 @@ def createDummy() -> Team:
 def dummyTurn(team: Team):
     team.nextTurn()
     team.sellFriend(0)
+    team.getState()
     team.sellFriend(1)
+    team.getState()
     team.sellFriend(2)
+    team.getState()
     team.buyFriend(0, 0)
+    team.getState()
     team.buyFriend(1, 1)
+    team.getState()
     team.buyFriend(2, 2)
+    team.getState()
     while team.getMoney() > 0:
         team.rollShop()
 
 
 class FightTests(unittest.TestCase):
     def test_simulate(self):
-        # currently takes around 4 seconds to sim 1000 full games
+        # currently takes around 15 seconds to sim 1000 full games
         team1Wins = 0
         team2Wins = 0
         err = 0
