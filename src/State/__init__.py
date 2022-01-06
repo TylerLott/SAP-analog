@@ -162,6 +162,25 @@ def getPossibleMovesState(team):
     #    - buy food        [2 * 5 = 10]
     #    Total             [77]
 
+    if team.moves < 20:
+        roll = np.array([0])
+        end_turn = np.array([1])
+        swap_animals = np.zeros(10)
+        move_animals = np.zeros(20)
+        sell_animals = np.zeros(5)
+        buyAnimals = np.zeros(25)
+        buyFood = np.zeros(10)
+
+        return (
+            roll,
+            end_turn,
+            swap_animals,
+            move_animals,
+            sell_animals,
+            buyAnimals,
+            buyFood,
+        )
+
     # able to do if money
     roll = np.array([0])
     if team.getMoney() > 0:
@@ -209,14 +228,15 @@ def getPossibleMovesState(team):
     # [s3 -> 0], [s3 -> 1], [s3 -> 2], [s3 -> 3], [s3 -> 4]
     # [s4 -> 0], [s4 -> 1], [s4 -> 2], [s4 -> 3], [s4 -> 4]
     buyAnimals = np.zeros(shape=(5, 5))
-    for i in range(len(team.shop.animals)):
-        if team.shop.animals[i]:
-            for j in range(len(team.friends)):
-                if (
-                    team.friends[j].__class__ == team.shop.animals[i].__class__
-                    or not team.friends[j]
-                ):
-                    buyAnimals[i][j] = 1
+    if team.getMoney() >= 3:
+        for i in range(len(team.shop.animals)):
+            if team.shop.animals[i]:
+                for j in range(len(team.friends)):
+                    if (
+                        team.friends[j].__class__ == team.shop.animals[i].__class__
+                        or not team.friends[j]
+                    ):
+                        buyAnimals[i][j] = 1
     buyAnimals = buyAnimals.flatten()
 
     # should always be able to do any of these
@@ -225,12 +245,17 @@ def getPossibleMovesState(team):
     buyFood = np.zeros(shape=(2, 5))
     for i in range(len(team.shop.items)):
         for j in range(len(team.friends)):
-            if team.friends[j] or team.shop.items[i].__class__.__name__ in [
-                "CannedFood",
-                "Salad",
-                "Sushi",
-                "Pizza",
-            ]:
+            if (
+                team.friends[j]
+                or team.shop.items[i].__class__.__name__
+                in [
+                    "CannedFood",
+                    "Salad",
+                    "Sushi",
+                    "Pizza",
+                ]
+                and team.getMoney() >= team.shop.items[i].cost
+            ):
                 buyFood[i][j] = 1
     buyFood = buyFood.flatten()
 
