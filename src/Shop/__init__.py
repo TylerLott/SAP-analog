@@ -34,6 +34,8 @@ class Shop:
         self.round = 1
         self.animals = [NoneAnimal()] * 3
         self.items = [NoneAnimal()] * 1
+        self.freeze_animal = [False] * 5
+        self.freeze_item = [False] * 2
         self.health_modifier = 0
         self.dmg_modifier = 0
         self.roll()
@@ -92,7 +94,9 @@ class Shop:
         while food_state.shape[0] < 2:
             food_state = np.append(food_state, [NoneFood().getState()], axis=0)
 
-        return anim_state, food_state
+        freeze_state = np.array([int(i) for i in self.freeze_animal + self.freeze_item])
+
+        return anim_state, food_state, freeze_state
 
     ### Setters ###
 
@@ -103,6 +107,7 @@ class Shop:
         return Animal and remove from shop
         """
         animal = self.animals[position]
+        self.freeze_animal[position] = False
         self.animals[position] = NoneAnimal()
         return animal
 
@@ -113,10 +118,15 @@ class Shop:
         return Animal and remove from shop
         """
         food = self.items[position]
+        self.freeze_item[position] = False
         self.items[position] = NoneFood()
         return food
 
-    # TODO implement freeze
+    def freezeAnimal(self, position: int):
+        self.freeze_animal[position] = not self.freeze_animal[position]
+
+    def freezeItem(self, position: int):
+        self.freeze_item[position] = not self.freeze_item[position]
 
     ### Actions ###
 

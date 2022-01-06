@@ -257,7 +257,7 @@ class Team:
         friend_state = np.stack(friend_state, axis=0)
 
         # Shop State
-        shop_an, shop_food = self.shop.getState()
+        shop_an, shop_food, shop_freeze = self.shop.getState()
 
         # Team State
         won_last = 1 if self.wonLast else 0
@@ -276,7 +276,7 @@ class Team:
 
         possible_moves = np.concatenate(getPossibleMovesState(self))
 
-        return friend_state, shop_an, shop_food, team_state, possible_moves
+        return friend_state, shop_an, shop_food, shop_freeze, team_state, possible_moves
 
     ### Overrides ###
 

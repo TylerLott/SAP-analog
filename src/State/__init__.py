@@ -260,5 +260,14 @@ def getPossibleMovesState(team):
     buyFood = buyFood.flatten()
 
     # TODO Add freeze moves
+    # [[friends], [shop]]
+    # [0,1,2,3,4,5,6]
+    freeze = np.zeros(7)
+    for i in range(len(team.shop.friends)):
+        if team.shop.friends[i]:
+            freeze[i] = 1
+    for i in range(len(team.shop.items)):
+        if team.shop.items[i]:
+            freeze[i + 4] = 1
 
     return roll, end_turn, swap_animals, move_animals, sell_animals, buyAnimals, buyFood
