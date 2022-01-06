@@ -27,4 +27,3 @@ class StateTests(unittest.TestCase):
         self.assertEqual(state[0].shape, (5, 83))
         self.assertEqual(state[1].shape, (5, 83))
         self.assertEqual(state[2].shape, (2, 18))
-        print(state)

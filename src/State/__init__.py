@@ -160,7 +160,8 @@ def getPossibleMovesState(team):
     #    - sell animals    [5]
     #    - buy animals     [5 * 5 = 25]
     #    - buy food        [2 * 5 = 10]
-    #    Total             [77]
+    #    - freeze          [7]
+    #    Total             [84]
 
     if team.moves < 20:
         roll = np.array([0])
@@ -270,4 +271,13 @@ def getPossibleMovesState(team):
         if team.shop.items[i]:
             freeze[i + 4] = 1
 
-    return roll, end_turn, swap_animals, move_animals, sell_animals, buyAnimals, buyFood
+    return (
+        roll,
+        end_turn,
+        swap_animals,
+        move_animals,
+        sell_animals,
+        buyAnimals,
+        buyFood,
+        freeze,
+    )
