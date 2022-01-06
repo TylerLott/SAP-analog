@@ -132,13 +132,15 @@ class Shop:
 
     def roll(self):
         for i in range(len(self.animals)):
-            self.animals[i] = getRandomAnimal(
-                self.getMaxTier(),
-                health_mod=self.health_modifier,
-                dmg_mod=self.dmg_modifier,
-            )
+            if not self.freeze_animal[i]:
+                self.animals[i] = getRandomAnimal(
+                    self.getMaxTier(),
+                    health_mod=self.health_modifier,
+                    dmg_mod=self.dmg_modifier,
+                )
         for i in range(len(self.items)):
-            self.items[i] = getRandomFood(self.getMaxTier())
+            if not self.freeze_item[i]:
+                self.items[i] = getRandomFood(self.getMaxTier())
 
     def setRound(self, round: int):
         self.round = round
