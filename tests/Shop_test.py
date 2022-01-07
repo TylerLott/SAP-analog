@@ -18,8 +18,8 @@ class TeamTests(unittest.TestCase):
         t.shop.items[0] = f
         t.buyFood(0, 0)
 
-        self.assertEqual(t.shop.health_modifier, 1)
-        self.assertEqual(t.shop.dmg_modifier, 1)
+        self.assertEqual(t.shop.health_modifier, 0)
+        self.assertEqual(t.shop.dmg_modifier, 0)
 
     def test_shop_randomfood(self):
         t = Team()

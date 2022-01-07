@@ -85,7 +85,8 @@ ANIMAL_EFFECT_DICT = {
     "honey": 73,
     "extraLife": 74,
     "coconut": 75,
-    None: 76,
+    "splash": 76,
+    None: 77,
 }
 
 
@@ -120,7 +121,7 @@ FOOD_STATE_DICT = {
 
 
 def getAnimalState(animal) -> np.array:
-    arr = np.zeros(83)
+    arr = np.zeros(84)
     if animal.__class__.__name__ == "NoneAnimal":
         arr[0] = 1
         return arr
@@ -131,12 +132,12 @@ def getAnimalState(animal) -> np.array:
     eff_ind = ANIMAL_EFFECT_DICT[animal.getEffect()]
     arr[eff_ind] = 1
 
-    arr[82] = animal.getLevel() / 3
-    arr[81] = animal.getExp() / 6
-    arr[80] = animal.getBaseHp() / 50
-    arr[79] = animal.getBaseDmg() / 50
-    arr[78] = animal.getTempHp() / 50
-    arr[77] = animal.getTempDmg() / 50
+    arr[83] = animal.getLevel() / 3
+    arr[82] = animal.getExp() / 6
+    arr[81] = animal.getBaseHp() / 50
+    arr[80] = animal.getBaseDmg() / 50
+    arr[79] = animal.getTempHp() / 50
+    arr[78] = animal.getTempDmg() / 50
 
     return arr
 
@@ -166,7 +167,7 @@ def getPossibleMovesState(team):
     if team.moves > 20:
         roll = np.array([0])
         # end_turn = np.array([1])
-        swap_animals = np.zeros(10)
+        # swap_animals = np.zeros(10)
         move_animals = np.zeros(20)
         sell_animals = np.zeros(5)
         buyAnimals = np.zeros(25)
@@ -176,7 +177,7 @@ def getPossibleMovesState(team):
         return (
             roll,
             # end_turn,
-            swap_animals,
+            # swap_animals,
             move_animals,
             sell_animals,
             buyAnimals,
@@ -197,7 +198,7 @@ def getPossibleMovesState(team):
     #  [1 <-> 2], [1 <-> 3], [1 <-> 4],
     #  [2 <-> 3], [2 <-> 4],
     #  [3 <-> 4]]
-    swap_animals = np.ones(10)
+    # swap_animals = np.ones(10)
 
     # able to do if empty, or the same animal
     # i x j (4 x 5)
@@ -211,7 +212,14 @@ def getPossibleMovesState(team):
         for j in range(len(team.friends)):
             if i == j:
                 continue
-            if team.friends[j].__class__ == team.friends[i].__class__:
+            if (
+                (
+                    team.friends[i]
+                    and team.friends[j].__class__ == team.friends[i].__class__
+                )
+                or (team.friends[i] and not team.friends[j])
+                or (team.friends[i] and not team.friends[j])
+            ):
                 col = j if j < i else j - 1
                 move_animals[i][col] = 1
     move_animals = move_animals.flatten()
@@ -249,15 +257,18 @@ def getPossibleMovesState(team):
     for i in range(len(team.shop.items)):
         for j in range(len(team.friends)):
             if (
-                team.friends[j]
-                or team.shop.items[i].__class__.__name__
-                in [
-                    "CannedFood",
-                    "Salad",
-                    "Sushi",
-                    "Pizza",
-                ]
+                (
+                    team.friends[j]
+                    or team.shop.items[i].__class__.__name__
+                    in [
+                        "CannedFood",
+                        "Salad",
+                        "Sushi",
+                        "Pizza",
+                    ]
+                )
                 and team.getMoney() >= team.shop.items[i].cost
+                and team.shop.items[i]
             ):
                 buyFood[i][j] = 1
     buyFood = buyFood.flatten()
@@ -265,17 +276,22 @@ def getPossibleMovesState(team):
     # [[friends], [shop]]
     # [0,1,2,3,4,5,6]
     freeze = np.zeros(7)
-    for i in range(len(team.shop.animals)):
-        if team.shop.animals[i]:
-            freeze[i] = 1
-    for i in range(len(team.shop.items)):
-        if team.shop.items[i]:
-            freeze[i + 5] = 1
+    can_freeze = False
+    # for i in team.friends:
+    # if i:
+    # can_freeze = True
+    if can_freeze:
+        for i in range(len(team.shop.animals)):
+            if team.shop.animals[i]:
+                freeze[i] = 1
+        for i in range(len(team.shop.items)):
+            if team.shop.items[i]:
+                freeze[i + 5] = 1
 
     return (
         roll,
         # end_turn,
-        swap_animals,
+        # swap_animals,
         move_animals,
         sell_animals,
         buyAnimals,

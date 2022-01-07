@@ -106,7 +106,31 @@ class Fight:
             self.team1.wonLast = False
             self.team2.wonLast = True
 
-        return [1, -1] if len(self.team1Friends) > len(self.team2Friends) else [-1, 1]
+        t = []
+        for i in self.team1.friends:
+            if i:
+                t.append(i)
+        t2 = []
+        for i in self.team2.friends:
+            if i:
+                t2.append(i)
+
+        if len(self.team1Friends) == len(self.team2Friends):
+
+            if len(t) >= len(t2) and len(t2) < 2 and len(t) > 2:
+                self.team2.life = 0
+                self.team2.alive = False
+            elif len(t2) > len(t) and len(t) < 2 and len(t2) > 2:
+                self.team1.life = 0
+                self.team1.alive = False
+
+        if len(t) < 2 and len(t2) < 2:
+            self.team1.life = 0
+            self.team1.alive = False
+            self.team2.life = 0
+            self.team2.alive = False
+
+        return 1 if len(self.team1Friends) > len(self.team2Friends) else 0
 
     ### Private ###
 

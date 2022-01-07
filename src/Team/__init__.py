@@ -78,7 +78,17 @@ class Team:
     ### Setters ###
 
     def moveFriend(self, pos1, pos2) -> None:
-        self.friends[pos1], self.friends[pos2] = self.friends[pos2], self.friends[pos1]
+        if (
+            self.friends[pos1].__class__ == self.friends[pos2].__class__
+            and self.friends[pos1].getLevel() < 3
+            and self.friends[pos2].getLevel() < 3
+        ):
+            self.friends[pos2] += self.friends[pos1]
+        else:
+            self.friends[pos1], self.friends[pos2] = (
+                self.friends[pos2],
+                self.friends[pos1],
+            )
 
     def sellFriend(self, friend_pos: int) -> None:
         if self.friends[friend_pos]:
@@ -90,82 +100,98 @@ class Team:
                     self.friends[i].onFriendSold(self.friends)
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
-        # to protect against combining animals more than level 3
-        if self.friends[friend_pos].getExp() == 6:
-            return
-        animal = self.shop.checkAnimal(shop_pos)
-        if self.money >= animal.getCost():
-            animal = self.shop.buyAnimal(shop_pos)
-            if not self.friends[friend_pos]:
-                self.money -= animal.getCost()
-                self.friends[friend_pos] = animal
-                self.friends[friend_pos].onBuy(self.friends, self)
-                for i in self.friends:
-                    if i != self.friends[friend_pos]:
-                        i.onFriendSummoned(self.friends, self.friends[friend_pos])
-                        i.onFriendBought(self.friends, self.friends[friend_pos])
-            elif self.friends[friend_pos].__class__ == animal.__class__:
-                # iadd is overridden for animal so this works
-                origin_level = self.friends[friend_pos].getLevel()
-                self.friends[friend_pos] += animal
-                self.friends[friend_pos].onBuy(self.friends, self)
-                if self.friends[friend_pos].getLevel() > origin_level:
-                    self.friends[friend_pos].onLevelUp(self.friends)
+        if (
+            len(self.shop.animals) > shop_pos
+            and self.shop.animals[shop_pos]
+            and (
+                self.friends[friend_pos].__class__
+                == self.shop.animals[shop_pos].__class__
+                or not self.friends[friend_pos]
+            )
+        ):
+
+            # to protect against combining animals more than level 3
+            if self.friends[friend_pos].getExp() == 6:
+                return
+            animal = self.shop.checkAnimal(shop_pos)
+            if self.money >= animal.getCost():
+                animal = self.shop.buyAnimal(shop_pos)
+                if not self.friends[friend_pos]:
+                    self.money -= animal.getCost()
+                    self.friends[friend_pos] = animal
+                    self.friends[friend_pos].onBuy(self.friends, self)
+                    for i in self.friends:
+                        if i != self.friends[friend_pos]:
+                            i.onFriendSummoned(self.friends, self.friends[friend_pos])
+                            i.onFriendBought(self.friends, self.friends[friend_pos])
+                elif self.friends[friend_pos].__class__ == animal.__class__:
+                    # iadd is overridden for animal so this works
+                    origin_level = self.friends[friend_pos].getLevel()
+                    self.friends[friend_pos] += animal
+                    self.friends[friend_pos].onBuy(self.friends, self)
+                    if self.friends[friend_pos].getLevel() > origin_level:
+                        self.friends[friend_pos].onLevelUp(self.friends)
 
     def buyFood(self, shop_pos: int, position: int) -> None:
-        food = self.shop.checkFood(shop_pos)
+        if (
+            len(self.shop.items) > shop_pos
+            and self.friends[position]
+            and self.shop.items[shop_pos]
+        ):
+            food = self.shop.checkFood(shop_pos)
 
-        if self.money >= food.getCost():
+            if self.money >= food.getCost():
 
-            food = self.shop.buyFood(shop_pos)
-            haveCat = 1
-            for i in self.friends:
-                if i.__class__.__name__ == "Cat":
-                    haveCat += i.getLevel()
-            food.perm_buff[0] *= haveCat
-            food.perm_buff[1] *= haveCat
-            food.temp_buff[0] *= haveCat
-            food.temp_buff[1] *= haveCat
+                food = self.shop.buyFood(shop_pos)
 
-            if food.effect == "pill":
-                self.friends[position].onFaint(self.friends, [])
+                haveCat = 1
                 for i in self.friends:
-                    if i != self.friends[position]:
-                        i.onFriendFaint(self.friends[position], self.friends)
-                if len(self.friends) > position + 1:
-                    self.friends[position + 1].onFriendAheadFaint(self.friends, [])
-                self.friends[position] = NoneAnimal()
+                    if i.__class__.__name__ == "Cat":
+                        haveCat += i.getLevel()
+                food.perm_buff[0] *= haveCat
+                food.perm_buff[1] *= haveCat
+                food.temp_buff[0] *= haveCat
+                food.temp_buff[1] *= haveCat
 
-            elif food.effect == "random":
-                food.effect = None
-                friends = []
-                for i in self.friends:
-                    if i:
-                        friends.append(i)
-                if len(friends) > food.num_animals:
-                    friends = choices(friends, k=food.num_animals)
-                for i in friends:
-                    food.effect = i.effect
-                    i += food
-                    i.onEat(self.friends)
-            elif food.effect == "buffShop":
-                self.shop.health_modifier += 1
-                self.shop.dmg_modifier += 1
-                for i in self.shop.animals:
-                    if i:
-                        i.setBaseHp(i.getBaseHp() + 1)
-                        i.setBaseDmg(i.getBaseDmg() + 1)
-            else:
-                self.money -= food.getCost()
-                origin_level = self.friends[position].getLevel()
-                # iadd override in animal makes this work
-                self.friends[position] += food
-                self.friends[position].onEat(self.friends)
-                if self.friends[position].getLevel() > origin_level:
-                    self.friends[position].onLevelUp(self.friends)
-                for i in range(len(self.friends)):
-                    if self.friends[i] and i != position:
-                        self.friends[i].onFriendEat(self.friends[position])
+                if food.effect == "pill":
+                    self.friends[position].onFaint(self.friends, [])
+                    for i in self.friends:
+                        if i != self.friends[position]:
+                            i.onFriendFaint(self.friends[position], self.friends)
+                    if len(self.friends) > position + 1:
+                        self.friends[position + 1].onFriendAheadFaint(self.friends, [])
+                    self.friends[position] = NoneAnimal()
+
+                elif food.effect == "random":
+                    food.effect = None
+                    friends = []
+                    for i in self.friends:
+                        if i:
+                            friends.append(i)
+                    if len(friends) > food.num_animals:
+                        friends = choices(friends, k=food.num_animals)
+                    for i in friends:
+                        food.effect = i.effect
+                        i += food
+                        i.onEat(self.friends)
+                elif food.effect == "buffShop":
+                    self.shop.health_modifier += 1
+                    self.shop.dmg_modifier += 1
+                    for i in self.shop.animals:
+                        if i:
+                            i.setBaseHp(i.getBaseHp() + 1)
+                            i.setBaseDmg(i.getBaseDmg() + 1)
+                else:
+                    self.money -= food.getCost()
+                    origin_level = self.friends[position].getLevel()
+                    # iadd override in animal makes this work
+                    self.friends[position] += food
+                    self.friends[position].onEat(self.friends)
+                    if self.friends[position].getLevel() > origin_level:
+                        self.friends[position].onLevelUp(self.friends)
+                    for i in range(len(self.friends)):
+                        if self.friends[i] and i != position:
+                            self.friends[i].onFriendEat(self.friends[position])
 
     def loseLife(self) -> None:
         if self.round <= 3:
@@ -222,7 +248,7 @@ class Team:
 
     ### State ###
 
-    def setState(self, move: list):
+    def setState(self, moves: np.array):
         """
         Converts a move state array to the correct move
         Then completes that move
@@ -236,8 +262,216 @@ class Team:
         - end turn
         """
         # TODO implement this
+        move = np.argmax(moves)
+        s = ""
+        if move == 0:
+            s = "roll"
+            self.rollShop()
+        elif move == 1:
+            s = "move 0 => 1"
+            self.moveFriend(0, 1)
+        elif move == 2:
+            s = "move 0 => 2"
+            self.moveFriend(0, 2)
+        elif move == 3:
+            s = "move 0 => 3"
+            self.moveFriend(0, 3)
+        elif move == 4:
+            s = "move 0 => 4"
+            self.moveFriend(0, 4)
+        elif move == 5:
+            s = "move 1 => 0"
+            self.moveFriend(1, 0)
+        elif move == 6:
+            s = "move 1 => 2"
+            self.moveFriend(1, 2)
+        elif move == 7:
+            s = "move 1 => 3"
+            self.moveFriend(1, 3)
+        elif move == 8:
+            s = "move 1 => 4"
+            self.moveFriend(1, 4)
+        elif move == 9:
+            s = "move 2 => 0"
+            self.moveFriend(2, 0)
+        elif move == 10:
+            s = "move 2 => 1"
+            self.moveFriend(2, 1)
+        elif move == 11:
+            s = "move 2 => 3"
+            self.moveFriend(2, 3)
+        elif move == 12:
+            s = "move 2 => 4"
+            self.moveFriend(2, 4)
+        elif move == 13:
+            s = "move 3 => 0"
+            self.moveFriend(3, 0)
+        elif move == 14:
+            s = "move 3 => 1"
+            self.moveFriend(3, 1)
+        elif move == 15:
+            s = "move 3 => 2"
+            self.moveFriend(3, 2)
+        elif move == 16:
+            s = "move 3 => 4"
+            self.moveFriend(3, 4)
+        elif move == 17:
+            s = "move 4 => 1"
+            self.moveFriend(4, 0)
+        elif move == 18:
+            s = "move 4 => 1"
+            self.moveFriend(4, 1)
+        elif move == 19:
+            s = "move 4 => 2"
+            self.moveFriend(4, 2)
+        elif move == 20:
+            s = "move 4 => 3"
+            self.moveFriend(4, 3)
+        elif move == 21:
+            s = "sell 0"
+            self.sellFriend(0)
+        elif move == 22:
+            s = "sell 1"
+            self.sellFriend(1)
+        elif move == 23:
+            s = "sell 2"
+            self.sellFriend(2)
+        elif move == 24:
+            s = "sell 3"
+            self.sellFriend(3)
+        elif move == 25:
+            s = "sell 4"
+            self.sellFriend(4)
+        elif move == 26:
+            s = "buy 0 => 0"
+            self.buyFriend(0, 0)
+        elif move == 27:
+            s = "buy 0 => 1"
+            self.buyFriend(0, 1)
+        elif move == 28:
+            s = "buy 0 => 2"
+            self.buyFriend(0, 2)
+        elif move == 29:
+            s = "buy 0 => 3"
+            self.buyFriend(0, 3)
+        elif move == 30:
+            s = "buy 0 => 4"
+            self.buyFriend(0, 4)
+        elif move == 31:
+            s = "buy 1 => 0"
+            self.buyFriend(1, 0)
+        elif move == 32:
+            s = "buy 1 => 1"
+            self.buyFriend(1, 1)
+        elif move == 33:
+            s = "buy 1 => 2"
+            self.buyFriend(1, 2)
+        elif move == 34:
+            s = "buy 1 => 3"
+            self.buyFriend(1, 3)
+        elif move == 35:
+            s = "buy 1 => 4"
+            self.buyFriend(1, 4)
+        elif move == 36:
+            s = "buy 2 => 0"
+            self.buyFriend(2, 0)
+        elif move == 37:
+            s = "buy 2 => 1"
+            self.buyFriend(2, 1)
+        elif move == 38:
+            s = "buy 2 => 2"
+            self.buyFriend(2, 2)
+        elif move == 39:
+            s = "buy 2 => 3"
+            self.buyFriend(2, 3)
+        elif move == 40:
+            s = "buy 2 => 4"
+            self.buyFriend(2, 4)
+        elif move == 41:
+            s = "buy 3 => 0"
+            self.buyFriend(3, 0)
+        elif move == 42:
+            s = "buy 3 => 1"
+            self.buyFriend(3, 1)
+        elif move == 43:
+            s = "buy 3 => 2"
+            self.buyFriend(3, 2)
+        elif move == 44:
+            s = "buy 3 => 3"
+            self.buyFriend(3, 3)
+        elif move == 45:
+            s = "buy 3 => 4"
+            self.buyFriend(3, 4)
+        elif move == 46:
+            s = "buy 4 => 0"
+            self.buyFriend(4, 0)
+        elif move == 47:
+            s = "buy 4 => 1"
+            self.buyFriend(4, 1)
+        elif move == 48:
+            s = "buy 4 => 2"
+            self.buyFriend(4, 2)
+        elif move == 49:
+            s = "buy 4 => 3"
+            self.buyFriend(4, 3)
+        elif move == 50:
+            s = "buy 4 => 4"
+            self.buyFriend(4, 4)
+        elif move == 51:
+            s = "buy food 0 => 0"
+            self.buyFood(0, 0)
+        elif move == 52:
+            s = "buy food 0 => 1"
+            self.buyFood(0, 1)
+        elif move == 53:
+            s = "buy food 0 => 2"
+            self.buyFood(0, 2)
+        elif move == 54:
+            s = "buy food 0 => 3"
+            self.buyFood(0, 3)
+        elif move == 55:
+            s = "buy food 0 => 4"
+            self.buyFood(0, 4)
+        elif move == 56:
+            s = "buy food 1 => 0"
+            self.buyFood(1, 0)
+        elif move == 57:
+            s = "buy food 1 => 1"
+            self.buyFood(1, 1)
+        elif move == 58:
+            s = "buy food 1 => 2"
+            self.buyFood(1, 2)
+        elif move == 59:
+            s = "buy food 1 => 3"
+            self.buyFood(1, 3)
+        elif move == 60:
+            s = "buy food 1 => 4"
+            self.buyFood(1, 4)
+        elif move == 61:
+            s = "freeze 0"
+            self.shop.freezeAnimal(0)
+        elif move == 62:
+            s = "freeze 1"
+            self.shop.freezeAnimal(1)
+        elif move == 63:
+            s = "freeze 2"
+            self.shop.freezeAnimal(2)
+        elif move == 64:
+            s = "freeze 3"
+            self.shop.freezeAnimal(3)
+        elif move == 65:
+            s = "freeze 4"
+            self.shop.freezeAnimal(4)
+        elif move == 66:
+            s = "freeze food 0"
+            self.shop.freezeItem(0)
+        elif move == 67:
+            s = "freeze food 1"
+            self.shop.freezeItem(1)
+
         self.moves += 1
 
+        return s
 
     def getState(self):
         """
