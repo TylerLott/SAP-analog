@@ -156,49 +156,36 @@ def getPossibleMovesState(team):
     # possible moves:
     #    - roll            [1]
     #    - end turn        [1]
-    #    - swap animals    [15]
     #    - move animals    [20]
     #    - sell animals    [5]
     #    - buy animals     [5 * 5 = 25]
     #    - buy food        [2 * 5 = 10]
     #    - freeze          [7]
-    #    Total             [79]
+    #    Total             [69]
 
-    if team.moves > 20:
+    if team.moves > 10:
         roll = np.array([0])
-        # end_turn = np.array([1])
-        # swap_animals = np.zeros(10)
         move_animals = np.zeros(20)
         sell_animals = np.zeros(5)
         buyAnimals = np.zeros(25)
         buyFood = np.zeros(10)
         freeze = np.zeros(7)
+        end_turn = np.array([1])
 
         return (
             roll,
-            # end_turn,
-            # swap_animals,
             move_animals,
             sell_animals,
             buyAnimals,
             buyFood,
             freeze,
+            end_turn,
         )
 
     # able to do if money
     roll = np.array([0])
     if team.getMoney() > 0:
         roll[0] = 1
-
-    # always able to do
-    # end_turn = np.array([1])
-
-    # swap animals, always able to
-    # [[0 <-> 1], [0 <-> 2], [0 <-> 3], [0 <-> 4],
-    #  [1 <-> 2], [1 <-> 3], [1 <-> 4],
-    #  [2 <-> 3], [2 <-> 4],
-    #  [3 <-> 4]]
-    # swap_animals = np.ones(10)
 
     # able to do if empty, or the same animal
     # i x j (4 x 5)
@@ -277,9 +264,9 @@ def getPossibleMovesState(team):
     # [0,1,2,3,4,5,6]
     freeze = np.zeros(7)
     can_freeze = False
-    # for i in team.friends:
-    # if i:
-    # can_freeze = True
+    for i in team.friends:
+        if i:
+            can_freeze = True
     if can_freeze:
         for i in range(len(team.shop.animals)):
             if team.shop.animals[i]:
@@ -288,13 +275,15 @@ def getPossibleMovesState(team):
             if team.shop.items[i]:
                 freeze[i + 5] = 1
 
+    # always able to do
+    end_turn = np.array([1])
+
     return (
         roll,
-        # end_turn,
-        # swap_animals,
         move_animals,
         sell_animals,
         buyAnimals,
         buyFood,
         freeze,
+        end_turn,
     )

@@ -248,7 +248,7 @@ class Team:
 
     ### State ###
 
-    def setState(self, moves: np.array):
+    def setState(self, move: int):
         """
         Converts a move state array to the correct move
         Then completes that move
@@ -261,12 +261,11 @@ class Team:
         - roll
         - end turn
         """
-        # TODO implement this
-        move = np.argmax(moves)
         s = ""
         if move == 0:
             s = "roll"
             self.rollShop()
+
         elif move == 1:
             s = "move 0 => 1"
             self.moveFriend(0, 1)
@@ -468,6 +467,9 @@ class Team:
         elif move == 67:
             s = "freeze food 1"
             self.shop.freezeItem(1)
+        elif move == 68:
+            s = "end turn"
+            self.endTurn()
 
         self.moves += 1
 
