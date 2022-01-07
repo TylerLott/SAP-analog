@@ -135,6 +135,15 @@ def getGauntlet(round: int = 1) -> Team:
         t2.friends[0].exp = 3
         t2.friends[1].effect = "melon"
         t3 = Team()
+        t3.friends[0] = Ant(dmg=5, health=4)
+        t3.friends[1] = Cricket(dmg=6, health=5)
+        t3.friends[2] = Swan(dmg=3, health=7)
+        t3.friends[3] = Rabbit()
+        t3.friends[4] = Rabbit(dmg=4, health=4)
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 3
+        t3.friends[0].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
     elif round == 7:
         t1 = Team()
@@ -154,6 +163,15 @@ def getGauntlet(round: int = 1) -> Team:
         t2.friends[2].effect = "garlic"
         t2.friends[4].effect = "honey"
         t3 = Team()
+        t3.friends[0] = Ant(dmg=5, health=4)
+        t3.friends[1] = Cricket(dmg=7, health=6)
+        t3.friends[2] = Ox(dmg=1, health=1)
+        t3.friends[3] = Swan(dmg=3, health=7)
+        t3.friends[4] = Rabbit(dmg=5, health=5)
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 3
+        t3.friends[0].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
     elif round == 8:
         t1 = Team()
@@ -176,6 +194,18 @@ def getGauntlet(round: int = 1) -> Team:
         t2.friends[0].exp = 3
         t2.friends[0].effect = "garlic"
         t3 = Team()
+        t3.friends[0] = Ant(dmg=5, health=4)
+        t3.friends[1] = Cricket(dmg=7, health=7)
+        t3.friends[2] = Ox(dmg=2, health=2)
+        t3.friends[3] = Swan(dmg=3, health=8)
+        t3.friends[4] = Rabbit(dmg=5, health=5)
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 3
+        t3.friends[2].exp = 3
+        t3.friends[0].effect = "garlic"
+        t3.friends[1].effect = "garlic"
+        t3.friends[3].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
     elif round == 9:
         t1 = Team()
@@ -189,6 +219,15 @@ def getGauntlet(round: int = 1) -> Team:
         t1.friends[3].effect = "garlic"
         t1.friends[4].effect = "honey"
         t2 = Team()
+        t2.friends[0] = Cricket(dmg=4, health=4)
+        t2.friends[1] = Rooster(dmg=8, health=8)
+        t2.friends[2] = Shark()
+        t2.friends[3] = Turkey(dmg=3, health=3)
+        t2.friends[4] = Turkey()
+        t2.friends[0].exp = 3
+        t2.friends[1].exp = 3
+        t2.friends[0].effect = "meat"
+        t2.friends[1].effect = "meat"
         t3 = Team()
         team = random.choice([t1, t2, t3])
     elif round == 10:
@@ -212,6 +251,18 @@ def getGauntlet(round: int = 1) -> Team:
         t2.friends[0].effect = "honey"
         t2.friends[2].effect = "garlic"
         t3 = Team()
+        t3.friends[0] = Ant(dmg=5, health=4)
+        t3.friends[1] = Cricket(dmg=10, health=12)
+        t3.friends[2] = Ox(dmg=3, health=3)
+        t3.friends[3] = Swan(dmg=3, health=8)
+        t3.friends[4] = Rabbit(dmg=5, health=5)
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 3
+        t3.friends[2].exp = 3
+        t3.friends[0].effect = "garlic"
+        t3.friends[1].effect = "garlic"
+        t3.friends[3].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
     elif round == 11:
         t1 = Team()
@@ -223,52 +274,64 @@ def getGauntlet(round: int = 1) -> Team:
         t1.friends[2].exp = 3
         t1.friends[4].effect = "honey"
         t2 = Team()
+        t2.friends[0] = Cricket(dmg=4, health=4)
+        t2.friends[1] = Rooster(dmg=9, health=9)
+        t2.friends[2] = Turkey(dmg=5, health=5)
+        t2.friends[3] = Turkey(dmg=6, health=5)
+        t2.friends[4] = Shark()
+        t2.friends[0].exp = 3
+        t2.friends[1].exp = 3
+        t2.friends[2].exp = 3
+        t2.friends[0].effect = "meat"
+        t2.friends[1].effect = "extraLife"
         t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 12:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 13:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 14:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 15:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 16:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 17:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 18:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
-        team = random.choice([t1, t2, t3])
-    elif round == 19:
-        t1 = Team()
-        t2 = Team()
-        t3 = Team()
+        t3.friends[0] = Cricket(dmg=16, health=18)
+        t3.friends[1] = Ox(dmg=5, health=7)
+        t3.friends[2] = Swan(dmg=3, health=8)
+        t3.friends[3] = Monkey()
+        t3.friends[4] = Monkey()
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 6
+        t3.friends[0].effect = "garlic"
+        t3.friends[2].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
     else:
         t1 = Team()
+        t1.friends[0] = Mammoth(dmg=6, health=6)
+        t1.friends[1] = Cricket(dmg=4, health=4)
+        t1.friends[2] = Rooster(dmg=10, health=10)
+        t1.friends[3] = Turkey(dmg=5, health=5)
+        t1.friends[4] = Turkey(dmg=6, health=5)
+        t1.friends[1].exp = 3
+        t1.friends[2].exp = 3
+        t1.friends[3].exp = 3
+        t1.friends[0].effect = "steak"
+        t1.friends[1].effect = "extraLife"
+        t1.friends[2].effect = "extraLife"
         t2 = Team()
+        t2.friends[0] = Mammoth(dmg=6, health=6)
+        t2.friends[1] = Cricket(dmg=4, health=4)
+        t2.friends[2] = Rooster(dmg=9, health=9)
+        t2.friends[3] = Turkey(dmg=5, health=5)
+        t2.friends[4] = Turkey(dmg=6, health=5)
+        t2.friends[1].exp = 3
+        t2.friends[2].exp = 3
+        t2.friends[3].exp = 3
+        t2.friends[0].effect = "steak"
+        t2.friends[1].effect = "meat"
+        t2.friends[2].effect = "extraLife"
         t3 = Team()
+        t3.friends[0] = Cricket(dmg=24, health=30)
+        t3.friends[1] = Ox(dmg=5, health=7)
+        t3.friends[2] = Snake()
+        t3.friends[3] = Swan(dmg=3, health=8)
+        t3.friends[4] = Monkey(dmg=2, health=2)
+        t3.friends[0].exp = 3
+        t3.friends[1].exp = 6
+        t3.friends[0].effect = "garlic"
+        t3.friends[3].effect = "garlic"
+
         team = random.choice([t1, t2, t3])
 
     return team
