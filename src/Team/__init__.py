@@ -88,7 +88,6 @@ class Team:
             for i in range(len(self.friends)):
                 if i != friend_pos and self.friends[i]:
                     self.friends[i].onFriendSold(self.friends)
-            self.moves += 1
 
     def buyFriend(self, shop_pos: int, friend_pos: int) -> None:
         # to protect against combining animals more than level 3
@@ -112,7 +111,6 @@ class Team:
                 self.friends[friend_pos].onBuy(self.friends, self)
                 if self.friends[friend_pos].getLevel() > origin_level:
                     self.friends[friend_pos].onLevelUp(self.friends)
-            self.moves += 1
 
     def buyFood(self, shop_pos: int, position: int) -> None:
         food = self.shop.checkFood(shop_pos)
@@ -128,7 +126,6 @@ class Team:
             food.perm_buff[1] *= haveCat
             food.temp_buff[0] *= haveCat
             food.temp_buff[1] *= haveCat
-            self.moves += 1
 
             if food.effect == "pill":
                 self.friends[position].onFaint(self.friends, [])
@@ -209,12 +206,10 @@ class Team:
         if self.money > 0:
             self.shop.roll()
             self.money -= 1
-            self.moves += 1
 
     def endTurn(self) -> None:
         for i in self.friends:
             i.onEndOfTurn(self.friends)
-        self.moves += 1
 
     def nextTurn(self) -> None:
         self.moves = 0
@@ -241,7 +236,8 @@ class Team:
         - end turn
         """
         # TODO implement this
-        pass
+        self.moves += 1
+
 
     def getState(self):
         """
@@ -275,8 +271,16 @@ class Team:
         )
 
         possible_moves = np.concatenate(getPossibleMovesState(self))
+        friend_state = friend_state.flatten()
+        shop_an = shop_an.flatten()
+        shop_food = shop_food.flatten()
+        shop_freeze = shop_freeze.flatten()
+        team_state = team_state.flatten()
+        state = np.concatenate(
+            (friend_state, shop_an, shop_food, shop_freeze, team_state)
+        )
 
-        return friend_state, shop_an, shop_food, shop_freeze, team_state, possible_moves
+        return state, possible_moves
 
     ### Overrides ###
 

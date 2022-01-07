@@ -21,7 +21,7 @@ class Fight:
 
     ### Actions ###
 
-    def simulate(self) -> None:
+    def simulate(self) -> list:
         """
         onStartOfBattle in order of dmg
             onFaint if dies
@@ -105,6 +105,8 @@ class Fight:
             self.team1.loseLife()
             self.team1.wonLast = False
             self.team2.wonLast = True
+
+        return [1, -1] if len(self.team1Friends) > len(self.team2Friends) else [-1, 1]
 
     ### Private ###
 

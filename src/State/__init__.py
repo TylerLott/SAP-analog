@@ -161,25 +161,27 @@ def getPossibleMovesState(team):
     #    - buy animals     [5 * 5 = 25]
     #    - buy food        [2 * 5 = 10]
     #    - freeze          [7]
-    #    Total             [84]
+    #    Total             [79]
 
-    if team.moves < 20:
+    if team.moves > 20:
         roll = np.array([0])
-        end_turn = np.array([1])
+        # end_turn = np.array([1])
         swap_animals = np.zeros(10)
         move_animals = np.zeros(20)
         sell_animals = np.zeros(5)
         buyAnimals = np.zeros(25)
         buyFood = np.zeros(10)
+        freeze = np.zeros(7)
 
         return (
             roll,
-            end_turn,
+            # end_turn,
             swap_animals,
             move_animals,
             sell_animals,
             buyAnimals,
             buyFood,
+            freeze,
         )
 
     # able to do if money
@@ -188,7 +190,7 @@ def getPossibleMovesState(team):
         roll[0] = 1
 
     # always able to do
-    end_turn = np.array([1])
+    # end_turn = np.array([1])
 
     # swap animals, always able to
     # [[0 <-> 1], [0 <-> 2], [0 <-> 3], [0 <-> 4],
@@ -260,20 +262,19 @@ def getPossibleMovesState(team):
                 buyFood[i][j] = 1
     buyFood = buyFood.flatten()
 
-    # TODO Add freeze moves
     # [[friends], [shop]]
     # [0,1,2,3,4,5,6]
     freeze = np.zeros(7)
-    for i in range(len(team.shop.friends)):
-        if team.shop.friends[i]:
+    for i in range(len(team.shop.animals)):
+        if team.shop.animals[i]:
             freeze[i] = 1
     for i in range(len(team.shop.items)):
         if team.shop.items[i]:
-            freeze[i + 4] = 1
+            freeze[i + 5] = 1
 
     return (
         roll,
-        end_turn,
+        # end_turn,
         swap_animals,
         move_animals,
         sell_animals,
