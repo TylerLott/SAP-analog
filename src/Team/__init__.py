@@ -500,9 +500,9 @@ class Team:
             [
                 money / 20,
                 self.getLife() / 10,
-                self.getRound() / 100,
+                self.getRound() / 20,
                 won_last,
-                self.moves / 50,
+                self.moves / 15,
             ]
         )
 

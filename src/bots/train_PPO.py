@@ -11,7 +11,7 @@ from src.bots.EnvWrapper import EnvWrapper
 
 def run():
     NUM_TIMESTEPS = int(2e7)
-    EVAL_FREQ = 250000
+    EVAL_FREQ = 75000
     EVAL_EPISODES = 100
     LOGDIR = "./train/ppo1"  # moved to zoo afterwards.
 
@@ -21,7 +21,7 @@ def run():
     env = Monitor(env, filename=LOGDIR)
 
     # take mujoco hyperparams (but doubled timesteps_per_actorbatch to cover more steps.)
-    policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=[128, 32, 512, 512, 32])
+    policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=[128, 32, 512, 512])
     model = PPO(
         "MlpPolicy",
         env,
@@ -30,7 +30,7 @@ def run():
         n_steps=4096,
         n_epochs=100,
         policy_kwargs=policy_kwargs,
-        learning_rate=0.000003
+        learning_rate=0.00001
         # ent_coef=0.01,
     )
 

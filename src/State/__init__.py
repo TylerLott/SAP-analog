@@ -121,6 +121,7 @@ FOOD_STATE_DICT = {
 
 
 def getAnimalState(animal) -> np.array:
+    # original (one hot)
     arr = np.zeros(84)
     if animal.__class__.__name__ == "NoneAnimal":
         arr[0] = 1
@@ -139,6 +140,16 @@ def getAnimalState(animal) -> np.array:
     arr[79] = animal.getTempHp() / 50
     arr[78] = animal.getTempDmg() / 50
 
+    # arr = np.zeros(8)
+    # arr[0] = ANIMAL_STATE_DICT[animal.__class__.__name__] / 66
+    # arr[1] = (ANIMAL_EFFECT_DICT[animal.getEffect()] - 66) / 12
+    # arr[2] = animal.getLevel() / 3
+    # arr[3] = animal.getExp() / 6
+    # arr[4] = animal.getBaseHp() / 50
+    # arr[5] = animal.getBaseDmg() / 50
+    # arr[6] = animal.getTempHp() / 50
+    # arr[7] = animal.getTempDmg() / 50
+
     return arr
 
 
@@ -147,6 +158,8 @@ def getFoodState(food) -> np.array:
 
     food_ind = FOOD_STATE_DICT[food.__class__.__name__]
     arr[food_ind] = 1
+
+    # arr = np.array([FOOD_STATE_DICT[food.__class__.__name__] / 18])
 
     return arr
 
