@@ -17,7 +17,14 @@ def getGauntlet(round: int = 1) -> Team:
         t3.friends[0] = Ant()
         t3.friends[1] = Mosquito()
         t3.friends[2] = Mosquito()
-
+        # t4 = Team()
+        # t4.friends[2] = Horse()
+        # t5 = Team()
+        # t5.friends[0] = Otter()
+        # t5.friends[2] = Horse()
+        # t6 = Team()
+        # t6.friends[0] = Ant()
+        # team = random.choice([t1, t2, t3, t4, t5, t6])
         team = random.choice([t1, t2, t3])
     elif round == 2:
         t1 = Team()

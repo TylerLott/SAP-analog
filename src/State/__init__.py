@@ -276,7 +276,8 @@ def getPossibleMovesState(team):
                 freeze[i + 5] = 1
 
     # always able to do
-    end_turn = np.array([1])
+    end_turn = np.array([0]) if team.money > 0 else np.array([1])
+    # end_turn = np.array([1])
 
     return (
         roll,
