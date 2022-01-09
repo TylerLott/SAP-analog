@@ -1,5 +1,28 @@
 import csv
 
+
+s = """
+############################################
+ __        __   _                          
+ \ \      / /__| | ___ ___  _ __ ___   ___ 
+  \ \ /\ / / _ \ |/ __/ _ \| '_ ` _ \ / _ \
+   \ V  V /  __/ | (_| (_) | | | | | |  __/
+    \_/\_/ \___|_|\___\___/|_| |_| |_|\___|
+############################################
+This is a data collector for super auto pets
+
+It is meant to be used while watching a video
+
+inputs:
+    - round       => (round)
+    - lives       => (lives)
+    - Friends     => (name dmg hp effect)
+    - Shop Friend => (name dmg hp)
+    - Shop Food   => (name)
+
+"""
+
+
 done = False
 while not done:
     isEnd = input("end?")

@@ -14,8 +14,7 @@ class Fight:
     def __init__(self, team1: Team, team2: Team):
         self.team1 = team1
         self.team2 = team2
-        self.team1Friends = team1.getFriendCopy()
-        self.team2Friends = team2.getFriendCopy()
+
         # Copy teams into new arrays
         # turn order is based on damage
 
@@ -41,7 +40,8 @@ class Fight:
             onFriendAheadFaint
             onFriendAheadAttack if not faint
         """
-
+        self.team1Friends = self.team1.getFriendCopy()
+        self.team2Friends = self.team2.getFriendCopy()
         # I might need to make like a move buffer and just load into
         # that rather than recursively calling everything
 
@@ -106,9 +106,20 @@ class Fight:
             self.team1.wonLast = False
             self.team2.wonLast = True
 
-        if len(self.team1Friends) == len(self.team2Friends):
-            return 0
-        return 1 if len(self.team1Friends) > len(self.team2Friends) else -1
+        # return Winner
+        # if len(self.team1Friends) == len(self.team2Friends):
+        #     return 0
+        # return 1 if len(self.team1Friends) > len(self.team2Friends) else -1
+
+        advantage = 0
+
+        for i in self.team1Friends:
+            advantage += i.getHp()
+
+        for i in self.team2Friends:
+            advantage -= i.getHp()
+
+        return advantage
 
     ### Private ###
 
