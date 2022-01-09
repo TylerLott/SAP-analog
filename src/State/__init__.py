@@ -276,17 +276,17 @@ def getPossibleMovesState(team):
     # [[friends], [shop]]
     # [0,1,2,3,4,5,6]
     freeze = np.zeros(7)
-    can_freeze = False
-    for i in team.friends:
-        if i:
-            can_freeze = True
-    if can_freeze:
-        for i in range(len(team.shop.animals)):
-            if team.shop.animals[i]:
-                freeze[i] = 1
-        for i in range(len(team.shop.items)):
-            if team.shop.items[i]:
-                freeze[i + 5] = 1
+    # can_freeze = False
+    # for i in team.friends:
+    #     if i:
+    #         can_freeze = True
+    # if can_freeze:
+    #     for i in range(len(team.shop.animals)):
+    #         if team.shop.animals[i]:
+    #             freeze[i] = 1
+    #     for i in range(len(team.shop.items)):
+    #         if team.shop.items[i]:
+    #             freeze[i + 5] = 1
 
     # always able to do
     end_turn = np.array([0]) if team.money > 0 else np.array([1])

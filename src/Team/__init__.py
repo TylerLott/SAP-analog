@@ -84,6 +84,7 @@ class Team:
             and self.friends[pos2].getLevel() < 3
         ):
             self.friends[pos2] += self.friends[pos1]
+            self.friends[pos1] = NoneAnimal()
         else:
             self.friends[pos1], self.friends[pos2] = (
                 self.friends[pos2],
@@ -488,8 +489,14 @@ class Team:
         friend_state = [i.getState() for i in self.friends]
         friend_state = np.stack(friend_state, axis=0)
 
+        # print("friend_state", len(friend_state.flatten()))
+
         # Shop State
         shop_an, shop_food, shop_freeze = self.shop.getState()
+
+        # print("shop_an", len(shop_an.flatten()))
+        # print("shop_food", len(shop_food.flatten()))
+        # print("shop_freeze", len(shop_freeze.flatten()))
 
         # Team State
         won_last = 1 if self.wonLast else 0
@@ -507,14 +514,16 @@ class Team:
         )
 
         possible_moves = np.concatenate(getPossibleMovesState(self))
-        friend_state = friend_state.flatten()
-        shop_an = shop_an.flatten()
-        shop_food = shop_food.flatten()
-        shop_freeze = shop_freeze.flatten()
-        team_state = team_state.flatten()
+        friend_state = friend_state.flatten()  # 420
+        shop_an = shop_an.flatten()  # 420
+        shop_food = shop_food.flatten()  # 36
+        shop_freeze = shop_freeze.flatten()  # 5
+        team_state = team_state.flatten()  # 5
         state = np.concatenate(
             (friend_state, shop_an, shop_food, shop_freeze, team_state)
-        )
+        )  # 886
+
+        assert len(state) == 888
 
         return state, possible_moves
 
