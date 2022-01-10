@@ -48,7 +48,8 @@ def bestMove(team1, enemies, depth):
             t = deepcopy(team1)
             t.setState(i)
             adv = getAdvantage(t, enemies)
-            DFS(t, enemies, adv, maxSum, depth + 1, counter)
+            if i != 68:
+                DFS(t, enemies, adv, maxSum, depth + 1, counter)
             if adv + maxSum[0] > maxmax:
                 best_i = i
                 maxmax = adv + maxSum[0]
@@ -68,7 +69,8 @@ def DFS(team, enemies, sum, maxSum, depth, counter):
             t = deepcopy(team)
             t.setState(i)
             adv = getAdvantage(t, enemies)
-            DFS(t, enemies, sum + adv, maxSum, depth + 1, counter)
+            if i != 68:
+                DFS(t, enemies, sum + adv, maxSum, depth + 1, counter)
 
 
 def getAdvantage(team, enemies):
@@ -103,10 +105,14 @@ def run():
                 )
 
                 s = t1.setState(move)
+                if move == 68:
+                    break
                 # print(
                 #     f"| Move {i:3}: {s:15} | Moves Checked: {count[0]:8} | Estimated Advantage: {m:10.2f} | time taken: {time.time() - start_time:4.2f}s | money: {t1.money:2} |"
                 # )
 
+            if move != 68:
+                t1.setState(68)
             enemies1 = getGauntlet(round)
             f = Fight(t1, enemies1)
             score = f.simulate()

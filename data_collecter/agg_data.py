@@ -1,6 +1,8 @@
 import glob
 import pandas as pd
 import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 def run():
@@ -34,5 +36,9 @@ def run():
     print("no_na:", no_na.shape[0])
 
     sub = actual_df.columns[0:-1]
-    no_dup = actual_df.drop_duplicates(subset=sub)
-    print("no_dup:", no_dup.shape[0])
+    no_dup_state = actual_df.drop_duplicates(subset=sub)
+    print("no_dup_state:", no_dup_state.shape[0])
+
+    moves = no_dup_state[no_dup_state.columns[-1]]
+    sns.distplot(moves)
+    plt.show()
