@@ -112,7 +112,13 @@ def run():
                 # )
 
             if move != 68:
+                state, _ = t1.getState()
+                move = 68
                 t1.setState(68)
+                data = np.append(state, move)
+                pd.DataFrame(data.reshape(-1, len(data))).to_csv(
+                    data_file, mode="a", index=False, header=False
+                )
             enemies1 = getGauntlet(round)
             f = Fight(t1, enemies1)
             score = f.simulate()
@@ -122,14 +128,20 @@ def run():
             # print(f"| Round {round:4} | score: {score:4} | win number: {wins} |")
 
             round += 1
+            if round > 15:
+                print("got past round 15")
+            if wins > 10:
+                print(f"I won at round: {round}")
+            if not t1.alive:
+                print(f"got to round {round} and lost")
 
         # print(t1)
         # print(f"| got to round: {round} | number of wins: {wins} |")
 
 
-def multi_run():
+def multi_run(processes):
     proc = []
-    for i in range(24):
+    for i in range(processes):
         t = Process(target=run)
         proc.append(t)
     for i in proc:
