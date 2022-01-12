@@ -42,3 +42,13 @@ def run():
     moves = no_dup_state[no_dup_state.columns[-1]]
     sns.distplot(moves)
     plt.show()
+
+    print(actual_df.iloc[1, :-1])
+    print(actual_df.iloc[1, -1])
+
+    # train_df = no_dup_state.iloc[: int(len(no_dup_state) * 0.9), :]
+    train_df = no_dup_state
+    valid_df = no_dup_state.iloc[int(len(no_dup_state) * 0.9) :, :]
+
+    train_df.to_csv("./data_collecter/full_data/train.csv")
+    valid_df.to_csv("./data_collecter/full_data/validation.csv")

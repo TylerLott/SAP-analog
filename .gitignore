@@ -3,3 +3,6 @@
 .VSCodeCounter
 *ga_selfplay
 *.csv
+model_2022*
+model_full*
+tensorboard*

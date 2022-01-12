@@ -11,25 +11,24 @@ class CustomNetwork(nn.Module):
 
         # Network
 
-        self.layer1 = nn.Linear(self.obs_dim, 256)
-        self.relu1 = nn.ReLU()
-        self.layer2 = nn.Linear(256, 512)
-        self.relu2 = nn.ReLU()
+        self.relu = nn.ReLU()
+        self.dropout = nn.Dropout(0.5)
+
+        self.layer1 = nn.Linear(self.obs_dim, 512)
+        self.layer2 = nn.Linear(512, 512)
         self.layer3 = nn.Linear(512, 512)
-        self.relu3 = nn.ReLU()
         self.layer4 = nn.Linear(512, 256)
-        self.relu4 = nn.ReLU()
-        self.layer5 = nn.Linear(256, self.out_dim)
-        self.out = nn.Softmax()
+        self.out = nn.Linear(256, self.out_dim)
 
     def forward(self, obs):
         x = self.layer1(obs)
-        x = self.relu1(x)
+        x = self.relu(x)
         x = self.layer2(x)
-        x = self.relu2(x)
+        x = self.relu(x)
+        # x = self.dropout(x)
         x = self.layer3(x)
-        x = self.relu3(x)
+        x = self.relu(x)
+        # x = self.dropout(x)
         x = self.layer4(x)
-        x = self.relu4(x)
-        x = self.layer5(x)
+        x = self.relu(x)
         return self.out(x)
