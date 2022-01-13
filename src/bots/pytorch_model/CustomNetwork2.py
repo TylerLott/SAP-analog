@@ -33,8 +33,10 @@ class CustomNetwork2(nn.Module):
         self.main2 = nn.Linear(512, 128)
         self.main3 = nn.Linear(128, 69)
 
-    def forward(self, f, s, t):
-
+    def forward(self, obs):
+        f = obs[:, :420]
+        s = obs[:, 420:883]
+        t = obs[:, 883:]
         f = self.branch1(f)
         s = self.branch2(s)
         t = self.branch3(t)

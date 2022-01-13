@@ -12,6 +12,7 @@ class EnvWrapper(gym.Env):
         super(EnvWrapper, self).__init__()
         self.team1 = Team()
         self.won_rounds = 0
+        self.moves = 0
         state = self.team1.getState()
         self.action_space = spaces.Discrete(len(state[1]))
         self.observation_space = spaces.Box(
@@ -24,67 +25,29 @@ class EnvWrapper(gym.Env):
         done = False
         round = self.team1.round
 
-        # penalize for bad moves
-        _, p = self.team1.getState()
-        amt = 1
-        if p[move] == 0 and move != 68 and self.team1.moves > 10:
-            amt = amt * (self.team1.moves - 10)
-            reward -= amt
-        elif p[move] == 0:
-            reward -= 5
-        # elif p[move] == 1:
-        #     reward += 1
-
-        og = 0
-        for i in self.team1.friends:
-            if i:
-                og += 1
-
-        # Do move
-        move_print = self.team1.setState(move)
-
         # fight if end turn action
-        if move == 68:
-            reward -= self.team1.money
+        if move == 68 or self.moves > 7:
+            move_print = self.team1.setState(68)
             t2 = getGauntlet(round=self.team1.getRound())
             f = Fight(self.team1, t2)
             res = f.simulate()
 
             # reward based on results
-            if res == 1:
-                reward += 100 * self.team1.getRound()
+            if res >= 0:
+                reward += 10 * self.team1.getRound()
                 self.won_rounds += 1
-            elif res == -1:
-                reward = reward - 100 + (10 * self.team1.getRound())
-                done = True
-            elif res == 0:
-                reward += 20
-            if self.won_rounds > 10:
-                done = True
 
             self.team1.nextTurn()
-
-        if self.team1.moves > 30:
-            reward -= 1000
-            done = True
-
-        og2 = 0
-        for i in self.team1.friends:
-            if i:
-                og2 += 1
-
-        if og2 > og:
-            reward += 5
+            self.moves = 0
+        else:
+            # Do move
+            move_print = self.team1.setState(move)
+            self.moves += 1
 
         # Done
-        # if self.team1.alive and self.won_rounds < 10:
-        #     done = False
-        # elif self.team1.alive and self.won_rounds >= 10:
-        #     done = True
-        #     reward += 500
-        # elif not self.team1.alive:
-        #     done = True
-        # reward -= 50
+        if not self.team1.alive or self.won_rounds >= 10:
+            done = True
+            self.won_rounds = 0
 
         # Observations
         obs, _ = self.team1.getState()

@@ -7,31 +7,35 @@ from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.monitor import Monitor
 
 from src.bots.EnvWrapper import EnvWrapper
+from src.bots.custPolicy import CustomPolicy
 
 
 def run():
-    NUM_TIMESTEPS = int(2e7)
-    EVAL_FREQ = 250000
-    EVAL_EPISODES = 100
-    LOGDIR = "./train/dqn1"  # moved to zoo afterwards.
+    NUM_TIMESTEPS = int(2e8)
+    EVAL_FREQ = 50000
+    EVAL_EPISODES = 20
+    LOGDIR = "./train/dqn1"
 
     logger = configure(folder=LOGDIR)
 
     env = EnvWrapper()
     env = Monitor(env, filename=LOGDIR)
 
-    # take mujoco hyperparams (but doubled timesteps_per_actorbatch to cover more steps.)
-    policy_kwargs = dict(activation_fn=th.nn.ReLU, net_arch=[512, 256, 128])
+    def lr_schedule(initial, end):
+        def func(progress_remaining):
+            return initial - ((1 - progress_remaining) * (initial - end))
+
+        return func
+
     model = DQN(
-        "MlpPolicy",
+        CustomPolicy,
         env,
         verbose=1,
-        policy_kwargs=policy_kwargs,
+        learning_rate=lr_schedule(0.001, 0.000001),
+        tensorboard_log="./train/dqn_rl/",
     )
 
-    # model.set_parameters("./train/ppo1/best_model.zip")
-
-    model.set_logger(logger)
+    # model.set_logger(logger)
 
     eval_callback = EvalCallback(
         env,
@@ -41,7 +45,9 @@ def run():
         n_eval_episodes=EVAL_EPISODES,
     )
 
-    model.learn(total_timesteps=NUM_TIMESTEPS, callback=eval_callback)
+    model.learn(
+        total_timesteps=NUM_TIMESTEPS, callback=eval_callback, tb_log_name="first_run"
+    )
 
     model.save(os.path.join(LOGDIR, "final_model"))  # probably never get to this point.
 

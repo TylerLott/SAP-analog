@@ -92,6 +92,7 @@ def run():
 
         round = 1
         wins = 0
+        ties = 0
         while t1.alive and wins < 10:
 
             for i in range(7):
@@ -124,17 +125,19 @@ def run():
             score = f.simulate()
             if score > 0:
                 wins += 1
+            if score == 0:
+                ties += 1
             t1.nextTurn()
             # print(f"| Round {round:4} | score: {score:4} | win number: {wins} |")
 
-            round += 1
             if round > 15:
                 print("got past round 15")
-            if wins > 10:
+            if wins > 9:
                 print(f"I won at round: {round}")
             if not t1.alive:
-                print(f"got to round {round} and lost")
+                print(f"| got to round {round} and lost | {wins} wins | {ties} ties |")
 
+            round += 1
         # print(t1)
         # print(f"| got to round: {round} | number of wins: {wins} |")
 
