@@ -1,22 +1,22 @@
-from src.bots.pytorch_model.CustomNetwork import CustomNetwork
+from src.bots.pytorch_model.autoencoder.CustomNetwork3 import CustomNetwork3
 import torch
 from torch.utils.data import DataLoader
 from datetime import datetime
 from torch.utils.tensorboard import SummaryWriter
 
-from src.bots.pytorch_model.Dataset import SAPDataset_train, SAPDataset_valid
+from src.bots.pytorch_model.Dataset2 import SAPDataset_train2, SAPDataset_valid2
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # should be batched here
 train_loader = DataLoader(
-    SAPDataset_train(), batch_size=512, shuffle=True, num_workers=2
+    SAPDataset_train2(), batch_size=512, shuffle=True, num_workers=2
 )
 validation_loader = DataLoader(
-    SAPDataset_valid(), batch_size=512, shuffle=True, num_workers=2
+    SAPDataset_valid2(), batch_size=512, shuffle=True, num_workers=2
 )
 
-model = CustomNetwork(888, 69)
+model = CustomNetwork3(420, 463, 5, 69)
 model.to(device)
 
 loss_fn = torch.nn.CrossEntropyLoss()
@@ -30,13 +30,16 @@ def train_one_epoch(epoch_index, tb_writer):
     train_acc = 0.0
 
     for i, data in enumerate(train_loader):
-        input, label = data
-        input = input.to(device)
+        f, s, t, label = data
+        f = f.to(device)
+        s = s.to(device)
+        t = t.to(device)
+
         label = label.to(device)
 
         optimizer.zero_grad()
 
-        out = model(input)
+        out = model(f, s, t)
 
         loss = loss_fn(out, label)
         loss.backward()
@@ -82,10 +85,12 @@ def train(epochs=1000):
         running_vloss = 0.0
         train_vacc = 0.0
         for i, vdata in enumerate(validation_loader):
-            vinputs, vlabels = vdata
-            vinputs = vinputs.to(device)
+            f, s, t, vlabels = vdata
+            f = f.to(device)
+            s = s.to(device)
+            t = t.to(device)
             vlabels = vlabels.to(device)
-            vout = model(vinputs)
+            vout = model(f, s, t)
             vloss = loss_fn(vout, vlabels)
             vprobs = torch.softmax(vout, dim=1)
             vwinners = vprobs.argmax(dim=1)
@@ -106,5 +111,5 @@ def train(epochs=1000):
 
         if avg_vloss < best_vloss:
             best_vloss = avg_vloss
-            model_path = f"./train/custDQN/model_{time_stamp}_{epoch}"
+            model_path = f"./train/custDQN/model2_{time_stamp}_{epoch}"
             torch.save(model.state_dict(), model_path)
