@@ -117,8 +117,8 @@ class Team:
             animal = self.shop.checkAnimal(shop_pos)
             if self.money >= animal.getCost():
                 animal = self.shop.buyAnimal(shop_pos)
+                self.money -= animal.getCost()
                 if not self.friends[friend_pos]:
-                    self.money -= animal.getCost()
                     self.friends[friend_pos] = animal
                     self.friends[friend_pos].onBuy(self.friends, self)
                     for i in self.friends:
@@ -522,8 +522,7 @@ class Team:
         state = np.concatenate(
             (friend_state, shop_an, shop_food, shop_freeze, team_state)
         )
-
-        assert len(state) == 888
+        assert len(state) == 94
 
         return state, possible_moves
 

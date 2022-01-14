@@ -12,7 +12,7 @@ from functools import partial
 from multiprocessing import Pool, Process
 
 MAX_DEPTH = 2
-DATA_PATH = "./data_collecter/data/data"
+DATA_PATH = "./data_collecter/games/"
 
 # def minmax(team1: Team, enemies: Team, depth, moves, best):
 
@@ -84,6 +84,7 @@ def getAdvantage(team, enemies):
 def run():
     print(f"Starting process {os.getpid()}")
     data_file = f"{DATA_PATH}_{os.getpid()}.csv"
+    game = 0
     while True:
         t1 = Team()
 
@@ -93,33 +94,49 @@ def run():
         round = 1
         wins = 0
         ties = 0
-        while t1.alive and wins < 10:
+        move_hist = None
 
-            for i in range(7):
+        while t1.alive and wins < 10:
+            old_adv = -10000
+
+            for i in range(10):
                 # start_time = time.time()
-                move, count, m = bestMove(t1, enemies1, 0)
+                next_enemies = getGauntlet(round)
+                move, numMovesChecked, maxAdv = bestMove(t1, next_enemies, 0)
 
                 state, _ = t1.getState()
-                data = np.append(state, move)
-                pd.DataFrame(data.reshape(-1, len(data))).to_csv(
-                    data_file, mode="a", index=False, header=False
-                )
+
+                if move == 68 or (t1.money == 0 and maxAdv <= old_adv):
+                    break
+
+                if type(move_hist) != np.ndarray:
+                    move_hist = np.expand_dims(np.append(state, move), axis=0)
+                else:
+                    move_hist = np.append(
+                        move_hist,
+                        np.expand_dims(np.append(state, move), axis=0),
+                        axis=0,
+                    )
+                # data = np.append(state, move)
+                # pd.DataFrame(data.reshape(-1, len(data))).to_csv(
+                #     data_file, mode="a", index=False, header=False
+                # )
 
                 s = t1.setState(move)
-                if move == 68:
-                    break
+
                 # print(
-                #     f"| Move {i:3}: {s:15} | Moves Checked: {count[0]:8} | Estimated Advantage: {m:10.2f} | time taken: {time.time() - start_time:4.2f}s | money: {t1.money:2} |"
+                #     f"| Move {i+1:3}: {s:15} | Moves Checked: {numMovesChecked[0]:8} | Estimated Advantage: {maxAdv:10.2f} | time taken: {time.time() - start_time:4.2f}s | money: {t1.money:2} |"
                 # )
+                old_adv = maxAdv
 
             if move != 68:
                 state, _ = t1.getState()
                 move = 68
                 t1.setState(68)
-                data = np.append(state, move)
-                pd.DataFrame(data.reshape(-1, len(data))).to_csv(
-                    data_file, mode="a", index=False, header=False
+                move_hist = np.append(
+                    move_hist, np.expand_dims(np.append(state, move), axis=0), axis=0
                 )
+
             enemies1 = getGauntlet(round)
             f = Fight(t1, enemies1)
             score = f.simulate()
@@ -130,15 +147,22 @@ def run():
             t1.nextTurn()
             # print(f"| Round {round:4} | score: {score:4} | win number: {wins} |")
 
-            if round > 15:
-                print("got past round 15")
-            if wins > 9:
-                print(f"I won at round: {round}")
-            if not t1.alive:
-                print(f"| got to round {round} and lost | {wins} wins | {ties} ties |")
+            # if round > 15:
+            #     print("got past round 15")
+            # if wins > 6:
+            #     print(f"I won at round: {round}")
+            # if not t1.alive:
+            #     print(f"| got to round {round} and lost | {wins} wins | {ties} ties |")
 
             round += 1
-        # print(t1)
+
+        if wins > 6:
+            data_file = (
+                f"{DATA_PATH}/game_{game}_{os.getpid()}_round_{round}_wins_{wins}.csv"
+            )
+            np.savetxt(data_file, move_hist, delimiter=",")
+            print(f"game {game} saved")
+        game += 1
         # print(f"| got to round: {round} | number of wins: {wins} |")
 
 

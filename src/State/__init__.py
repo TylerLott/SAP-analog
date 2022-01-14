@@ -122,44 +122,44 @@ FOOD_STATE_DICT = {
 
 def getAnimalState(animal) -> np.array:
     # original (one hot)
-    arr = np.zeros(84)
-    if animal.__class__.__name__ == "NoneAnimal":
-        arr[0] = 1
-        return arr
+    # arr = np.zeros(84)
+    # if animal.__class__.__name__ == "NoneAnimal":
+    #     arr[0] = 1
+    #     return arr
 
-    animal_ind = ANIMAL_STATE_DICT[animal.__class__.__name__]
-    arr[animal_ind] = 1
+    # animal_ind = ANIMAL_STATE_DICT[animal.__class__.__name__]
+    # arr[animal_ind] = 1
 
-    eff_ind = ANIMAL_EFFECT_DICT[animal.getEffect()]
-    arr[eff_ind] = 1
+    # eff_ind = ANIMAL_EFFECT_DICT[animal.getEffect()]
+    # arr[eff_ind] = 1
 
-    arr[83] = animal.getLevel() / 3
-    arr[82] = animal.getExp() / 6
-    arr[81] = animal.getBaseHp() / 50
-    arr[80] = animal.getBaseDmg() / 50
-    arr[79] = animal.getTempHp() / 50
-    arr[78] = animal.getTempDmg() / 50
+    # arr[83] = animal.getLevel() / 3
+    # arr[82] = animal.getExp() / 6
+    # arr[81] = animal.getBaseHp() / 50
+    # arr[80] = animal.getBaseDmg() / 50
+    # arr[79] = animal.getTempHp() / 50
+    # arr[78] = animal.getTempDmg() / 50
 
-    # arr = np.zeros(8)
-    # arr[0] = ANIMAL_STATE_DICT[animal.__class__.__name__] / 66
-    # arr[1] = (ANIMAL_EFFECT_DICT[animal.getEffect()] - 66) / 12
+    arr = np.zeros(8)
+    arr[0] = ANIMAL_STATE_DICT[animal.__class__.__name__] / 65
+    arr[1] = (ANIMAL_EFFECT_DICT[animal.getEffect()] - 65) / 11
     # arr[2] = animal.getLevel() / 3
-    # arr[3] = animal.getExp() / 6
-    # arr[4] = animal.getBaseHp() / 50
-    # arr[5] = animal.getBaseDmg() / 50
-    # arr[6] = animal.getTempHp() / 50
-    # arr[7] = animal.getTempDmg() / 50
+    arr[2] = animal.getExp() / 6
+    arr[3] = animal.getBaseHp() / 50
+    arr[4] = animal.getBaseDmg() / 50
+    arr[5] = animal.getTempHp() / 50
+    arr[6] = animal.getTempDmg() / 50
 
     return arr
 
 
 def getFoodState(food) -> np.array:
-    arr = np.zeros(18)
+    # arr = np.zeros(18)
 
-    food_ind = FOOD_STATE_DICT[food.__class__.__name__]
-    arr[food_ind] = 1
+    # food_ind = FOOD_STATE_DICT[food.__class__.__name__]
+    # arr[food_ind] = 1
 
-    # arr = np.array([FOOD_STATE_DICT[food.__class__.__name__] / 18])
+    arr = np.array([FOOD_STATE_DICT[food.__class__.__name__] / 17])
 
     return arr
 
@@ -176,24 +176,24 @@ def getPossibleMovesState(team):
     #    - freeze          [7]
     #    Total             [69]
 
-    if team.moves > 10:
-        roll = np.array([0])
-        move_animals = np.zeros(20)
-        sell_animals = np.zeros(5)
-        buyAnimals = np.zeros(25)
-        buyFood = np.zeros(10)
-        freeze = np.zeros(7)
-        end_turn = np.array([1])
+    # if team.moves > 10:
+    #     roll = np.array([0])
+    #     move_animals = np.zeros(20)
+    #     sell_animals = np.zeros(5)
+    #     buyAnimals = np.zeros(25)
+    #     buyFood = np.zeros(10)
+    #     freeze = np.zeros(7)
+    #     end_turn = np.array([1])
 
-        return (
-            roll,
-            move_animals,
-            sell_animals,
-            buyAnimals,
-            buyFood,
-            freeze,
-            end_turn,
-        )
+    #     return (
+    #         roll,
+    #         move_animals,
+    #         sell_animals,
+    #         buyAnimals,
+    #         buyFood,
+    #         freeze,
+    #         end_turn,
+    #     )
 
     # able to do if money
     roll = np.array([0])

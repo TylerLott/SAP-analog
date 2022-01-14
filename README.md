@@ -64,6 +64,12 @@ Round 1 fighting
 ## Proposed architecture
 
 - no clue at this point..
+- Transformer attention for different states
+- position encodings on team animals
+- LSTM core
+- somehow filter for possible moves
+- A2C rl architecture?
+- IMPALA for training?
 
 ## Unit Tests
 

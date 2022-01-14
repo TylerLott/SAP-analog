@@ -43,3 +43,5 @@ class TeamTests(unittest.TestCase):
         t.sellFriend(0)
 
         self.assertFalse(t.friends[0])
+
+
