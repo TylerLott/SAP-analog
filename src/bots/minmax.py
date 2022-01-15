@@ -104,11 +104,12 @@ def run():
                 next_enemies = getGauntlet(round)
                 move, numMovesChecked, maxAdv = bestMove(t1, next_enemies, 0)
 
-                state, _ = t1.getState()
+                state, p = t1.getState()
 
                 if move == 68 or (t1.money == 0 and maxAdv <= old_adv):
                     break
 
+                state = np.append(state, p, axis=0)
                 if type(move_hist) != np.ndarray:
                     move_hist = np.expand_dims(np.append(state, move), axis=0)
                 else:
@@ -130,7 +131,8 @@ def run():
                 old_adv = maxAdv
 
             if move != 68:
-                state, _ = t1.getState()
+                state, p = t1.getState()
+                state = np.append(state, p, axis=0)
                 move = 68
                 t1.setState(68)
                 move_hist = np.append(

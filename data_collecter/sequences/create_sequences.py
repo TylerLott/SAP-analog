@@ -4,7 +4,9 @@ from collections import deque
 
 
 def create_sequences(
-    seq_len: int = 10, data_dir: str = "./data_collecter/games/", verbose: int = 0
+    seq_len: int = 10,
+    data_dir: str = "./data_collecter/games/",
+    verbose: int = 0,
 ):
     DATA_DIR = data_dir
     SEQ_LENGTH = seq_len
@@ -26,6 +28,7 @@ def create_sequences(
         obs = np.insert(obs, 0, obs_pad, axis=0)
 
         data_comb = np.append(obs, move_one_hot, axis=1)
+        print(data_comb.shape)
 
         prev_states = deque(maxlen=SEQ_LENGTH)
 
@@ -36,4 +39,30 @@ def create_sequences(
 
     if verbose == 1:
         print(f"Generated {len(seq_data)} sequences")
+    return seq_data
+
+
+def create_flat(data_dir: str = "./data_collecter/games/"):
+    DATA_DIR = data_dir
+
+    all_files = glob.glob(DATA_DIR + "*.csv")
+
+    seq_data = np.empty(shape=[1, 232])
+
+    for filename in all_files:
+        data = np.loadtxt(filename, delimiter=",")
+        obs, move = data[:, :-1], data[:, -1]
+        move_one_hot = np.zeros((move.size, 69))
+        move_one_hot[np.arange(move.size), move.astype(np.int32)] = 1
+
+        hot_pad = np.zeros((9, move_one_hot.shape[-1]))
+        obs_pad = np.zeros((9, obs.shape[-1]))
+
+        move_one_hot = np.insert(move_one_hot, 0, hot_pad, axis=0)
+        obs = np.insert(obs, 0, obs_pad, axis=0)
+
+        data_comb = np.append(obs, move_one_hot, axis=1)
+        seq_data = np.append(seq_data, data_comb, axis=0)
+        print(seq_data.shape)
+
     return seq_data
