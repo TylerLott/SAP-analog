@@ -517,12 +517,13 @@ class Team:
         friend_state = friend_state.flatten()
         shop_an = shop_an.flatten()
         shop_food = shop_food.flatten()
-        shop_freeze = shop_freeze.flatten()
+        # shop_freeze = shop_freeze.flatten()
         team_state = team_state.flatten()
-        state = np.concatenate(
-            (friend_state, shop_an, shop_food, shop_freeze, team_state)
-        )
-        assert len(state) == 94
+        # state = np.concatenate(
+        #     (friend_state, shop_an, shop_food, shop_freeze, team_state)
+        # )
+        state = np.concatenate((friend_state, shop_an, shop_food, team_state))
+        assert len(state) == 77
 
         return state, possible_moves
 

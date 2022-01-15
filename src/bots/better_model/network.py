@@ -3,7 +3,13 @@ from src.Team import Team
 import tensorflow as tf
 import tensorflow_probability as tfp
 from tensorflow.keras import Sequential, Model, Input
-from tensorflow.keras.layers import Dense, LSTM, Flatten, Softmax, Layer
+from tensorflow.keras.layers import (
+    Dense,
+    LSTM,
+    Flatten,
+    Softmax,
+    Layer,
+)
 
 
 tfd = tfp.distributions
@@ -162,7 +168,7 @@ class BetaPets(Model):
         possible_encoded = self.possible_encoder(possible)
 
         features_encoded = tf.concat(
-            [friends_encoded, team_encoded, shop_encoded, possible_encoded], axis=-1
+            [friends_encoded, team_encoded, shop_encoded, possible_encoded], axis=2
         )
 
         core_outputs, final_memory_state, final_carry_state = self.core(
@@ -227,12 +233,12 @@ def make_dense(name):
     return model
 
 
-def make_model(name):
+def make_model(name, seq):
 
-    friends = Input(shape=(10, 40))
-    team = Input(shape=(10, 5))
-    shop = Input(shape=(10, 49))
-    possible = Input(shape=(10, 69))
+    friends = Input(shape=(seq, 40))
+    team = Input(shape=(seq, 5))
+    shop = Input(shape=(seq, 49))
+    possible = Input(shape=(seq, 69))
     memory_state = Input(shape=(256), name="mem_in")
     carry_state = Input(shape=(256), name="carry_in")
 

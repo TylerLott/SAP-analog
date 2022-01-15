@@ -9,11 +9,12 @@ from random import shuffle
 
 
 def test():
-    dataset = create_sequences()
+    seq_len = 2
+    dataset = create_sequences(seq_len=seq_len)
     shuffle(dataset)
     print(f"sequences: {len(dataset)}")
 
-    train = np.empty(shape=[1, 10, 163])
+    train = np.empty(shape=[1, seq_len, 163])
     label = np.empty(shape=[1, 69])
     for i in dataset:
         train = np.append(train, i[0][np.newaxis, :, :], axis=0)
@@ -21,6 +22,8 @@ def test():
 
     print(train.shape)
     print(label.shape)
+    train = train.astype("float32")
+    label = label.astype("float32")
 
     def batch_generator(x, y, batch_size=10):
         indicies = np.arange(len(x))
@@ -37,8 +40,8 @@ def test():
 
     dataset_gen = batch_generator(train, label, batch_size=10)
 
-    model = make_model("test_net")
-    loss = CategoricalCrossentropy(from_logits=True)
+    model = make_model("test_net", seq=seq_len)
+    loss = CategoricalCrossentropy(from_logits=False, label_smoothing=0.1)
     opt = Adam(learning_rate=0.00001)
 
     EPOCHS = 3
@@ -58,12 +61,12 @@ def test():
                 move_logits = out["action_logits"]
                 loss_val = loss(move_logits, y)
             grads = tape.gradient(loss_val, model.trainable_weights)
-            capped_gvs = [tf.clip_by_value(grad, -1, 1) for grad in grads]
+            capped_gvs = [tf.clip_by_value(grad, -0.1, 0.1) for grad in grads]
             opt.apply_gradients(zip(capped_gvs, model.trainable_weights))
 
             if step % 100 == 0:
                 print(
-                    f"| Step {step} | Training loss {float(loss_val)} | action {out['action']} | correct_action {list(np.argmax(y, axis=1))} |"
+                    f"| Step {step} | Training loss {float(loss_val)} | action {out['action']} | correct_action {list(np.argmax(y, axis=1))} | logits_for_first {out['action_logits'][0]}"
                 )
             if (step + 1) % 1000 == 0:
                 break

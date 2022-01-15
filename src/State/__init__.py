@@ -140,15 +140,15 @@ def getAnimalState(animal) -> np.array:
     # arr[79] = animal.getTempHp() / 50
     # arr[78] = animal.getTempDmg() / 50
 
-    arr = np.zeros(8)
-    arr[0] = ANIMAL_STATE_DICT[animal.__class__.__name__] / 65
-    arr[1] = (ANIMAL_EFFECT_DICT[animal.getEffect()] - 65) / 11
+    arr = np.zeros(7)
+    arr[0] = ANIMAL_STATE_DICT[animal.__class__.__name__]
+    arr[1] = ANIMAL_EFFECT_DICT[animal.getEffect()] - 65
     # arr[2] = animal.getLevel() / 3
-    arr[2] = animal.getExp() / 6
-    arr[3] = animal.getBaseHp() / 50
-    arr[4] = animal.getBaseDmg() / 50
-    arr[5] = animal.getTempHp() / 50
-    arr[6] = animal.getTempDmg() / 50
+    arr[2] = animal.getExp()
+    arr[3] = animal.getBaseHp()
+    arr[4] = animal.getBaseDmg()
+    arr[5] = animal.getTempHp()
+    arr[6] = animal.getTempDmg()
 
     return arr
 
@@ -159,7 +159,7 @@ def getFoodState(food) -> np.array:
     # food_ind = FOOD_STATE_DICT[food.__class__.__name__]
     # arr[food_ind] = 1
 
-    arr = np.array([FOOD_STATE_DICT[food.__class__.__name__] / 17])
+    arr = np.array([FOOD_STATE_DICT[food.__class__.__name__]])
 
     return arr
 

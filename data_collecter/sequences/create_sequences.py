@@ -5,7 +5,7 @@ from collections import deque
 
 def create_sequences(
     seq_len: int = 10,
-    data_dir: str = "./data_collecter/games/",
+    data_dir: str = "./data_collecter/games_norm/",
     verbose: int = 0,
 ):
     DATA_DIR = data_dir
@@ -21,8 +21,8 @@ def create_sequences(
         move_one_hot = np.zeros((move.size, 69))
         move_one_hot[np.arange(move.size), move.astype(np.int32)] = 1
 
-        hot_pad = np.zeros((9, move_one_hot.shape[-1]))
-        obs_pad = np.zeros((9, obs.shape[-1]))
+        hot_pad = np.zeros((SEQ_LENGTH - 1, move_one_hot.shape[-1]))
+        obs_pad = np.zeros((SEQ_LENGTH - 1, obs.shape[-1]))
 
         move_one_hot = np.insert(move_one_hot, 0, hot_pad, axis=0)
         obs = np.insert(obs, 0, obs_pad, axis=0)
@@ -55,14 +55,34 @@ def create_flat(data_dir: str = "./data_collecter/games/"):
         move_one_hot = np.zeros((move.size, 69))
         move_one_hot[np.arange(move.size), move.astype(np.int32)] = 1
 
-        hot_pad = np.zeros((9, move_one_hot.shape[-1]))
-        obs_pad = np.zeros((9, obs.shape[-1]))
-
-        move_one_hot = np.insert(move_one_hot, 0, hot_pad, axis=0)
-        obs = np.insert(obs, 0, obs_pad, axis=0)
-
         data_comb = np.append(obs, move_one_hot, axis=1)
         seq_data = np.append(seq_data, data_comb, axis=0)
         print(seq_data.shape)
 
+    return seq_data
+
+
+def create_for_transform(data_dir: str = "./data_collecter/games/"):
+    DATA_DIR = data_dir
+
+    all_files = glob.glob(DATA_DIR + "*.csv")
+
+    a = "a"
+    print(f"Reading data from {len(all_files)} games...")
+
+    for filename in all_files:
+        data = np.loadtxt(filename, delimiter=",")
+
+        obs, move = data[:, :-1], data[:, -1]
+        move_one_hot = np.zeros((move.size, 69))
+        move_one_hot[np.arange(move.size), move.astype(np.int32)] = 1
+
+        data_comb = np.append(obs, move_one_hot, axis=1)
+        if a == "a":
+            seq_data = data_comb
+            a = "b"
+        else:
+            seq_data = np.append(seq_data, data_comb, axis=0)
+
+    print(f"Data read completed")
     return seq_data
