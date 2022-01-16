@@ -129,7 +129,7 @@ class TransformerModel(Model):
     def __init__(self, emb_dim=32, num_heads=2, dropout=0.1):
         super(TransformerModel, self).__init__()
 
-        pos_enc = positional_encoding(5, emb_dim)
+        self.pos_enc = positional_encoding(5, emb_dim)
 
         # Animal Embeddings (used by shop and friends)
         self.animal_type_emb = Embedding(66, emb_dim)
@@ -165,6 +165,8 @@ class TransformerModel(Model):
 
         # Final Dense network
 
+        self.o1 = Dense(512, activation="relu")
+        self.o2 = Dense(256, activation="relu")
         self.out = Dense(69, activation="softmax", name="output")
 
     def call(self, animals, shop_an, shop_food, team, possible):
@@ -189,6 +191,7 @@ class TransformerModel(Model):
 
         a_x = self.add(
             [
+                self.pos_enc,
                 an_emb_t,
                 an_emb_e,
                 an_emb_h,
@@ -221,6 +224,9 @@ class TransformerModel(Model):
         mid = self.concat([a_x, sa_x, s_food_emb_1, s_food_emb_2, team, possible])
 
         out = self.dropout(mid)
+        out = self.o1(out)
+        out = self.dropout(out)
+        out = self.o2(out)
         return self.out(out)
 
 
@@ -232,7 +238,9 @@ def make_model(name):
     team = Input(shape=(5))
     possible = Input(shape=(69))
 
-    prob_dist = TransformerModel()(animals, shop_an, shop_food, team, possible)
+    prob_dist = TransformerModel(emb_dim=32, num_heads=4)(
+        animals, shop_an, shop_food, team, possible
+    )
 
     model = Model(
         inputs={

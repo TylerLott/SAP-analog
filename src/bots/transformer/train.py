@@ -25,15 +25,15 @@ def run():
 
     model = make_model("test_transformer")
     loss = CategoricalCrossentropy()
-    opt = Adam(learning_rate=0.001)
+    opt = Adam(learning_rate=0.0003)
 
     tensorboard = TensorBoard(
         log_dir="./train/transformer/test_transformer",
         update_freq="batch",
-        write_graph=False,
+        write_graph=True,
     )
     checkpoint = ModelCheckpoint(
-        filepath="/train/transformer/models/best_model",
+        filepath="./train/transformer/models/best_val_loss",
         monitor="val_loss",
         verbose=0,
         mode="min",
@@ -42,6 +42,8 @@ def run():
     )
 
     model.compile(loss=loss, optimizer=opt, metrics=["accuracy"])
+
+    model.load_weights("./train/transformer/models/best_val_loss")
 
     model.summary()
 

@@ -84,5 +84,7 @@ def create_for_transform(data_dir: str = "./data_collecter/games/"):
         else:
             seq_data = np.append(seq_data, data_comb, axis=0)
 
+    seq_data = np.unique(seq_data, axis=0)
+
     print(f"Data read completed")
     return seq_data
