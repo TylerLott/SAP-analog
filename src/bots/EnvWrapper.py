@@ -26,7 +26,7 @@ class EnvWrapper(gym.Env):
         round = self.team1.round
 
         # fight if end turn action
-        if move == 68 or self.moves > 7:
+        if move == 68 or self.moves > 10:
             move_print = self.team1.setState(68)
             t2 = getGauntlet(round=self.team1.getRound())
             f = Fight(self.team1, t2)
@@ -34,7 +34,7 @@ class EnvWrapper(gym.Env):
 
             # reward based on results
             if res >= 0:
-                reward += 10 * self.team1.getRound()
+                reward = 1
                 self.won_rounds += 1
 
             self.team1.nextTurn()

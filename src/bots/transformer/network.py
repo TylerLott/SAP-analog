@@ -167,7 +167,7 @@ class TransformerModel(Model):
 
         self.o1 = Dense(512, activation="relu")
         self.o2 = Dense(256, activation="relu")
-        self.out = Dense(69, activation="softmax", name="output")
+        self.out = Dense(69, name="output")
 
         # Final Dense network (Critic)
 
@@ -247,6 +247,11 @@ class TransformerModel(Model):
         value = self.out_c(value)
 
         return out_dist, value
+
+    def action_value(self, state):
+        logits, val = self.predict_on_batch(state)
+        action = tf.random.categorical(logits, 1)[0]
+        return action, val
 
 
 def make_model(name):
