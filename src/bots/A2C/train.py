@@ -1,9 +1,11 @@
 # tf implementation for training A2C model
 import tensorflow as tf
+from datetime import datetime
 from src.bots.transformer.network import make_model
 from src.bots.EnvWrapper import EnvWrapper
 
-STORE_PATH = "./train/a2c/models/"
+STORE_PATH = "./train/a2c/tf/"
+MODEL_STORE_PATH = "./train/a2c/models/"
 CRITIC_LOSS_WEIGHT = 0.5
 ACTOR_LOSS_WEIGHT = 1.0
 ENTROPY_LOSS_WEIGHT = 0.05
@@ -47,16 +49,52 @@ def discounted_rewards_advantages(rewards, dones, values, next_value):
     return discounted_rewards, advantages
 
 
+def format_state(state):
+    animals = state[35:].reshape(1, 5, 7)
+    shop_an = state[35:70].reshape(1, 5, 7)
+    shop_food = state[70:72].reshape(1, 2)
+    team = state[72:77].reshape(1, 5)
+    possible = state[77:].reshape(1, 69)
+
+    return {
+        "animals": animals,
+        "shop_an": shop_an,
+        "shop_food": shop_food,
+        "team": team,
+        "possible": possible,
+    }
+
+
+def format_states(states):
+    states = np.array(states)
+    animals = state[:, 35:].reshape(-1, 5, 7)
+    shop_an = state[:, 35:70].reshape(-1, 5, 7)
+    shop_food = state[:, 70:72].reshape(-1, 2)
+    team = state[:, 72:77].reshape(-1, 5)
+    possible = state[:, 77:].reshape(-1, 69)
+
+    return {
+        "animals": animals,
+        "shop_an": shop_an,
+        "shop_food": shop_food,
+        "team": team,
+        "possible": possible,
+    }
+
+
 model.compile(optimizer=tf.keras.optimizers.Adam(), loss=[critic_loss, actor_loss])
 
 train_writer = tf.summary.create_file_writer(
-    STORE_PATH + f'A2C_transformer_{datetime.now().strftime("%d%m%Y%H%M)")}'
+    STORE_PATH + f'A2C_transformer_{datetime.now().strftime("%d%m%Y%H%M")}'
 )
 
 
 def train():
     # model
     model = make_model()
+
+    # load weights
+    # model.load_weights()
 
     # env
     env = EnvWrapper()
@@ -74,9 +112,9 @@ def train():
         states = []
         dones = []
         for _ in range(BATCH_SIZE):
-            policy_logits, _ = model(state.reshape(1, -1))
+            policy_logits, _ = model(format_state(state))
 
-            action, value = model.action_value(state.reshape(1, -1))
+            action, value = model.action_value(format_state(state))
             new_state, reward, done, _ = env.step(action.numpy()[0])
 
             actions.append(action)
@@ -86,6 +124,7 @@ def train():
             episode_reward_sum += reward
 
             state = new_state
+
             if done:
                 rewards.append(0.0)
                 state = env.reset()
@@ -97,7 +136,7 @@ def train():
             else:
                 rewards.append(reward)
 
-        _, next_value = model.action_value(state.reshape(1, -1))
+        _, next_value = model.action_value(format_state(state))
         discounted_rewards, advantages = discounted_rewards_advantages(
             rewards, dones, values, next_value.numpy()[0]
         )
@@ -106,7 +145,15 @@ def train():
         combines[:, 0] = actions
         combines[:, 1] = advantages
 
-        loss = model.train_on_batch(tf.stack(states), [discounted_rewards, combined])
+        loss = model.train_on_batch(
+            format_states(states), [discounted_rewards, combined]
+        )
 
         with train_writer.as_default():
             tf.summary.scalar("tot_loss", np.sum(loss), step)
+
+        if episode % 1000 == 0:
+            model.save_weights(
+                MODEL_STORE_PATH
+                + f"model_ep_{episode}_{datetime.now().strftime('%d%m%Y%H%M')}"
+            )

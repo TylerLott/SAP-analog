@@ -61,8 +61,10 @@ def run():
     # labels = dataset[:, -69:]
 
     model = make_model("test_transformer")
-    loss = CategoricalCrossentropy()
+    loss = CategoricalCrossentropy(from_logits=True)
     opt = Adam(learning_rate=0.0003)
+
+    model.compile(optimizer=opt, loss=loss)
 
     tensorboard = TensorBoard(
         log_dir="./train/transformer/test_transformer",
@@ -128,7 +130,9 @@ def run():
             opt.apply_gradients(zip(grads, model.trainable_weights))
 
             epoch_loss_avg.update_state(loss_val)
-            epoch_acc.update_state(y["prob_dist"], model(x, training=True)["prob_dist"])
+            epoch_acc.update_state(
+                y["prob_dist"], tf.nn.softmax(model(x, training=True)["prob_dist"])
+            )
 
             if step % 20 == 0:
                 print(
@@ -147,7 +151,7 @@ def run():
 
             valid_loss_avg.update_state(loss_val)
             valid_acc.update_state(
-                y["prob_dist"], model(x, training=False)["prob_dist"]
+                y["prob_dist"], tf.nn.softmax(model(x, training=False)["prob_dist"])
             )
 
         valid_loss_res.append(valid_loss_avg.result())
