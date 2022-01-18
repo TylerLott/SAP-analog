@@ -163,13 +163,19 @@ class TransformerModel(Model):
             rate=dropout,
         )
 
-        # Final Dense network
+        # Final Dense network (Actor)
 
         self.o1 = Dense(512, activation="relu")
         self.o2 = Dense(256, activation="relu")
         self.out = Dense(69, activation="softmax", name="output")
 
+        # Final Dense network (Critic)
+
+        self.oc1 = Dense(512, activation="relu")
+        self.out_c = Dense(1)
+
     def call(self, animals, shop_an, shop_food, team, possible):
+        # friends embeddings
         an_emb_t = self.animal_type_emb(animals[..., 0])
         an_emb_e = self.animal_effect_emb(animals[..., 1])
         an_emb_ex = self.animal_exp_emb(animals[..., 2])
@@ -178,6 +184,7 @@ class TransformerModel(Model):
         an_emb_th = self.animal_thp_emb(animals[..., 5])
         an_emb_td = self.animal_tdmg_emb(animals[..., 6])
 
+        # shop animal embeddings
         s_an_emb_t = self.animal_type_emb(shop_an[..., 0])
         s_an_emb_e = self.animal_effect_emb(shop_an[..., 1])
         s_an_emb_ex = self.animal_exp_emb(shop_an[..., 2])
@@ -186,9 +193,11 @@ class TransformerModel(Model):
         s_an_emb_th = self.animal_thp_emb(shop_an[..., 5])
         s_an_emb_td = self.animal_tdmg_emb(shop_an[..., 6])
 
+        # shop food embeddings
         s_food_emb_1 = self.food_emb(shop_food[..., 0])
         s_food_emb_2 = self.food_emb(shop_food[..., 1])
 
+        # sum embeddings
         a_x = self.add(
             [
                 self.pos_enc,
@@ -213,21 +222,31 @@ class TransformerModel(Model):
             ]
         )
 
+        # friends transformer
         a_x = self.encoder1(a_x, mask=None)
         a_x = self.encoder2(a_x, mask=None)
         a_x = self.avg_pool(a_x)
         a_x = self.dropout(a_x)
         a_x = self.flatten(a_x)
 
+        # flatten shop animals embs
         sa_x = self.flatten(sa_x)
 
+        # combine state stuff
         mid = self.concat([a_x, sa_x, s_food_emb_1, s_food_emb_2, team, possible])
 
+        # final dense actor (prob dist)
         out = self.dropout(mid)
         out = self.o1(out)
         out = self.dropout(out)
         out = self.o2(out)
-        return self.out(out)
+        out_dist = self.out(out)
+
+        # final dense critic (single val)
+        value = self.oc1(mid)
+        value = self.out_c(value)
+
+        return out_dist, value
 
 
 def make_model(name):
@@ -238,7 +257,7 @@ def make_model(name):
     team = Input(shape=(5))
     possible = Input(shape=(69))
 
-    prob_dist = TransformerModel(emb_dim=32, num_heads=4)(
+    prob_dist, value = TransformerModel(emb_dim=32, num_heads=4)(
         animals, shop_an, shop_food, team, possible
     )
 
@@ -250,7 +269,7 @@ def make_model(name):
             "team": team,
             "possible": possible,
         },
-        outputs={"prob_dist": prob_dist},
+        outputs={"prob_dist": prob_dist, "value": value},
         name=name,
     )
 
