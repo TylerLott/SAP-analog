@@ -47,6 +47,7 @@ def run():
                 {"prob_dist": tf.TensorSpec(shape=(69), dtype=tf.float32)},
             ),
         )
+        dataset = dataset.batch(64)
         return dataset
 
     train_dataset = get_dataset(data_gen)
@@ -130,7 +131,9 @@ def run():
             epoch_acc.update_state(y["prob_dist"], model(x, training=True)["prob_dist"])
 
             if step % 20 == 0:
-                print(f"Training loss at step {step}: {loss_val}")
+                print(
+                    f"Training loss at step {step} / {int(len(dataset)//64)}: {loss_val:.4f}"
+                )
 
             step += 1
 
@@ -153,6 +156,7 @@ def run():
         print(
             f"Epoch {epoch}: Loss {epoch_loss_avg.result():.3f}, Acc {epoch_acc.result():.3f} -- Validation: Loss {valid_loss_avg.result():.3f}, Acc {valid_acc.result():.3f}"
         )
-        if epoch % 10 == 0:
+        if epoch % 5 == 0:
+            print("saving weights...")
             fp = f"./train/trainsformer/models/custom_train_vloss_{valid_loss_avg.result()}_epoch_{epoch}"
             model.save_weights(fp)
