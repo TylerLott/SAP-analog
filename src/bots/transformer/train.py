@@ -1,6 +1,8 @@
 import os
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+from tqdm import tqdm
+import silence_tensorflow.auto
 import tensorflow as tf
 import numpy as np
 from tensorflow.keras.callbacks import TensorBoard, ModelCheckpoint
@@ -13,15 +15,18 @@ from random import shuffle
 
 
 def run():
+
+    BATCH_SIZE = 128
+
     dataset = create_for_transform()
     print(f"Rows of data loaded: {len(dataset)}")
 
     def data_gen(train=True):
-        rows = len(dataset)
+        rows = dataset
         if train:
-            rows = rows[: len(rows) * 0.9]
+            rows = rows[: int(len(rows) * 0.9)]
         if not train:
-            rows = rows[len(rows) * 0.9 :]
+            rows = rows[int(len(rows) * 0.9) :]
         for i in rows:
             inps = {
                 "animals": i[:35].reshape(5, 7),
@@ -46,12 +51,13 @@ def run():
                 },
                 {"prob_dist": tf.TensorSpec(shape=(69), dtype=tf.float32)},
             ),
+            args=[train],
         )
-        dataset = dataset.batch(64)
+        dataset = dataset.batch(BATCH_SIZE)
         return dataset
 
     train_dataset = get_dataset(data_gen)
-    valid_dataset = get_dataset(data_gen(train=False))
+    valid_dataset = get_dataset(data_gen, train=False)
 
     # friends = dataset[:, :35].reshape((-1, 5, 7))
     # shop_an = dataset[:, 35:70].reshape((-1, 5, 7))
@@ -83,7 +89,9 @@ def run():
     #     save_weights_only=True,
     # )
 
-    # model.load_weights("./train/transformer/models/best_val_loss")
+    model.load_weights(
+        "./train/trainsformer/models/custom_train_vloss_2.287598133087158_epoch_0"
+    )
 
     model.summary()
 
@@ -121,25 +129,26 @@ def run():
 
         step = 1
         # training loop
-        for x, y in iter(train_dataset):
-            with tf.GradientTape() as tape:
-                out = model(x, training=True)
-                loss_val = loss(y["prob_dist"], out["prob_dist"])
+        total_steps = int((len(dataset) * 0.9) // BATCH_SIZE)
+        with tqdm(total=total_steps) as pbar:
+            for x, y in iter(train_dataset):
+                with tf.GradientTape() as tape:
+                    out = model(x, training=True)
+                    loss_val = loss(y["prob_dist"], out["prob_dist"])
 
-            grads = tape.gradient(loss_val, model.trainable_weights)
-            opt.apply_gradients(zip(grads, model.trainable_weights))
+                grads = tape.gradient(loss_val, model.trainable_weights)
+                opt.apply_gradients(zip(grads, model.trainable_weights))
 
-            epoch_loss_avg.update_state(loss_val)
-            epoch_acc.update_state(
-                y["prob_dist"], tf.nn.softmax(model(x, training=True)["prob_dist"])
-            )
-
-            if step % 20 == 0:
-                print(
-                    f"Training loss at step {step} / {int(len(dataset)//64)}: {loss_val:.4f}"
+                epoch_loss_avg.update_state(loss_val)
+                epoch_acc.update_state(
+                    y["prob_dist"], tf.nn.softmax(model(x, training=True)["prob_dist"])
                 )
 
-            step += 1
+                step += 1
+                pbar.update(1)
+                pbar.set_description(
+                    f"Epoch {epoch}: Loss = {epoch_loss_avg.result():.5f}, Acc = {epoch_acc.result():.5f}"
+                )
 
         train_loss_res.append(epoch_loss_avg.result())
         train_acc_res.append(epoch_acc.result())
@@ -158,7 +167,7 @@ def run():
         valid_acc_res.append(valid_acc.result())
 
         print(
-            f"Epoch {epoch}: Loss {epoch_loss_avg.result():.3f}, Acc {epoch_acc.result():.3f} -- Validation: Loss {valid_loss_avg.result():.3f}, Acc {valid_acc.result():.3f}"
+            f"Epoch {epoch}: Loss = {epoch_loss_avg.result():.3f}, Acc = {epoch_acc.result():.3f} -- Validation: Loss = {valid_loss_avg.result():.3f}, Acc = {valid_acc.result():.3f}"
         )
         if epoch % 5 == 0:
             print("saving weights...")

@@ -8,3 +8,5 @@ model_full*
 tensorboard*
 model2_*
 autoencoder_*
+custom_train_vloss*
+*checkpoint

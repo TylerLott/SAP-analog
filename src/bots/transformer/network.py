@@ -171,10 +171,17 @@ class TransformerModel(Model):
 
         # Final Dense network (Critic)
 
-        self.oc1 = Dense(512, activation="relu")
+        self.oc1 = Dense(256, activation="relu")
         self.out_c = Dense(1)
 
-    def call(self, animals, shop_an, shop_food, team, possible):
+    def call(self, state, training=True):
+
+        animals = state[0]
+        shop_an = state[1]
+        shop_food = state[2]
+        team = state[3]
+        possible = state[4]
+
         # friends embeddings
         an_emb_t = self.animal_type_emb(animals[..., 0])
         an_emb_e = self.animal_effect_emb(animals[..., 1])
@@ -226,7 +233,7 @@ class TransformerModel(Model):
         a_x = self.encoder1(a_x, mask=None)
         a_x = self.encoder2(a_x, mask=None)
         a_x = self.avg_pool(a_x)
-        a_x = self.dropout(a_x)
+        a_x = self.dropout(a_x, training=training)
         a_x = self.flatten(a_x)
 
         # flatten shop animals embs
@@ -237,13 +244,14 @@ class TransformerModel(Model):
 
         # final dense actor (prob dist)
         out = self.dropout(mid)
-        out = self.o1(out)
+        out = self.o1(out, training=training)
         out = self.dropout(out)
-        out = self.o2(out)
+        out = self.o2(out, training=training)
         out_dist = self.out(out)
 
         # final dense critic (single val)
-        value = self.oc1(mid)
+        value = self.concat([mid, out_dist])
+        value = self.oc1(value)
         value = self.out_c(value)
 
         return out_dist, value

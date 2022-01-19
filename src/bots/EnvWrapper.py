@@ -34,7 +34,8 @@ class EnvWrapper(gym.Env):
 
             # reward based on results
             if res >= 0:
-                reward = 1
+                reward += 1
+                reward += res
                 self.won_rounds += 1
 
             self.team1.nextTurn()
@@ -50,7 +51,7 @@ class EnvWrapper(gym.Env):
             self.won_rounds = 0
 
         # Observations
-        obs, _ = self.team1.getState()
+        obs, p = self.team1.getState()
 
         info = {
             "move": move_print,
@@ -61,13 +62,13 @@ class EnvWrapper(gym.Env):
             "friends": self.team1,
         }
 
-        return obs, reward, done, info
+        return np.concatenate([obs, p]), reward, done, info
 
     def reset(self):
         self.team1 = Team()
         self.won_rounds = 0
-        s, _ = self.team1.getState()
-        return s
+        s, p = self.team1.getState()
+        return np.concatenate([s, p])
 
     def render(self):
         pass
