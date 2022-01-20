@@ -10,3 +10,4 @@ model2_*
 autoencoder_*
 custom_train_vloss*
 *checkpoint
+*a2c/

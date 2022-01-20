@@ -25,6 +25,10 @@ class EnvWrapper(gym.Env):
         done = False
         round = self.team1.round
 
+        _, p = self.team1.getState()
+        if p[move] == 1:
+            reward += 1
+
         # fight if end turn action
         if move == 68 or self.moves > 10:
             move_print = self.team1.setState(68)
@@ -36,10 +40,13 @@ class EnvWrapper(gym.Env):
             if res >= 0:
                 reward += 1
                 reward += res
+            if res > 0:
+                reward += 20
                 self.won_rounds += 1
 
             self.team1.nextTurn()
             self.moves = 0
+            # reward += res
         else:
             # Do move
             move_print = self.team1.setState(move)
@@ -48,7 +55,6 @@ class EnvWrapper(gym.Env):
         # Done
         if not self.team1.alive or self.won_rounds >= 10:
             done = True
-            self.won_rounds = 0
 
         # Observations
         obs, p = self.team1.getState()

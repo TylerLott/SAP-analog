@@ -11,24 +11,22 @@ STORE_PATH = "./train/a2c/tf/"
 MODEL_STORE_PATH = "./train/a2c/models/"
 CRITIC_LOSS_WEIGHT = 0.5
 ACTOR_LOSS_WEIGHT = 1.0
-ENTROPY_LOSS_WEIGHT = 0.05
+ENTROPY_LOSS_WEIGHT = 0.03
 BATCH_SIZE = 64
-GAMMA = 0.95
+GAMMA = 0.99
 
 
 # util functions for loss calc
 def critic_loss(discounted_reward, predicted_values):
-    return (
-        tf.keras.losses.mean_squared_error(discounted_reward, predicted_values)
-        * CRITIC_LOSS_WEIGHT
-    )
+    h = tf.keras.losses.Huber()
+    return h(discounted_reward, predicted_values) * CRITIC_LOSS_WEIGHT
 
 
 def actor_loss(combined, policy_logits):
     actions = combined[:, 0]
     advantages = combined[:, 1]
     sparse_ce = tf.keras.losses.SparseCategoricalCrossentropy(
-        from_logits=True, reduction=tf.keras.losses.Reduction.SUM
+        from_logits=True, reduction=tf.keras.losses.Reduction.NONE
     )
     actions = tf.cast(actions, tf.int32)
     policy_loss = sparse_ce(actions, policy_logits, sample_weight=advantages)
@@ -81,12 +79,13 @@ train_writer = tf.summary.create_file_writer(
 def train():
     # model
     model = TransformerModel()
-    model.compile(optimizer=tf.keras.optimizers.Adam(), loss=[actor_loss, critic_loss])
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.00001),
+        loss=[actor_loss, critic_loss],
+    )
 
     # load weights
-    model.load_weights(
-        "./train/trainsformer/models/custom_train_vloss_2.097245693206787_epoch_10"
-    )
+    model.load_weights("./train/a2c/models/model_ep_3100_190120221258")
     model.trainable = True
 
     # env
@@ -134,15 +133,17 @@ def train():
             format_states(states), [combined, discounted_rewards]
         )
         print(
-            f"Episode: {episode}, reward: {episode_reward_sum}, loss: {np.sum(loss):.4f}, num_steps: {len(rewards)}"
+            f"Episode: {episode}, reward: {episode_reward_sum}, loss: {loss[2]}, num_steps: {len(rewards)}, wins: {env.won_rounds}"
         )
+        print("actions:", [int(i) for i in actions])
 
         with train_writer.as_default():
             tf.summary.scalar("rewards", episode_reward_sum, episode)
         with train_writer.as_default():
-            tf.summary.scalar("tot_loss", np.sum(loss), step)
+            tf.summary.scalar("tot_loss", loss[2], step)
 
-        if episode % 1000 == 0:
+        if episode % 100 == 0:
+            print("saving model...")
             model.save_weights(
                 MODEL_STORE_PATH
                 + f"model_ep_{episode}_{datetime.now().strftime('%d%m%Y%H%M')}"
