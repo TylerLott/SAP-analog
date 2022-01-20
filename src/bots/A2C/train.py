@@ -85,7 +85,7 @@ def train():
     )
 
     # load weights
-    model.load_weights("./train/a2c/models/model_ep_3100_190120221258")
+    model.load_weights("./train/a2c/models/model_ep_5200_190120222301")
     model.trainable = True
 
     # env
@@ -141,6 +141,12 @@ def train():
             tf.summary.scalar("rewards", episode_reward_sum, episode)
         with train_writer.as_default():
             tf.summary.scalar("tot_loss", loss[2], step)
+        with train_writer.as_default():
+            tf.summary.scalar("actor_loss", loss[0], step)
+        with train_writer.as_default():
+            tf.summary.scalar("critic_loss", loss[1], step)
+        with train_writer.as_default():
+            tf.summary.scalar("won_rounds", env.won_rounds, step)
 
         if episode % 100 == 0:
             print("saving model...")
