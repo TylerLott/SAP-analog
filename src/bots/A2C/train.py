@@ -11,7 +11,7 @@ STORE_PATH = "./train/a2c/tf/"
 MODEL_STORE_PATH = "./train/a2c/models/"
 CRITIC_LOSS_WEIGHT = 0.5
 ACTOR_LOSS_WEIGHT = 1.0
-ENTROPY_LOSS_WEIGHT = 0.03
+ENTROPY_LOSS_WEIGHT = 0.1
 BATCH_SIZE = 64
 GAMMA = 0.99
 
@@ -85,7 +85,7 @@ def train():
     )
 
     # load weights
-    model.load_weights("./train/a2c/models/model_ep_5200_190120222301")
+    # model.load_weights("./train/a2c/models/model_ep_900_200120220020")
     model.trainable = True
 
     # env
