@@ -63,13 +63,7 @@ Round 1 fighting
 
 ## Proposed architecture
 
-- no clue at this point..
-- Transformer attention for different states
-- position encodings on team animals
-- LSTM core
-- somehow filter for possible moves
-- A2C rl architecture?
-- IMPALA for training?
+Tried several different structures, a simple dense network, a LSTM network, a transformer network. I implemented the A2C algorithm to train the networks in tensorflow. I think I may need to make some sort of hybrid lstm/transformer to tackle this. We'll see how the A2C transformer works first though.
 
 ## Unit Tests
 
