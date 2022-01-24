@@ -65,6 +65,8 @@ Round 1 fighting
 
 Tried several different structures, a simple dense network, a LSTM network, a transformer network. I implemented the A2C algorithm to train the networks in tensorflow. I think I may need to make some sort of hybrid lstm/transformer to tackle this. We'll see how the A2C transformer works first though.
 
+The A2C is struggling... but I'm going to let it run for a few days.
+
 ## Unit Tests
 
 One Set of Tests
