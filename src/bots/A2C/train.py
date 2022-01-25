@@ -85,7 +85,7 @@ def train():
     )
 
     # load weights
-    # model.load_weights("./train/a2c/models/model_ep_900_200120220020")
+    model.load_weights("./train/a2c/models/model_ep_187800_230120222355")
     model.trainable = True
 
     # env

@@ -67,6 +67,8 @@ Tried several different structures, a simple dense network, a LSTM network, a tr
 
 The A2C is struggling... but I'm going to let it run for a few days.
 
+Still training...
+
 ## Unit Tests
 
 One Set of Tests
