@@ -69,6 +69,8 @@ The A2C is struggling... but I'm going to let it run for a few days.
 
 Still training...
 
+still training.. might stop soon and rethink structure
+
 ## Unit Tests
 
 One Set of Tests
