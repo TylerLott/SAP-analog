@@ -80,12 +80,12 @@ def train():
     # model
     model = TransformerModel()
     model.compile(
-        optimizer=tf.keras.optimizers.Adam(learning_rate=0.00001),
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.001),
         loss=[actor_loss, critic_loss],
     )
 
     # load weights
-    model.load_weights("./train/a2c/models/model_ep_187800_230120222355")
+    model.load_weights("./train/a2c/models/model_ep_768000_090220222319")
     model.trainable = True
 
     # env
